@@ -97,6 +97,30 @@ export class CustomerController {
     return this.customerService.previewSubscription(user.id, id, from, to);
   }
 
+  @Post('subscriptions/:id/end-request')
+  requestEnd(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: { reason?: string },
+  ) {
+    return this.customerService.requestSubscriptionEnd(user.id, id, dto.reason);
+  }
+
+  @Post('subscriptions/:id/end-confirm')
+  confirmEnd(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.customerService.confirmSubscriptionEnd(user.id, id);
+  }
+
+  @Post('subscriptions/:id/end-reject')
+  rejectEnd(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.customerService.rejectSubscriptionEnd(user.id, id);
+  }
+
+  @Get('subscriptions/:id/end-status')
+  endStatus(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.customerService.getSubscriptionEndStatus(user.id, id);
+  }
+
   @Post('subscriptions/:id/pause')
   pauseSubscription(
     @CurrentUser() user: AuthUser,

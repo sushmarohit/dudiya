@@ -19,6 +19,7 @@ import {
   toDistributorLocationData,
 } from '../common/address/address.util';
 import { SubscriptionScheduleService } from '../subscription/subscription-schedule.service';
+import { SubscriptionEndService } from '../subscription/subscription-end.service';
 import { ReadinessService } from './readiness.service';
 import { PhoneValidationService } from '../common/services/phone-validation.service';
 import { NotificationService } from '../notification/notification.service';
@@ -55,6 +56,7 @@ export class DistributorService {
     private phoneValidation: PhoneValidationService,
     private notifications: NotificationService,
     private catalog: CatalogService,
+    private subscriptionEnd: SubscriptionEndService,
   ) {}
 
   private async getProfileByUserId(userId: string) {
@@ -513,6 +515,10 @@ export class DistributorService {
   async createSubscription(userId: string, dto: CreateDistributorSubscriptionDto) {
     const profile = await this.getProfileByUserId(userId);
     await this.validateSubscriptionCreation(profile.id, dto);
+    await this.subscriptionEnd.assertNoActiveSubscription(
+      profile.id,
+      dto.customerId,
+    );
 
     const link = await this.prisma.distributorCustomer.findUnique({
       where: {
@@ -581,11 +587,50 @@ export class DistributorService {
     if (!sub) {
       throwApi(ApiErrorCode.SUBSCRIPTION_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
+    if (
+      dto.status === SubscriptionStatus.CANCELLED ||
+      dto.status === SubscriptionStatus.PENDING_CANCEL
+    ) {
+      throwApi(ApiErrorCode.SUBSCRIPTION_END_NOT_ALLOWED, HttpStatus.BAD_REQUEST);
+    }
     return this.prisma.subscription.update({
       where: { id: subscriptionId },
       data: dto,
       include: { product: true, deliverySlot: true, customer: true },
     });
+  }
+
+  async requestSubscriptionEnd(userId: string, subscriptionId: string, reason?: string) {
+    return this.subscriptionEnd.requestEnd(
+      subscriptionId,
+      UserRole.DISTRIBUTOR,
+      userId,
+      reason,
+    );
+  }
+
+  async confirmSubscriptionEnd(userId: string, subscriptionId: string) {
+    return this.subscriptionEnd.confirmEnd(
+      subscriptionId,
+      UserRole.DISTRIBUTOR,
+      userId,
+    );
+  }
+
+  async rejectSubscriptionEnd(userId: string, subscriptionId: string) {
+    return this.subscriptionEnd.rejectEnd(
+      subscriptionId,
+      UserRole.DISTRIBUTOR,
+      userId,
+    );
+  }
+
+  async getSubscriptionEndStatus(userId: string, subscriptionId: string) {
+    return this.subscriptionEnd.getEndRequest(
+      subscriptionId,
+      UserRole.DISTRIBUTOR,
+      userId,
+    );
   }
 
   async previewSubscription(

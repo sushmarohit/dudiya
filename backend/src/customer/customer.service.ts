@@ -16,6 +16,7 @@ import {
 import { NotificationService } from '../notification/notification.service';
 import { PhoneValidationService } from '../common/services/phone-validation.service';
 import { SubscriptionScheduleService } from '../subscription/subscription-schedule.service';
+import { SubscriptionEndService } from '../subscription/subscription-end.service';
 import { ReadinessService } from '../distributor/readiness.service';
 import { IdentityService } from '../identity/identity.service';
 import { ApiErrorCode } from '../common/errors/api-error-code.enum';
@@ -49,6 +50,7 @@ export class CustomerService {
     private notifications: NotificationService,
     private catalog: CatalogService,
     private identity: IdentityService,
+    private subscriptionEnd: SubscriptionEndService,
   ) {}
 
   private async getProfileByUserId(userId: string) {
@@ -316,6 +318,11 @@ export class CustomerService {
     if (!live) {
       throwApi(ApiErrorCode.DISTRIBUTOR_NOT_ACCEPTING, HttpStatus.BAD_REQUEST);
     }
+
+    await this.subscriptionEnd.assertNoActiveSubscription(
+      dto.distributorId,
+      profile.id,
+    );
 
     await this.catalog.assertDistributorCanUseProduct(
       dto.distributorId,
@@ -623,6 +630,39 @@ export class CustomerService {
       dates: dates.map(formatDateKey),
       pausedDates,
     };
+  }
+
+  async requestSubscriptionEnd(userId: string, subscriptionId: string, reason?: string) {
+    return this.subscriptionEnd.requestEnd(
+      subscriptionId,
+      UserRole.CUSTOMER,
+      userId,
+      reason,
+    );
+  }
+
+  async confirmSubscriptionEnd(userId: string, subscriptionId: string) {
+    return this.subscriptionEnd.confirmEnd(
+      subscriptionId,
+      UserRole.CUSTOMER,
+      userId,
+    );
+  }
+
+  async rejectSubscriptionEnd(userId: string, subscriptionId: string) {
+    return this.subscriptionEnd.rejectEnd(
+      subscriptionId,
+      UserRole.CUSTOMER,
+      userId,
+    );
+  }
+
+  async getSubscriptionEndStatus(userId: string, subscriptionId: string) {
+    return this.subscriptionEnd.getEndRequest(
+      subscriptionId,
+      UserRole.CUSTOMER,
+      userId,
+    );
   }
 
   private async assertBeforeCutoff(distributorId: string) {

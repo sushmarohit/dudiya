@@ -10,7 +10,11 @@ export type SubscriptionFrequency =
   | "WEEKDAYS"
   | "WEEKLY"
   | "MONTHLY";
-export type SubscriptionStatus = "ACTIVE" | "PAUSED" | "CANCELLED";
+export type SubscriptionStatus =
+  | "ACTIVE"
+  | "PAUSED"
+  | "PENDING_CANCEL"
+  | "CANCELLED";
 export type DeliveryItemStatus = "PENDING" | "DELIVERED" | "SKIPPED" | "FAILED";
 export type BillStatus =
   | "DRAFT"
@@ -361,6 +365,7 @@ export interface Bill {
   status: BillStatus;
   dueDate?: string | null;
   issuedAt?: string | null;
+  isSettlement?: boolean;
   lineItems?: BillLineItem[];
   payments?: Payment[];
   billAdjustments?: BillAdjustment[];
@@ -368,6 +373,48 @@ export interface Bill {
     user?: { name: string; phone?: string | null };
   };
   distributor?: { businessName: string };
+}
+
+export interface SettlementPreview {
+  periodStart: string;
+  periodEnd: string;
+  deliveryCount: number;
+  subtotal: number;
+  total: number;
+  lines: Array<{
+    deliveryItemId: string;
+    deliveryDate: string;
+    productId: string;
+    productName: string;
+    quantity: number;
+    unitPrice: number;
+    lineTotal: number;
+  }>;
+}
+
+export interface SubscriptionEndRequest {
+  id: string;
+  subscriptionId: string;
+  initiatedBy: "CUSTOMER" | "DISTRIBUTOR";
+  reason?: string | null;
+  status: RequestStatus;
+  customerConfirmedAt?: string | null;
+  distributorConfirmedAt?: string | null;
+  settlementBillId?: string | null;
+  settledAt?: string | null;
+  settlementBill?: Bill | null;
+  createdAt: string;
+}
+
+export interface SubscriptionEndStatus {
+  subscription: {
+    id: string;
+    status: SubscriptionStatus;
+    productName: string;
+    endedAt?: string | null;
+  };
+  endRequest: SubscriptionEndRequest | null;
+  settlementPreview: SettlementPreview;
 }
 
 export interface BillingSettings {

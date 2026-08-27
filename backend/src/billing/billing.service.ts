@@ -504,7 +504,9 @@ export class BillingService {
     const chunks: Buffer[] = [];
     doc.on('data', (chunk) => chunks.push(chunk));
 
-    doc.fontSize(18).text('Invoice', { align: 'center' });
+    doc.fontSize(18).text(bill.isSettlement ? 'Settlement Invoice' : 'Invoice', {
+      align: 'center',
+    });
     doc.moveDown();
     doc.fontSize(12).text(`Bill ID: ${bill.id}`);
     doc.text(`Period: ${bill.cycleStart.toISOString().split('T')[0]} – ${bill.cycleEnd.toISOString().split('T')[0]}`);
@@ -522,6 +524,176 @@ export class BillingService {
     doc.end();
     await new Promise<void>((resolve) => doc.on('end', resolve));
     return Buffer.concat(chunks);
+  }
+
+  /**
+   * Settlement period:
+   * - start = day after last non-VOID bill cycleEnd for this customer+distributor,
+   *           else billingActivationDate / startDate of the subscription
+   * - end   = last DELIVERED delivery date for this subscription (or start if none)
+   * Only unbilled DELIVERED items for this subscription are included.
+   */
+  async previewSettlementBill(subscriptionId: string) {
+    const { periodStart, periodEnd, items, lineData, subtotal } =
+      await this.buildSettlementLines(subscriptionId);
+    return {
+      periodStart,
+      periodEnd,
+      deliveryCount: items.length,
+      subtotal: Number(subtotal.toFixed(2)),
+      total: Number(subtotal.toFixed(2)),
+      lines: lineData.map((l) => ({
+        deliveryItemId: l.item.id,
+        deliveryDate: l.item.deliveryDate,
+        productId: l.item.productId,
+        productName: l.item.product.name,
+        quantity: l.qty,
+        unitPrice: Number(l.unitPrice.toFixed(2)),
+        lineTotal: Number(l.lineTotal.toFixed(2)),
+      })),
+    };
+  }
+
+  async createSettlementBill(subscriptionId: string) {
+    const sub = await this.prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+      include: {
+        distributor: true,
+        customer: { include: { user: true } },
+        product: true,
+      },
+    });
+    if (!sub) {
+      throwApi(ApiErrorCode.SUBSCRIPTION_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+
+    const { periodStart, periodEnd, items, lineData, subtotal } =
+      await this.buildSettlementLines(subscriptionId);
+
+    if (items.length === 0) {
+      return null;
+    }
+
+    const adjustments = new Decimal(0);
+    const total = subtotal.add(adjustments);
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + sub.distributor.billingDueDays);
+
+    const bill = await this.prisma.bill.create({
+      data: {
+        distributorId: sub.distributorId,
+        customerId: sub.customerId,
+        cycleStart: periodStart,
+        cycleEnd: periodEnd,
+        subtotal,
+        adjustments,
+        total,
+        amountPaid: new Decimal(0),
+        status: BillStatus.ISSUED,
+        dueDate,
+        issuedAt: new Date(),
+        isSettlement: true,
+        lineItems: {
+          create: lineData.map((l) => ({
+            productId: l.item.productId,
+            deliveryDate: l.item.deliveryDate,
+            quantity: l.qty,
+            unitPrice: l.unitPrice,
+            lineTotal: l.lineTotal,
+            deliveryItemId: l.item.id,
+          })),
+        },
+      },
+      include: { lineItems: true },
+    });
+
+    await this.notifications.create({
+      userId: sub.customer.user.id,
+      type: NotificationType.BILL_GENERATED,
+      title: 'Settlement invoice issued',
+      body: `Final settlement for ${sub.product.name}: ₹${formatMoney(total)} (${periodStart.toISOString().slice(0, 10)} – ${periodEnd.toISOString().slice(0, 10)}).`,
+      payload: { billId: bill.id, subscriptionId, settlement: true },
+      eventId: `settlement-bill:${bill.id}`,
+    });
+
+    await this.audit.log(
+      sub.distributor.userId,
+      'SETTLEMENT_BILL_CREATED',
+      'bill',
+      bill.id,
+      { subscriptionId, total: decimalToNumber(total) },
+    );
+
+    return bill;
+  }
+
+  private async buildSettlementLines(subscriptionId: string) {
+    const sub = await this.prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+    });
+    if (!sub) {
+      throwApi(ApiErrorCode.SUBSCRIPTION_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+
+    const lastBill = await this.prisma.bill.findFirst({
+      where: {
+        distributorId: sub.distributorId,
+        customerId: sub.customerId,
+        status: { not: BillStatus.VOID },
+      },
+      orderBy: { cycleEnd: 'desc' },
+    });
+
+    let periodStart: Date;
+    if (lastBill) {
+      periodStart = startOfDay(lastBill.cycleEnd);
+      periodStart.setDate(periodStart.getDate() + 1);
+    } else {
+      periodStart = startOfDay(sub.billingActivationDate ?? sub.startDate);
+    }
+
+    const items = await this.prisma.deliveryItem.findMany({
+      where: {
+        subscriptionId,
+        status: DeliveryItemStatus.DELIVERED,
+        deliveryDate: { gte: periodStart },
+        billLineItems: { none: {} },
+      },
+      include: {
+        product: true,
+        subscription: true,
+      },
+      orderBy: { deliveryDate: 'asc' },
+    });
+
+    let periodEnd = periodStart;
+    if (items.length > 0) {
+      const lastDate = items[items.length - 1].deliveryDate;
+      periodEnd = startOfDay(lastDate);
+      periodEnd.setHours(23, 59, 59, 999);
+    }
+
+    const lineData: Array<{
+      item: (typeof items)[0];
+      unitPrice: Decimal;
+      qty: number;
+      lineTotal: Decimal;
+    }> = [];
+
+    for (const item of items) {
+      const unitPrice = await this.resolveUnitPrice(
+        sub.distributorId,
+        item.productId,
+        item.subscription.fatPercent,
+        item.deliveryDate,
+      );
+      const qty = item.deliveredQty ?? item.plannedQty;
+      const lineTotal = unitPrice.mul(qty);
+      lineData.push({ item, unitPrice, qty, lineTotal });
+    }
+
+    const subtotal = sumDecimals(lineData.map((l) => l.lineTotal));
+    return { periodStart, periodEnd, items, lineData, subtotal };
   }
 
   async markOverdueBills() {

@@ -13,12 +13,14 @@ import { DeliverySlotSelect } from "@/components/forms/delivery-slot-select";
 import {
   useDistributorDetail,
   useCreateCustomerSubscription,
+  useCustomerSubscriptions,
 } from "@/hooks/use-customer";
 import { useFormSchemas } from "@/hooks/use-form-schemas";
 import type { SubscriptionFrequency } from "@/types";
 import { useApiErrorMessage } from "@/hooks/use-api-error-message";
 import { showToast } from "@/components/providers";
 import { formatCurrency } from "@/lib/utils";
+import { Link } from "@/i18n/navigation";
 
 const FREQUENCY_MESSAGE_KEYS: Record<SubscriptionFrequency, string> = {
   DAILY: "daily",
@@ -40,8 +42,19 @@ export default function SubscribePage({
   const tSubscription = useTranslations("subscription");
   const getApiErrorMessage = useApiErrorMessage();
   const { data: distributor, isLoading } = useDistributorDetail(distributorId);
+  const { data: mySubscriptions } = useCustomerSubscriptions();
   const createSubscription = useCreateCustomerSubscription();
   const schemas = useFormSchemas();
+
+  const existingActive = useMemo(
+    () =>
+      mySubscriptions?.find(
+        (s) =>
+          s.distributorId === distributorId &&
+          (s.status === "ACTIVE" || s.status === "PENDING_CANCEL"),
+      ),
+    [mySubscriptions, distributorId],
+  );
 
   const {
     register,
@@ -93,6 +106,30 @@ export default function SubscribePage({
 
   if (isLoading) {
     return <p className="text-slate-500">{tCommon("loading")}</p>;
+  }
+
+  if (existingActive) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">
+            {tCustomer("subscribe.title")}
+          </h1>
+        </div>
+        <Card className="max-w-lg border-amber-200 bg-amber-50">
+          <CardContent className="space-y-3 py-6">
+            <p className="text-sm text-amber-900">
+              {existingActive.status === "PENDING_CANCEL"
+                ? tCustomer("subscribe.endPending")
+                : tCustomer("subscribe.alreadyActive")}
+            </p>
+            <Link href={`/customer/subscriptions/${existingActive.id}`}>
+              <Button>{tCustomer("subscribe.manageExisting")}</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   const slots = distributor?.deliverySlots?.filter((s) => s.active) || [];

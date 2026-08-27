@@ -14,6 +14,7 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "back": "Back",
+    "view": "View",
     "edit": "Edit",
     "create": "Create",
     "delete": "Delete",
@@ -465,7 +466,8 @@
       "createSubscription": "Create subscription",
       "pauseSubscription": "Pause subscription",
       "resumeSubscription": "Resume subscription",
-      "extraMilkRequest": "Extra milk request"
+      "extraMilkRequest": "Extra milk request",
+      "detailTitle": "Subscription details"
     },
     "settings": {
       "title": "Distributor settings",
@@ -500,7 +502,10 @@
       "chooseSlot": "Choose delivery slot",
       "confirmSubscription": "Confirm subscription",
       "subscriptionCreated": "Subscription created",
-      "fatFromDistributor": "Fat {fat}% · {price}/unit (set by distributor)"
+      "fatFromDistributor": "Fat {fat}% · {price}/unit (set by distributor)",
+      "alreadyActive": "You already have an active subscription with this distributor. End it before starting a new one.",
+      "endPending": "A subscription end request is pending with this distributor. Finish or wait for confirmation before starting a new one.",
+      "manageExisting": "Manage existing subscription"
     },
     "subscriptions": {
       "list": {
@@ -634,6 +639,11 @@
     "IDENTITY_DOCUMENT_NOT_FOUND": "Identity document not found.",
     "IDENTITY_NAME_MISMATCH": "The name on the document does not match your registered name.",
     "IDENTITY_NOT_VERIFIED": "Upload at least one verified identity document to continue.",
+    "SUBSCRIPTION_ALREADY_ACTIVE": "You already have an active subscription with this distributor. End it before starting a new one.",
+    "SUBSCRIPTION_END_PENDING": "A subscription end request is already pending confirmation.",
+    "SUBSCRIPTION_END_NOT_PENDING": "There is no pending end request for this subscription.",
+    "SUBSCRIPTION_END_ALREADY_CONFIRMED": "You have already confirmed this end request.",
+    "SUBSCRIPTION_END_NOT_ALLOWED": "This subscription end action is not allowed.",
     "GENERIC": "Something went wrong. Please try again."
   },
   "identity": {
@@ -671,6 +681,38 @@
       "PAN": "PAN card",
       "OTHER": "Other ID"
     }
+  },
+  "subscriptionEnd": {
+    "title": "End subscription",
+    "description": "Ending requires confirmation from both customer and distributor. A settlement invoice covers unbilled deliveries from the last bill (or start) through the last delivered date.",
+    "settlementPreview": "Settlement preview",
+    "period": "Period",
+    "deliveries": "Deliveries",
+    "total": "Total due",
+    "reason": "Reason (optional)",
+    "reasonPlaceholder": "Why are you ending this subscription?",
+    "requestEnd": "Request end & settlement",
+    "requestTitle": "Request to end subscription?",
+    "requestDescription": "The other party must confirm. After both confirm, deliveries stop and a settlement invoice is issued.",
+    "requestConfirm": "Send request",
+    "requestSent": "End request sent. Waiting for the other party.",
+    "pendingBanner": "End request pending — both parties must confirm.",
+    "initiatedBy": "Initiated by",
+    "yourConfirm": "Your confirmation",
+    "otherConfirm": "Other party",
+    "yes": "Yes",
+    "no": "Pending",
+    "confirmTitle": "Confirm end & settle?",
+    "confirmDescription": "This will close the subscription and issue the settlement invoice for delivered, unbilled milk.",
+    "confirmAction": "Confirm & settle",
+    "confirmed": "Subscription ended and settlement completed.",
+    "rejectTitle": "Reject end request?",
+    "rejectDescription": "The subscription will stay active.",
+    "rejectAction": "Reject",
+    "rejected": "End request rejected. Subscription remains active.",
+    "ended": "This subscription has ended.",
+    "viewSettlement": "View settlement invoice",
+    "noSettlementNeeded": "No unbilled deliveries — no settlement invoice was needed."
   },
   "subscription": {
     "frequencies": {

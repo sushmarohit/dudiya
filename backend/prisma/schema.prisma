@@ -46,7 +46,13 @@ enum SubscriptionFrequency {
 enum SubscriptionStatus {
   ACTIVE
   PAUSED
+  PENDING_CANCEL
   CANCELLED
+}
+
+enum EndRequestInitiator {
+  CUSTOMER
+  DISTRIBUTOR
 }
 
 enum RequestStatus {
@@ -157,6 +163,9 @@ enum NotificationType {
   DISTRIBUTOR_APPROVED
   DELIVERY_FAILED_SKIPPED
   DELIVERY_REMINDER
+  SUBSCRIPTION_END_REQUESTED
+  SUBSCRIPTION_END_CONFIRMED
+  SUBSCRIPTION_END_REJECTED
 }
 
 model User {
@@ -415,6 +424,7 @@ model Subscription {
   createdVia            OnboardedVia          @map("created_via")
   billingActivationDate DateTime?             @map("billing_activation_date")
   fatPercent            Float?                @map("fat_percent")
+  endedAt               DateTime?             @map("ended_at")
   createdAt             DateTime              @default(now()) @map("created_at")
   updatedAt             DateTime              @updatedAt @map("updated_at")
 
@@ -425,9 +435,31 @@ model Subscription {
   pauses      SubscriptionPause[]
   extras      SubscriptionExtra[]
   deliveryItems DeliveryItem[]
+  endRequests SubscriptionEndRequest[]
 
+  @@index([distributorId, customerId, status])
   @@index([distributorId, status, startDate])
   @@map("subscriptions")
+}
+
+model SubscriptionEndRequest {
+  id                     String              @id @default(cuid())
+  subscriptionId         String              @map("subscription_id")
+  initiatedBy            EndRequestInitiator @map("initiated_by")
+  reason                 String?
+  status                 RequestStatus       @default(PENDING)
+  customerConfirmedAt    DateTime?           @map("customer_confirmed_at")
+  distributorConfirmedAt DateTime?           @map("distributor_confirmed_at")
+  settlementBillId       String?             @unique @map("settlement_bill_id")
+  settledAt              DateTime?           @map("settled_at")
+  createdAt              DateTime            @default(now()) @map("created_at")
+  updatedAt              DateTime            @updatedAt @map("updated_at")
+
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  settlementBill Bill?        @relation(fields: [settlementBillId], references: [id])
+
+  @@index([subscriptionId, status])
+  @@map("subscription_end_requests")
 }
 
 model SubscriptionPause {
@@ -536,6 +568,7 @@ model Bill {
   dueDate       DateTime?  @map("due_date")
   issuedAt      DateTime?  @map("issued_at")
   voidReason    String?    @map("void_reason")
+  isSettlement  Boolean    @default(false) @map("is_settlement")
   createdAt     DateTime   @default(now()) @map("created_at")
   updatedAt     DateTime   @updatedAt @map("updated_at")
 
@@ -544,6 +577,7 @@ model Bill {
   lineItems   BillLineItem[]
   payments    Payment[]
   billAdjustments BillAdjustment[]
+  settlementForEndRequest SubscriptionEndRequest?
 
   @@index([customerId, status])
   @@index([distributorId, status])

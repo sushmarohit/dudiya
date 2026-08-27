@@ -23,6 +23,7 @@ import { formatDate } from "@/lib/utils";
 import { useApiErrorMessage } from "@/hooks/use-api-error-message";
 import { showToast } from "@/components/providers";
 import { DeliverySchedulePreview } from "@/components/subscription/delivery-schedule-preview";
+import { SubscriptionEndPanel } from "@/components/subscription/subscription-end-panel";
 
 const FREQUENCY_MESSAGE_KEYS: Record<SubscriptionFrequency, string> = {
   DAILY: "daily",
@@ -145,6 +146,12 @@ export default function SubscriptionDetailPage({
           </p>
         </CardContent>
       </Card>
+
+      <SubscriptionEndPanel
+        party="customer"
+        subscriptionId={id}
+        status={subscription.status}
+      />
 
       {subscription.status === "ACTIVE" && (
         <Card>

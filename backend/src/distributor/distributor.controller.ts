@@ -206,6 +206,34 @@ export class DistributorController {
     return this.distributorService.updateSubscription(user.id, id, dto);
   }
 
+  @Post('subscriptions/:id/end-request')
+  @UseGuards(DistributorApprovedGuard)
+  requestEnd(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: { reason?: string },
+  ) {
+    return this.distributorService.requestSubscriptionEnd(user.id, id, dto.reason);
+  }
+
+  @Post('subscriptions/:id/end-confirm')
+  @UseGuards(DistributorApprovedGuard)
+  confirmEnd(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.distributorService.confirmSubscriptionEnd(user.id, id);
+  }
+
+  @Post('subscriptions/:id/end-reject')
+  @UseGuards(DistributorApprovedGuard)
+  rejectEnd(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.distributorService.rejectSubscriptionEnd(user.id, id);
+  }
+
+  @Get('subscriptions/:id/end-status')
+  @UseGuards(DistributorApprovedGuard)
+  endStatus(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.distributorService.getSubscriptionEndStatus(user.id, id);
+  }
+
   @Get('subscriptions/:id/preview')
   @UseGuards(DistributorApprovedGuard)
   previewSubscription(

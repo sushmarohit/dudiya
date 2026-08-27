@@ -73,6 +73,7 @@ export default function DistributorSubscriptionsPage() {
                   {tCommon("status")}
                 </th>
                 <th className="px-4 py-3 font-medium text-slate-600">Start</th>
+                <th className="px-4 py-3 font-medium text-slate-600" />
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
@@ -90,6 +91,13 @@ export default function DistributorSubscriptionsPage() {
                   </td>
                   <td className="px-4 py-3">{s.status}</td>
                   <td className="px-4 py-3">{formatDate(s.startDate)}</td>
+                  <td className="px-4 py-3">
+                    <Link href={`/distributor/subscriptions/${s.id}`}>
+                      <Button size="sm" variant="outline">
+                        {tCommon("view")}
+                      </Button>
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>
