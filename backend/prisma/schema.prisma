@@ -1,0 +1,615 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  DISTRIBUTOR
+  CUSTOMER
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum SetupStatus {
+  INCOMPLETE
+  GO_LIVE
+}
+
+enum OnboardedVia {
+  DISTRIBUTOR_LED
+  SELF_SERVICE
+}
+
+enum SubscriptionFrequency {
+  DAILY
+  ALTERNATE_DAY
+  WEEKDAYS
+  WEEKLY
+  MONTHLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ProductCategory {
+  MILK
+  CURD
+  PANEER
+  EGGS
+  LASSI
+  GHEE
+  BUTTER
+  KHOYA
+}
+
+enum MilkSpecies {
+  COW
+  BUFFALO
+  GOAT
+  CAMEL
+}
+
+enum AddressType {
+  URBAN
+  RURAL
+}
+
+enum PreferredLocale {
+  en
+  hi
+}
+
+enum IdentityDocumentType {
+  AADHAAR
+  PAN
+  OTHER
+}
+
+enum IdentityDocumentStatus {
+  PENDING
+  VERIFIED
+  DECLINED
+}
+
+enum ProductPromotionStatus {
+  NONE
+  PRIVATE
+  PENDING_REVIEW
+  PROMOTED
+  REJECTED
+}
+
+enum ProductScope {
+  GLOBAL
+  DISTRIBUTOR
+}
+
+enum DeliveryItemStatus {
+  PENDING
+  DELIVERED
+  SKIPPED
+  FAILED
+}
+
+enum DeliveryRunStatus {
+  GENERATED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum BillingCycle {
+  WEEKLY
+  BI_WEEKLY
+  MONTHLY
+}
+
+enum BillStatus {
+  DRAFT
+  ISSUED
+  PARTIALLY_PAID
+  PAID
+  OVERDUE
+  VOID
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  BANK
+  OTHER
+}
+
+enum BillAdjustmentType {
+  CREDIT
+  DEBIT
+}
+
+enum NotificationType {
+  SUBSCRIPTION_ACTIVATED
+  PAUSE_APPLIED
+  EXTRA_MILK_REQUEST
+  BILL_GENERATED
+  PAYMENT_RECORDED
+  DISTRIBUTOR_APPROVED
+  DELIVERY_FAILED_SKIPPED
+  DELIVERY_REMINDER
+}
+
+model User {
+  id              String          @id @default(cuid())
+  email           String          @unique
+  phone           String?
+  passwordHash    String          @map("password_hash")
+  name            String
+  role            UserRole
+  status          UserStatus      @default(ACTIVE)
+  preferredLocale PreferredLocale @default(en) @map("preferred_locale")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  distributorProfile DistributorProfile?
+  customerProfile    CustomerProfile?
+  refreshTokens      RefreshToken[]
+  passwordResetTokens PasswordResetToken[]
+  activationTokens   ActivationToken[]
+  auditLogs          AuditLog[]
+  notifications      Notification[]
+  identityDocuments  IdentityDocument[]
+
+  @@unique([phone, role])
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
+}
+
+model ActivationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("activation_tokens")
+}
+
+model DistributorProfile {
+  id              String         @id @default(cuid())
+  userId          String         @unique @map("user_id")
+  businessName    String         @map("business_name")
+  ownerName       String?        @map("owner_name")
+  approvalStatus  ApprovalStatus @default(PENDING) @map("approval_status")
+  rejectionReason String?        @map("rejection_reason")
+  setupStatus     SetupStatus    @default(INCOMPLETE) @map("setup_status")
+  setupSteps      String[]       @default([]) @map("setup_steps")
+  serviceLat      Float?         @map("service_lat")
+  serviceLng      Float?         @map("service_lng")
+  serviceRadiusKm Float          @default(5) @map("service_radius_km")
+  addressType     AddressType    @default(URBAN) @map("address_type")
+  flatOrHouseNo   String?        @map("flat_or_house_no")
+  buildingOrSociety String?      @map("building_or_society")
+  streetOrLane    String?        @map("street_or_lane")
+  landmark        String?
+  village         String?
+  district        String?
+  state           String?
+  addressLine     String?        @map("address_line")
+  formattedAddress String?       @map("formatted_address")
+  city            String?
+  pincode         String?
+  goLiveAt        DateTime?      @map("go_live_at")
+  identityVerified Boolean       @default(false) @map("identity_verified")
+  billingCycle    BillingCycle   @default(WEEKLY) @map("billing_cycle")
+  biWeeklyAnchorDay Int?         @map("bi_weekly_anchor_day")
+  billingDueDays  Int            @default(7) @map("billing_due_days")
+  timezone        String         @default("Asia/Kolkata")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enabledProducts   DistributorProduct[]
+  pricing           Pricing[]
+  deliverySlots     DeliverySlot[]
+  distributorCustomers DistributorCustomer[]
+  subscriptions     Subscription[]
+  deliveries        Delivery[]
+  bills             Bill[]
+  ownedProducts     Product[]            @relation("DistributorOwnedProducts")
+
+  @@index([approvalStatus, setupStatus])
+  @@index([identityVerified, setupStatus])
+  @@index([serviceLat, serviceLng])
+  @@map("distributor_profiles")
+}
+
+model CustomerProfile {
+  id           String      @id @default(cuid())
+  userId       String      @unique @map("user_id")
+  addressType  AddressType @default(URBAN) @map("address_type")
+  flatOrHouseNo String?    @map("flat_or_house_no")
+  buildingOrSociety String? @map("building_or_society")
+  streetOrLane String?     @map("street_or_lane")
+  landmark     String?
+  village      String?
+  district     String?
+  state        String?
+  addressLine  String?     @map("address_line")
+  formattedAddress String?  @map("formatted_address")
+  city         String?
+  pincode      String?
+  deliveryLat  Float?      @map("delivery_lat")
+  deliveryLng  Float?      @map("delivery_lng")
+  identityVerified Boolean @default(false) @map("identity_verified")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  distributorCustomers  DistributorCustomer[]
+  subscriptions         Subscription[]
+  deliveryItems         DeliveryItem[]
+  bills                 Bill[]
+
+  @@map("customer_profiles")
+}
+
+model IdentityDocument {
+  id             String                  @id @default(cuid())
+  userId         String                  @map("user_id")
+  documentType   IdentityDocumentType    @map("document_type")
+  filePath       String                  @map("file_path")
+  mimeType       String                  @map("mime_type")
+  originalName   String?                 @map("original_name")
+  declaredName   String                  @map("declared_name")
+  matchedAgainst String                  @map("matched_against")
+  status         IdentityDocumentStatus  @default(PENDING)
+  declineReason  String?                 @map("decline_reason")
+  createdAt      DateTime                @default(now()) @map("created_at")
+  updatedAt      DateTime                @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@map("identity_documents")
+}
+
+model DistributorCustomer {
+  id             String       @id @default(cuid())
+  distributorId  String       @map("distributor_id")
+  customerId     String       @map("customer_id")
+  onboardedVia   OnboardedVia @map("onboarded_via")
+  createdAt      DateTime     @default(now()) @map("created_at")
+
+  distributor DistributorProfile @relation(fields: [distributorId], references: [id], onDelete: Cascade)
+  customer    CustomerProfile    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([distributorId, customerId])
+  @@map("distributor_customers")
+}
+
+model Product {
+  id                 String                  @id @default(cuid())
+  sku                String                  @unique
+  name               String
+  category           ProductCategory
+  species            MilkSpecies?
+  unit               String                  @default("litre")
+  active             Boolean                 @default(true)
+  scope              ProductScope            @default(GLOBAL)
+  ownerDistributorId String?                 @map("owner_distributor_id")
+  promotionStatus    ProductPromotionStatus  @default(NONE) @map("promotion_status")
+  createdAt          DateTime                @default(now()) @map("created_at")
+  updatedAt          DateTime                @updatedAt @map("updated_at")
+
+  ownerDistributor   DistributorProfile?     @relation("DistributorOwnedProducts", fields: [ownerDistributorId], references: [id], onDelete: Cascade)
+  distributorProducts DistributorProduct[]
+  pricing             Pricing[]
+  subscriptions       Subscription[]
+  deliveryItems       DeliveryItem[]
+  billLineItems         BillLineItem[]
+
+  @@index([scope, active])
+  @@index([ownerDistributorId, active])
+  @@map("products")
+}
+
+model DistributorProduct {
+  id            String @id @default(cuid())
+  distributorId String @map("distributor_id")
+  productId     String @map("product_id")
+  enabled       Boolean @default(true)
+
+  distributor DistributorProfile @relation(fields: [distributorId], references: [id], onDelete: Cascade)
+  product     Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([distributorId, productId])
+  @@map("distributor_products")
+}
+
+model Pricing {
+  id            String   @id @default(cuid())
+  distributorId String   @map("distributor_id")
+  productId     String   @map("product_id")
+  fatPercent    Float?   @map("fat_percent")
+  pricePerUnit  Float    @map("price_per_unit")
+  effectiveFrom DateTime @default(now()) @map("effective_from")
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  distributor DistributorProfile @relation(fields: [distributorId], references: [id], onDelete: Cascade)
+  product     Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([distributorId, active])
+  @@map("pricing")
+}
+
+model DeliverySlot {
+  id            String  @id @default(cuid())
+  distributorId String  @map("distributor_id")
+  label         String
+  startTime     String  @map("start_time")
+  endTime       String  @map("end_time")
+  active        Boolean @default(true)
+
+  distributor   DistributorProfile @relation(fields: [distributorId], references: [id], onDelete: Cascade)
+  subscriptions Subscription[]
+  deliveries    Delivery[]
+
+  @@map("delivery_slots")
+}
+
+model Subscription {
+  id                    String                @id @default(cuid())
+  distributorId         String                @map("distributor_id")
+  customerId            String                @map("customer_id")
+  productId             String                @map("product_id")
+  pricingId             String?               @map("pricing_id")
+  quantity              Float
+  frequency             SubscriptionFrequency
+  deliverySlotId        String                @map("delivery_slot_id")
+  startDate             DateTime              @map("start_date")
+  status                SubscriptionStatus    @default(ACTIVE)
+  createdVia            OnboardedVia          @map("created_via")
+  billingActivationDate DateTime?             @map("billing_activation_date")
+  fatPercent            Float?                @map("fat_percent")
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @updatedAt @map("updated_at")
+
+  distributor DistributorProfile @relation(fields: [distributorId], references: [id], onDelete: Cascade)
+  customer    CustomerProfile    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product     Product            @relation(fields: [productId], references: [id])
+  deliverySlot DeliverySlot      @relation(fields: [deliverySlotId], references: [id])
+  pauses      SubscriptionPause[]
+  extras      SubscriptionExtra[]
+  deliveryItems DeliveryItem[]
+
+  @@index([distributorId, status, startDate])
+  @@map("subscriptions")
+}
+
+model SubscriptionPause {
+  id             String        @id @default(cuid())
+  subscriptionId String        @map("subscription_id")
+  startDate      DateTime      @map("start_date")
+  endDate        DateTime      @map("end_date")
+  status         RequestStatus @default(APPROVED)
+  requestedAt    DateTime      @default(now()) @map("requested_at")
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@map("subscription_pauses")
+}
+
+model SubscriptionExtra {
+  id             String        @id @default(cuid())
+  subscriptionId String        @map("subscription_id")
+  date           DateTime
+  extraQuantity  Float         @map("extra_quantity")
+  status         RequestStatus @default(APPROVED)
+  requestedAt    DateTime      @default(now()) @map("requested_at")
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@map("subscription_extras")
+}
+
+model PlatformSettings {
+  id                 String @id @default("default")
+  pauseCutoffHour    Int    @default(20) @map("pause_cutoff_hour")
+  pauseCutoffMinute  Int    @default(0) @map("pause_cutoff_minute")
+  defaultRadiusKm    Float  @default(5) @map("default_radius_km")
+
+  @@map("platform_settings")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?  @map("actor_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String?  @map("entity_id")
+  payload    Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+  actor      User?    @relation(fields: [actorId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model Delivery {
+  id            String            @id @default(cuid())
+  distributorId String            @map("distributor_id")
+  deliveryDate  DateTime          @map("delivery_date")
+  slotId        String            @map("slot_id")
+  status        DeliveryRunStatus @default(GENERATED)
+  generatedAt   DateTime          @default(now()) @map("generated_at")
+
+  distributor DistributorProfile @relation(fields: [distributorId], references: [id], onDelete: Cascade)
+  slot        DeliverySlot       @relation(fields: [slotId], references: [id])
+  items       DeliveryItem[]
+
+  @@unique([distributorId, deliveryDate, slotId])
+  @@index([distributorId, deliveryDate])
+  @@map("deliveries")
+}
+
+model DeliveryItem {
+  id             String              @id @default(cuid())
+  deliveryId     String              @map("delivery_id")
+  subscriptionId String              @map("subscription_id")
+  customerId     String              @map("customer_id")
+  productId      String              @map("product_id")
+  deliveryDate   DateTime            @map("delivery_date")
+  plannedQty     Float               @map("planned_qty")
+  deliveredQty   Float?              @map("delivered_qty")
+  status         DeliveryItemStatus  @default(PENDING)
+  routeOrder     Int?                @map("route_order")
+  notes          String?
+  deliveredAt    DateTime?           @map("delivered_at")
+  createdAt      DateTime            @default(now()) @map("created_at")
+  updatedAt      DateTime            @updatedAt @map("updated_at")
+
+  delivery     Delivery          @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  subscription Subscription      @relation(fields: [subscriptionId], references: [id])
+  customer     CustomerProfile   @relation(fields: [customerId], references: [id])
+  product      Product           @relation(fields: [productId], references: [id])
+  billLineItems BillLineItem[]
+
+  @@unique([subscriptionId, productId, deliveryDate])
+  @@index([deliveryDate, customerId])
+  @@map("delivery_items")
+}
+
+model Bill {
+  id            String     @id @default(cuid())
+  distributorId String     @map("distributor_id")
+  customerId    String     @map("customer_id")
+  cycleStart    DateTime   @map("cycle_start")
+  cycleEnd      DateTime   @map("cycle_end")
+  subtotal      Decimal    @map("subtotal") @db.Decimal(10, 2)
+  adjustments   Decimal    @default(0) @map("adjustments") @db.Decimal(10, 2)
+  total         Decimal    @map("total") @db.Decimal(10, 2)
+  amountPaid    Decimal    @default(0) @map("amount_paid") @db.Decimal(10, 2)
+  status        BillStatus @default(DRAFT)
+  dueDate       DateTime?  @map("due_date")
+  issuedAt      DateTime?  @map("issued_at")
+  voidReason    String?    @map("void_reason")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  distributor DistributorProfile @relation(fields: [distributorId], references: [id], onDelete: Cascade)
+  customer    CustomerProfile    @relation(fields: [customerId], references: [id])
+  lineItems   BillLineItem[]
+  payments    Payment[]
+  billAdjustments BillAdjustment[]
+
+  @@index([customerId, status])
+  @@index([distributorId, status])
+  @@map("bills")
+}
+
+model BillLineItem {
+  id              String   @id @default(cuid())
+  billId          String   @map("bill_id")
+  productId       String   @map("product_id")
+  deliveryDate    DateTime @map("delivery_date")
+  quantity        Float
+  unitPrice       Decimal  @map("unit_price") @db.Decimal(10, 2)
+  lineTotal       Decimal  @map("line_total") @db.Decimal(10, 2)
+  deliveryItemId  String?  @map("delivery_item_id")
+
+  bill         Bill          @relation(fields: [billId], references: [id], onDelete: Cascade)
+  product      Product       @relation(fields: [productId], references: [id])
+  deliveryItem DeliveryItem? @relation(fields: [deliveryItemId], references: [id])
+
+  @@map("bill_line_items")
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  billId      String        @map("bill_id")
+  amount      Decimal       @db.Decimal(10, 2)
+  method      PaymentMethod
+  reference   String?
+  paymentDate DateTime      @default(now()) @map("payment_date")
+  recordedBy  String        @map("recorded_by")
+  createdAt   DateTime      @default(now()) @map("created_at")
+
+  bill Bill @relation(fields: [billId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model BillAdjustment {
+  id        String             @id @default(cuid())
+  billId    String             @map("bill_id")
+  type      BillAdjustmentType
+  amount    Decimal            @db.Decimal(10, 2)
+  reason    String
+  createdBy String             @map("created_by")
+  createdAt DateTime           @default(now()) @map("created_at")
+
+  bill Bill @relation(fields: [billId], references: [id], onDelete: Cascade)
+
+  @@map("bill_adjustments")
+}
+
+model Notification {
+  id          String            @id @default(cuid())
+  userId      String            @map("user_id")
+  type        NotificationType
+  title       String
+  body        String
+  payloadJson Json?             @map("payload_json")
+  eventId     String?           @map("event_id")
+  readAt      DateTime?         @map("read_at")
+  createdAt   DateTime          @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([userId, readAt, createdAt(sort: Desc)])
+  @@map("notifications")
+}

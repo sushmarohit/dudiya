@@ -1,0 +1,698 @@
+{
+  "common": {
+    "appName": "MilkFlow",
+    "signIn": "साइन इन करें",
+    "signOut": "साइन आउट करें",
+    "getStarted": "शुरू करें",
+    "createAccount": "खाता बनाएं",
+    "creatingAccount": "खाता बनाया जा रहा है...",
+    "sending": "भेजा जा रहा है...",
+    "resetting": "रीसेट किया जा रहा है...",
+    "activating": "सक्रिय किया जा रहा है...",
+    "loading": "लोड हो रहा है...",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "confirm": "पुष्टि करें",
+    "back": "वापस",
+    "edit": "संपादित करें",
+    "create": "बनाएं",
+    "delete": "हटाएं",
+    "remove": "हटाएँ",
+    "search": "खोजें",
+    "submit": "सबमिट करें",
+    "tryAgain": "फिर प्रयास करें",
+    "saved": "सफलतापूर्वक सहेजा गया",
+    "deleted": "सफलतापूर्वक हटाया गया",
+    "updated": "सफलतापूर्वक अपडेट किया गया",
+    "created": "सफलतापूर्वक बनाया गया",
+    "confirmDeleteTitle": "क्या आप सुनिश्चित हैं?",
+    "confirmDeleteDescription": "यह क्रिया पूर्ववत नहीं की जा सकती।",
+    "confirmActionTitle": "कार्रवाई की पुष्टि करें",
+    "confirmGoLiveTitle": "लाइव हों?",
+    "confirmGoLiveDescription": "आपकी वितरक प्रोफ़ाइल ग्राहकों को दिखाई देगी।",
+    "confirmSuspendTitle": "वितरक निलंबित करें?",
+    "confirmSuspendDescription": "निलंबन हटाए जाने तक वे संचालन नहीं कर पाएंगे।",
+    "confirmApproveTitle": "वितरक स्वीकृत करें?",
+    "confirmApproveDescription": "वे सेटअप पूरा करके लाइव हो सकेंगे।",
+    "confirmDeactivateTitle": "निष्क्रिय करें?",
+    "confirmDeactivateDescription": "यह आइटम अब उपलब्ध नहीं रहेगा।",
+    "confirmRemoveSlotTitle": "डिलीवरी स्लॉट हटाएँ?",
+    "confirmRemoveSlotDescription": "इस स्लॉट का उपयोग करने वाले ग्राहक प्रभावित हो सकते हैं।",
+    "confirmMarkDeliveredTitle": "सभी को डिलीवर्ड चिह्नित करें?",
+    "confirmMarkDeliveredDescription": "आज के रूट के सभी स्टॉप अपडेट हो जाएंगे।",
+    "confirmRunBillingTitle": "बिलिंग चक्र चलाएँ?",
+    "confirmRunBillingDescription": "चयनित अवधि के लिए बिल जनरेट होंगे।",
+    "pageNotFound": "पृष्ठ नहीं मिला",
+    "pageNotFoundDescription": "यह पृष्ठ मौजूद नहीं है। आपको जल्द ही होम पेज पर भेजा जाएगा।",
+    "backToHome": "होम पर वापस जाएं",
+    "somethingWrong": "कुछ गलत हो गया",
+    "errorDescription": "एक अप्रत्याशित त्रुटि हुई। कृपया पुनः प्रयास करें।",
+    "skipToContent": "मुख्य सामग्री पर जाएं",
+    "openMenu": "मेनू खोलें",
+    "closeMenu": "मेनू बंद करें",
+    "localeEn": "अंग्रेजी",
+    "localeHi": "हिंदी",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "showPassword": "पासवर्ड दिखाएं",
+    "hidePassword": "पासवर्ड छिपाएं",
+    "phone": "फोन",
+    "name": "नाम",
+    "quantity": "मात्रा",
+    "frequency": "आवृत्ति",
+    "status": "स्थिति",
+    "city": "शहर",
+    "pincode": "पिनकोड",
+    "fullName": "पूरा नाम",
+    "businessName": "व्यवसाय का नाम",
+    "ownerName": "स्वामी का नाम",
+    "yourName": "आपका नाम",
+    "product": "उत्पाद",
+    "deliverySlot": "डिलीवरी स्लॉट",
+    "startDate": "आरंभ तिथि",
+    "endDate": "समाप्ति तिथि",
+    "date": "तिथि",
+    "fatPercent": "वसा प्रतिशत",
+    "statuses": {
+      "active": "सक्रिय",
+      "pending": "लंबित",
+      "suspended": "निलंबित"
+    },
+    "onboardedVia": {
+      "self": "स्वयं पंजीकृत",
+      "distributor": "वितरक द्वारा जोड़ा गया",
+      "admin": "एडमिन द्वारा जोड़ा गया",
+      "import": "आयातित"
+    }
+  },
+  "landing": {
+    "hero": {
+      "title": "ताजा दूध डिलीवरी,",
+      "titleHighlight": " सरल बनाई गई",
+      "description": "स्थानीय दूध वितरकों को ग्राहकों से जोड़ें। सदस्यताएं, डिलीवरी स्लॉट और मूल्य निर्धारण - सब कुछ एक ही प्लेटफॉर्म पर प्रबंधित करें।",
+      "customerCta": "दूध डिलीवरी प्राप्त करें",
+      "distributorCta": "मैं वितरक हूं"
+    },
+    "features": {
+      "customers": {
+        "title": "ग्राहकों के लिए",
+        "description": "नजदीकी वितरक खोजें, मूल्य तुलना करें और लचीली आवृत्तियों के साथ दैनिक दूध डिलीवरी की सदस्यता लें।",
+        "cta": "ग्राहक के रूप में पंजीकरण करें"
+      },
+      "distributors": {
+        "title": "वितरकों के लिए",
+        "description": "अपना कैटलॉग, मूल्य मैट्रिक्स, डिलीवरी स्लॉट सेट करें और ग्राहकों को जोड़ें - या उन्हें स्वयं सदस्यता लेने दें।",
+        "cta": "वितरक के रूप में पंजीकरण करें"
+      },
+      "subscriptionEngine": {
+        "title": "सदस्यता इंजन",
+        "description": "दैनिक, एक दिन छोड़कर, कार्यदिवस, साप्ताहिक या मासिक - रोकने और अतिरिक्त दूध अनुरोध की सुविधा सहित।",
+        "cta": "प्रबंधन के लिए साइन इन करें"
+      }
+    },
+    "footer": {
+      "text": "MilkFlow - दूध वितरण SaaS · चरण 1"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "फिर से स्वागत है",
+      "description": "अपने MilkFlow खाते में साइन इन करें",
+      "button": "साइन इन करें",
+      "forgotPassword": "पासवर्ड भूल गए?",
+      "noAccount": "खाता नहीं है?",
+      "registerLink": "खाता बनाएं"
+    },
+    "register": {
+      "title": "अपना खाता बनाएं",
+      "description": "चुनें कि आप MilkFlow का उपयोग कैसे करना चाहते हैं",
+      "customerTitle": "ग्राहक खाता",
+      "customerDescription": "वितरक खोजें और अपनी दूध सदस्यताएं प्रबंधित करें।",
+      "distributorTitle": "वितरक खाता",
+      "distributorDescription": "उत्पाद, डिलीवरी स्लॉट, ग्राहक और सदस्यताएं प्रबंधित करें।",
+      "customerButton": "ग्राहक के रूप में पंजीकरण करें",
+      "distributorButton": "वितरक के रूप में पंजीकरण करें",
+      "hasAccount": "पहले से खाता है?",
+      "loginLink": "साइन इन करें",
+      "backToRoleSelection": "भूमिका चयन पर वापस जाएं"
+    },
+    "customerRegistration": {
+      "title": "ग्राहक पंजीकरण",
+      "description": "अपना खाता बनाएं, अपना पता (शहरी या गांव) दर्ज करें, और मानचित्र पर अपना डिलीवरी स्थान पिन करें।"
+    },
+    "distributorRegistration": {
+      "title": "वितरक पंजीकरण",
+      "description": "अपना दूध वितरण व्यवसाय पंजीकृत करें। लाइव होने से पहले एडमिन स्वीकृति आवश्यक है।",
+      "success": "पंजीकरण सफल! रीडायरेक्ट किया जा रहा है..."
+    },
+    "forgot": {
+      "title": "पासवर्ड भूल गए",
+      "description": "अपना ईमेल दर्ज करें और हम पासवर्ड रीसेट निर्देश भेजेंगे।",
+      "button": "रीसेट लिंक भेजें",
+      "backToLogin": "साइन इन पर वापस जाएं",
+      "emailSent": "पासवर्ड रीसेट निर्देश भेज दिए गए हैं।"
+    },
+    "reset": {
+      "title": "पासवर्ड रीसेट करें",
+      "description": "अपने MilkFlow खाते के लिए नया पासवर्ड बनाएं।",
+      "newPassword": "नया पासवर्ड",
+      "confirmPassword": "पासवर्ड की पुष्टि करें",
+      "button": "पासवर्ड रीसेट करें",
+      "success": "आपका पासवर्ड रीसेट कर दिया गया है।",
+      "invalidToken": "रीसेट टोकन अमान्य या गायब है।",
+      "invalidLink": "रीसेट लिंक अमान्य है। कृपया पासवर्ड भूल गए पेज से नया अनुरोध करें।"
+    },
+    "activate": {
+      "title": "खाता सक्रिय करें",
+      "description": "अपना MilkFlow खाता सक्रिय करने के लिए पासवर्ड सेट करें।",
+      "button": "खाता सक्रिय करें",
+      "success": "आपका खाता सक्रिय है। अब आप साइन इन कर सकते हैं।",
+      "expired": "यह सक्रियण लिंक समाप्त हो गया है।",
+      "invalidToken": "सक्रियण टोकन अमान्य या गायब है।",
+      "invalidLink": "सक्रियण लिंक अमान्य है। कृपया नए आमंत्रण के लिए अपने वितरक से संपर्क करें।",
+      "alreadyActivated": "पहले से सक्रिय है? साइन इन करें"
+    }
+  },
+  "nav": {
+    "profileMenu": "प्रोफाइल मेनू",
+    "notifications": "सूचनाएं",
+    "portalTitles": {
+      "admin": "एडमिन पोर्टल",
+      "distributor": "वितरक पोर्टल",
+      "customer": "ग्राहक पोर्टल"
+    },
+    "adminNav": {
+      "dashboard": "डैशबोर्ड",
+      "verification": "सत्यापन",
+      "distributors": "वितरक",
+      "customers": "ग्राहक",
+      "subscriptions": "सदस्यताएं",
+      "products": "उत्पाद",
+      "settings": "सेटिंग्स",
+      "operations": "संचालन"
+    },
+    "distributorNav": {
+      "dashboard": "डैशबोर्ड",
+      "setup": "सेटअप",
+      "products": "उत्पाद",
+      "deliverySlots": "डिलीवरी स्लॉट",
+      "customers": "ग्राहक",
+      "subscriptions": "सदस्यताएं",
+      "deliveries": "डिलीवरी",
+      "billing": "बिलिंग",
+      "settings": "सेटिंग्स"
+    },
+    "customerNav": {
+      "profile": "प्रोफाइल",
+      "documents": "दस्तावेज़",
+      "findDistributor": "वितरक खोजें",
+      "subscriptions": "सदस्यताएं",
+      "deliveries": "डिलीवरी इतिहास",
+      "bills": "बिल"
+    }
+  },
+  "delivery": {
+    "title": "डिलीवरी",
+    "description": "दिन या महीने के अनुसार, एक ग्राहक या सभी ग्राहकों के अनुसार फ़िल्टर करें, फिर CSV निर्यात करें।",
+    "generate": "सूची बनाएं",
+    "markAllDelivered": "सभी डिलीवर चिह्नित करें",
+    "markDelivered": "डिलीवर",
+    "exportCsv": "CSV निर्यात",
+    "exportReady": "CSV डाउनलोड हो गया",
+    "allSlots": "सभी स्लॉट",
+    "allCustomers": "सभी ग्राहक",
+    "filterByDay": "दिन के अनुसार",
+    "filterByMonth": "महीने के अनुसार",
+    "empty": "इस तिथि के लिए कोई डिलीवरी नहीं। पहले सूची बनाएं।",
+    "emptyRange": "इस फ़िल्टर के लिए कोई डिलीवरी नहीं।",
+    "loadFailed": "डिलीवरी लोड नहीं हो सकी।",
+    "historyTitle": "डिलीवरी इतिहास",
+    "historyDescription": "पिछली डिलीवरी स्थिति और मात्रा देखें।",
+    "planned": "नियोजित",
+    "delivered": "डिलीवर"
+  },
+  "billing": {
+    "title": "बिलिंग",
+    "description": "चालान, भुगतान, और बिलिंग चक्र।",
+    "runCycle": "बिलिंग चक्र चलाएं",
+    "settings": "सेटिंग्स",
+    "dues": "बकाया राशि",
+    "empty": "अभी कोई बिल नहीं।",
+    "cycle": "चक्र",
+    "total": "कुल",
+    "paid": "भुगतान",
+    "balance": "बकाया",
+    "billDetail": "बिल विवरण",
+    "downloadPdf": "PDF डाउनलोड",
+    "recordPayment": "भुगतान दर्ज करें",
+    "amount": "राशि",
+    "method": "विधि",
+    "lineTotal": "पंक्ति कुल",
+    "settingsTitle": "बिलिंग सेटिंग्स",
+    "settingsDescription": "बिलिंग चक्र और देय दिन कॉन्फ़िगर करें।",
+    "billingCycle": "बिलिंग चक्र",
+    "dueDays": "जारी होने के बाद देय दिन",
+    "duesTitle": "बकाया राशि",
+    "duesDescription": "अवैतनिक शेष वाले ग्राहक।",
+    "outstanding": "बकाया",
+    "customerTitle": "आपके बिल",
+    "customerDescription": "चालान देखें और PDF डाउनलोड करें।",
+    "distributor": "वितरक"
+  },
+  "notifications": {
+    "title": "सूचनाएं",
+    "description": "डिलीवरी, बिल, और सदस्यता पर अपडेट।",
+    "markRead": "पढ़ा चिह्नित करें",
+    "markAllRead": "सभी पढ़ा चिह्नित करें"
+  },
+  "admin": {
+    "dashboard": {
+      "title": "एडमिन डैशबोर्ड",
+      "description": "वितरकों, ग्राहकों, सदस्यताओं और प्लेटफॉर्म गतिविधि की निगरानी करें।",
+      "kpis": {
+        "totalDistributors": "कुल वितरक",
+        "pendingVerifications": "लंबित सत्यापन",
+        "totalCustomers": "कुल ग्राहक",
+        "activeSubscriptions": "सक्रिय सदस्यताएं",
+        "monthlyRevenue": "मासिक राजस्व",
+        "deliveryVolume": "डिलीवरी मात्रा"
+      }
+    },
+    "verification": {
+      "title": "पहचान अवलोकन",
+      "description": "वितरकों को अब एडमिन स्वीकृति का इंतजार नहीं करना है। पहचान दस्तावेज़ नाम मिलान से स्वतः सत्यापित होते हैं। आवश्यकता होने पर वितरक सूची से खाता निलंबित करें।",
+      "approve": "वितरक स्वीकृत करें",
+      "reject": "वितरक अस्वीकार करें",
+      "pending": "कोई पुराना लंबित आवेदन नहीं",
+      "approved": "सत्यापित वितरक",
+      "rejected": "अस्वीकृत वितरक",
+      "deprecatedNotice": "पंजीकरण स्वीकृति अब आवश्यक नहीं है। नाम मिलान वाले दस्तावेज़ और सेटअप पूरा होने के बाद वितरक ग्राहकों को दिखते हैं।",
+      "identityVerified": "पहचान सत्यापित",
+      "identityUnverified": "पहचान असत्यापित",
+      "goToDistributors": "वितरक प्रबंधित करें"
+    },
+    "customers": {
+      "title": "ग्राहक",
+      "description": "ग्राहक प्रोफाइल, स्थान और सदस्यता गतिविधि देखें।",
+      "searchPlaceholder": "ग्राहक खोजें",
+      "customerName": "ग्राहक का नाम",
+      "joinedOn": "जुड़ने की तिथि",
+      "subscriptions": "सदस्यताएं",
+      "identity": "पहचान"
+    },
+    "distributors": {
+      "title": "वितरक",
+      "description": "वितरक खाते, पहचान स्थिति और सेवा क्षेत्रों का प्रबंधन करें।",
+      "searchPlaceholder": "वितरक खोजें",
+      "businessName": "व्यवसाय का नाम",
+      "ownerName": "स्वामी का नाम",
+      "serviceArea": "सेवा क्षेत्र",
+      "identity": "पहचान"
+    },
+    "subscriptions": {
+      "title": "सदस्यताएं",
+      "description": "सक्रिय, लंबित, रोकी गई और रद्द दूध सदस्यताओं को ट्रैक करें।",
+      "customer": "ग्राहक",
+      "distributor": "वितरक",
+      "nextDelivery": "अगली डिलीवरी",
+      "amount": "राशि"
+    },
+    "settings": {
+      "title": "एडमिन सेटिंग्स",
+      "description": "प्लेटफॉर्म डिफॉल्ट, सत्यापन नियम और सहायता विवरण कॉन्फिगर करें।",
+      "platformName": "प्लेटफॉर्म का नाम",
+      "supportEmail": "सहायता ईमेल",
+      "cutoffTime": "सदस्यता कटऑफ समय"
+    },
+    "operations": {
+      "title": "संचालन",
+      "description": "प्लेटफॉर्म डिलीवरी और बिलिंग निरीक्षण।",
+      "deliveryStats": "डिलीवरी प्रदर्शन",
+      "billingStats": "बिलिंग अवलोकन"
+    },
+    "products": {
+      "title": "उत्पाद कैटलॉग",
+      "description": "डिफॉल्ट प्लेटफॉर्म कैटलॉग प्रबंधित करें और वितरक द्वारा बनाए उत्पादों की समीक्षा करें।",
+      "catalogTab": "वैश्विक कैटलॉग",
+      "submissionsTab": "वितरक उत्पाद",
+      "addProduct": "वैश्विक उत्पाद जोड़ें",
+      "editProduct": "उत्पाद संपादित करें",
+      "sku": "SKU",
+      "category": "श्रेणी",
+      "unit": "इकाई",
+      "showInactive": "निष्क्रिय दिखाएं",
+      "emptyCatalog": "वैश्विक कैटलॉग में अभी कोई उत्पाद नहीं है।",
+      "emptySubmissions": "कोई वितरक-निर्मित उत्पाद नहीं।",
+      "inactive": "निष्क्रिय",
+      "deactivate": "निष्क्रिय करें",
+      "deactivated": "उत्पाद निष्क्रिय किया गया",
+      "created": "उत्पाद बनाया गया",
+      "updated": "उत्पाद अपडेट किया गया",
+      "distributor": "वितरक",
+      "promotionStatus": "स्थिति",
+      "actions": "कार्रवाई",
+      "promote": "कैटलॉग में जोड़ें",
+      "keepPrivate": "निजी रखें",
+      "reject": "अनुरोध अस्वीकार",
+      "promoted": "उत्पाद वैश्विक कैटलॉग में जोड़ा गया",
+      "keptPrivate": "उत्पाद निजी रखा गया",
+      "rejected": "प्रचार अनुरोध अस्वीकृत",
+      "promotionStatuses": {
+        "PRIVATE": "निजी",
+        "PENDING_REVIEW": "समीक्षा लंबित",
+        "PROMOTED": "प्रचारित",
+        "REJECTED": "अस्वीकृत",
+        "NONE": "वैश्विक"
+      }
+    }
+  },
+  "distributor": {
+    "pending": {
+      "title": "सत्यापन लंबित",
+      "description": "आपका वितरक खाता समीक्षा में है। स्वीकृति के बाद हम आपको सूचित करेंगे।",
+      "hint": "सत्यापन लंबित रहने के दौरान आप अपनी प्रोफाइल अपडेट कर सकते हैं।"
+    },
+    "rejected": {
+      "title": "सत्यापन अस्वीकृत",
+      "description": "आपका वितरक आवेदन स्वीकृत नहीं किया गया।",
+      "contactSupport": "अगले चरणों के लिए सहायता से संपर्क करें"
+    },
+    "dashboard": {
+      "title": "वितरक डैशबोर्ड",
+      "description": "दैनिक डिलीवरी, ग्राहक, उत्पाद और सदस्यताएं प्रबंधित करें।",
+      "todaysDeliveries": "आज की डिलीवरी",
+      "activeCustomers": "सक्रिय ग्राहक",
+      "activeSubscriptions": "सक्रिय सदस्यताएं",
+      "monthlyRevenue": "मासिक राजस्व"
+    },
+    "setup": {
+      "title": "व्यवसाय सेटअप",
+      "description": "सदस्यताएं स्वीकार करना शुरू करने के लिए ये चरण पूरे करें।",
+      "steps": {
+        "profile": "व्यवसाय प्रोफाइल पूरी करें",
+        "products": "दूध उत्पाद जोड़ें",
+        "pricing": "मूल्य निर्धारण सेट करें",
+        "deliverySlots": "डिलीवरी स्लॉट बनाएं",
+        "serviceArea": "सेवा क्षेत्र निर्धारित करें"
+      }
+    },
+    "products": {
+      "title": "उत्पाद",
+      "description": "प्लेटफॉर्म उत्पाद सक्षम करें, अपने उत्पाद जोड़ें और मूल्य निर्धारित करें।",
+      "addProduct": "मूल्य जोड़ें",
+      "productName": "उत्पाद का नाम",
+      "pricePerLiter": "प्रति इकाई मूल्य",
+      "fatPercent": "वसा प्रतिशत",
+      "available": "उपलब्ध",
+      "platformCatalog": "प्लेटफॉर्म कैटलॉग",
+      "myProducts": "मेरे उत्पाद",
+      "addCustomProduct": "मेरा उत्पाद जोड़ें",
+      "customBadge": "कस्टम",
+      "noCustomProducts": "आपने अभी तक कोई कस्टम उत्पाद नहीं जोड़ा है।",
+      "customCreated": "कस्टम उत्पाद बनाया गया",
+      "customDeactivated": "कस्टम उत्पाद हटाया गया",
+      "requestPromotion": "प्लेटफॉर्म सूची का अनुरोध",
+      "promotionRequested": "प्रचार अनुरोध एडमिन को भेजा गया",
+      "deactivateCustom": "हटाएं",
+      "category": "श्रेणी",
+      "unit": "इकाई",
+      "addPricing": "मूल्य जोड़ें",
+      "pricingMatrix": "मूल्य मैट्रिक्स",
+      "noPricing": "अभी कोई मूल्य निर्धारित नहीं",
+      "deactivate": "निष्क्रिय करें",
+      "activate": "सक्रिय करें",
+      "price": "मूल्य",
+      "promotionStatuses": {
+        "PRIVATE": "केवल आपके व्यवसाय के लिए",
+        "PENDING_REVIEW": "एडमिन समीक्षा लंबित",
+        "PROMOTED": "प्लेटफॉर्म कैटलॉग में सूचीबद्ध",
+        "REJECTED": "प्लेटफॉर्म सूची अस्वीकृत"
+      }
+    },
+    "slots": {
+      "title": "डिलीवरी स्लॉट",
+      "description": "ग्राहक सदस्यताओं के लिए डिलीवरी समय निर्धारित करें।",
+      "addSlot": "स्लॉट जोड़ें",
+      "slotName": "स्लॉट का नाम",
+      "startTime": "आरंभ समय",
+      "endTime": "समाप्ति समय",
+      "capacity": "क्षमता"
+    },
+    "customers": {
+      "list": {
+        "title": "ग्राहक",
+        "description": "अपने व्यवसाय से जुड़े ग्राहकों को देखें और प्रबंधित करें।",
+        "addCustomer": "ग्राहक जोड़ें",
+        "searchPlaceholder": "ग्राहक खोजें"
+      },
+      "new": {
+        "title": "ग्राहक जोड़ें",
+        "description": "ग्राहक प्रोफाइल बनाएं और वैकल्पिक रूप से सदस्यता शुरू करें।",
+        "inviteCustomer": "ग्राहक को आमंत्रित करें",
+        "createSubscription": "सदस्यता बनाएं"
+      },
+      "detail": {
+        "title": "ग्राहक विवरण",
+        "description": "ग्राहक संपर्क, पता और सदस्यता इतिहास की समीक्षा करें।",
+        "contactInfo": "संपर्क जानकारी",
+        "addressInfo": "पता जानकारी",
+        "subscriptionHistory": "सदस्यता इतिहास"
+      }
+    },
+    "subscriptions": {
+      "title": "सदस्यताएं",
+      "description": "ग्राहक सदस्यताएं बनाएं, समीक्षा करें, रोकें और प्रबंधित करें।",
+      "createSubscription": "सदस्यता बनाएं",
+      "pauseSubscription": "सदस्यता रोकें",
+      "resumeSubscription": "सदस्यता फिर शुरू करें",
+      "extraMilkRequest": "अतिरिक्त दूध अनुरोध"
+    },
+    "settings": {
+      "title": "वितरक सेटिंग्स",
+      "description": "व्यवसाय प्रोफाइल, सेवा क्षेत्र, मूल्य निर्धारण और सूचनाएं प्रबंधित करें।",
+      "businessName": "व्यवसाय का नाम",
+      "ownerName": "स्वामी का नाम",
+      "gstNumber": "जीएसटी नंबर",
+      "notificationPhone": "सूचना फोन"
+    }
+  },
+  "customer": {
+    "profile": {
+      "title": "प्रोफाइल",
+      "description": "अपने व्यक्तिगत विवरण, फोन नंबर और डिलीवरी पते का प्रबंधन करें।",
+      "personalInfo": "व्यक्तिगत जानकारी",
+      "deliveryAddress": "डिलीवरी पता",
+      "updateProfile": "प्रोफाइल अपडेट करें"
+    },
+    "findDistributor": {
+      "title": "वितरक खोजें",
+      "description": "नजदीकी दूध वितरक खोजें और उपलब्ध उत्पादों की तुलना करें।",
+      "radius": "खोज त्रिज्या",
+      "list": "सूची दृश्य",
+      "map": "मानचित्र दृश्य",
+      "nearbyDistributors": "नजदीकी वितरक",
+      "viewDistributor": "वितरक देखें"
+    },
+    "subscribe": {
+      "title": "दूध डिलीवरी की सदस्यता लें",
+      "description": "उत्पाद, मात्रा, आवृत्ति और डिलीवरी स्लॉट चुनें।",
+      "chooseProduct": "उत्पाद चुनें",
+      "chooseSlot": "डिलीवरी स्लॉट चुनें",
+      "confirmSubscription": "सदस्यता पुष्टि करें",
+      "subscriptionCreated": "सदस्यता बनाई गई",
+      "fatFromDistributor": "वसा {fat}% · {price}/यूनिट (वितरक द्वारा सेट)"
+    },
+    "subscriptions": {
+      "list": {
+        "title": "मेरी सदस्यताएं",
+        "description": "अपनी सभी दूध सदस्यताएं देखें और प्रबंधित करें।",
+        "active": "सक्रिय सदस्यताएं",
+        "past": "पिछली सदस्यताएं"
+      },
+      "detail": {
+        "title": "सदस्यता विवरण",
+        "description": "शेड्यूल, डिलीवरी, रोक अवधि और अतिरिक्त दूध अनुरोध की समीक्षा करें।",
+        "edit": "सदस्यता संपादित करें",
+        "pause": "सदस्यता रोकें",
+        "extra": "अतिरिक्त दूध का अनुरोध करें",
+        "deliveryHistory": "डिलीवरी इतिहास"
+      }
+    }
+  },
+  "validation": {
+    "email": "मान्य ईमेल पता दर्ज करें।",
+    "password": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए।",
+    "required": "यह फ़ील्ड आवश्यक है।",
+    "passwordsMatch": "पासवर्ड मेल नहीं खाते।",
+    "phone": "मान्य 10 अंकों का फोन नंबर दर्ज करें।",
+    "minQuantity": "मात्रा शून्य से अधिक होनी चाहिए।",
+    "selectCustomer": "ग्राहक चुनें।",
+    "selectProduct": "उत्पाद चुनें।",
+    "selectSlot": "डिलीवरी स्लॉट चुनें।",
+    "nameMin": "नाम कम से कम 2 अक्षरों का होना चाहिए।",
+    "businessNameRequired": "व्यवसाय का नाम आवश्यक है।",
+    "labelRequired": "लेबल आवश्यक है।",
+    "startTimeRequired": "प्रारंभ समय आवश्यक है।",
+    "endTimeRequired": "समाप्ति समय आवश्यक है।",
+    "startDateRequired": "प्रारंभ तिथि आवश्यक है।",
+    "endDateRequired": "समाप्ति तिथि आवश्यक है।",
+    "rejectionReason": "कृपया अस्वीकृति का कारण बताएं।",
+    "minPrice": "मूल्य शून्य से अधिक होना चाहिए।",
+    "addressUrbanLine": "फ्लैट, भवन, गली या पता दर्ज करें।",
+    "addressCity": "शहर आवश्यक है।",
+    "addressPincodeOrMap": "मानचित्र पर स्थान चिह्नित न करने पर पिनकोड आवश्यक है।",
+    "addressVillage": "गांव आवश्यक है।",
+    "addressDistrict": "जिला आवश्यक है।",
+    "addressState": "राज्य आवश्यक है।",
+    "addressRuralLocation": "पिनकोड, लैंडमार्क या मानचित्र पर स्थान जोड़ें।"
+  },
+  "address": {
+    "urban": "शहरी",
+    "rural": "ग्रामीण",
+    "flat": "फ्लैट / मकान नंबर",
+    "building": "भवन / सोसायटी",
+    "street": "गली",
+    "landmark": "लैंडमार्क",
+    "village": "गांव",
+    "district": "जिला",
+    "state": "राज्य",
+    "mapPin": "मानचित्र पिन",
+    "addressPreview": "पता पूर्वावलोकन",
+    "type": "पता प्रकार",
+    "line1": "पता पंक्ति 1",
+    "line2": "पता पंक्ति 2",
+    "area": "क्षेत्र",
+    "locality": "स्थानीयता",
+    "tehsil": "तहसील",
+    "country": "देश",
+    "latitude": "अक्षांश",
+    "longitude": "देशांतर",
+    "useCurrentLocation": "वर्तमान स्थान उपयोग करें",
+    "shareLocationQuestion": "क्या आप अपना स्थान साझा करना चाहते हैं?",
+    "shareLocationHint": "सटीक निर्देशांक सहेजने के लिए स्थान अनुमति दें। प्राप्त होने के बाद मानचित्र पूर्वावलोकन दिखेगा।",
+    "shareLocationYes": "हाँ, मेरा स्थान उपयोग करें",
+    "shareLocationNo": "नहीं, केवल पता",
+    "shareLocationSkipped": "स्थान साझा नहीं किया जाएगा। आप अपने पते और पिनकोड से सहेज सकते हैं।",
+    "fetchingLocation": "आपका स्थान प्राप्त किया जा रहा है…",
+    "locationCaptured": "स्थान प्राप्त हो गया",
+    "locationPreviewTitle": "मानचित्र पर आपका स्थान",
+    "openInMaps": "Google Maps में खोलें",
+    "updateLocation": "वर्तमान स्थान पर अपडेट करें",
+    "retryLocation": "स्थान पुनः प्राप्त करें",
+    "locationFetchDenied": "स्थान की अनुमति अस्वीकार कर दी गई। ब्राउज़र सेटिंग्स में अनुमति दें, फिर पुनः प्रयास करें।",
+    "locationFetchTimeout": "समय पर स्थान प्राप्त नहीं हो सका। कृपया पुनः प्रयास करें, या Location Services चालू करें।",
+    "locationFetchUnsupported": "आपका ब्राउज़र स्थान सेवाओं का समर्थन नहीं करता।",
+    "locationFetchInsecure": "स्थान केवल https:// या http://localhost पर काम करता है। ऐप को localhost से खोलें (192.168.x.x जैसे LAN IP से नहीं)।",
+    "locationFetchUnavailable": "स्थान अभी उपलब्ध नहीं है। कृपया पुनः प्रयास करें।"
+  },
+  "errors": {
+    "PHONE_ALREADY_REGISTERED": "यह फोन नंबर पहले से पंजीकृत है।",
+    "EMAIL_ALREADY_REGISTERED": "यह ईमेल पता पहले से पंजीकृत है।",
+    "INVALID_CREDENTIALS": "ईमेल या पासवर्ड अमान्य है।",
+    "ACCOUNT_SUSPENDED": "यह खाता निलंबित कर दिया गया है।",
+    "UNAUTHORIZED": "जारी रखने के लिए कृपया साइन इन करें।",
+    "FORBIDDEN": "आपके पास यह कार्रवाई करने की अनुमति नहीं है।",
+    "NOT_FOUND": "अनुरोधित संसाधन नहीं मिला।",
+    "SUBSCRIPTION_CUTOFF_PASSED": "सदस्यता बदलाव का कटऑफ समय निकल चुका है।",
+    "INVALID_REFRESH_TOKEN": "आपका सत्र समाप्त हो गया है। कृपया पुनः साइन इन करें।",
+    "INVALID_RESET_TOKEN": "यह पासवर्ड रीसेट लिंक अमान्य है या समाप्त हो गया है।",
+    "INVALID_ACTIVATION_TOKEN": "यह सक्रियण लिंक अमान्य है या समाप्त हो गया है।",
+    "BUSINESS_NAME_REQUIRED": "वितरक पंजीकरण के लिए व्यवसाय का नाम आवश्यक है।",
+    "SUBSCRIPTION_NOT_FOUND": "सदस्यता नहीं मिली।",
+    "SUBSCRIPTION_NOT_ACTIVE": "केवल सक्रिय सदस्यताएं अपडेट की जा सकती हैं।",
+    "DISTRIBUTOR_NOT_LIVE": "यह वितरक अभी लाइव नहीं है।",
+    "DISTRIBUTOR_NOT_ACCEPTING": "यह वितरक सदस्यताएं स्वीकार नहीं कर रहा है।",
+    "DISTRIBUTOR_NOT_APPROVED": "यह वितरक खाता स्वीकृत नहीं है।",
+    "DISTRIBUTOR_NOT_ELIGIBLE": "वितरक नहीं मिला या पात्र नहीं है।",
+    "DISTRIBUTOR_PROFILE_NOT_FOUND": "वितरक प्रोफ़ाइल नहीं मिली।",
+    "CUSTOMER_PROFILE_NOT_FOUND": "ग्राहक प्रोफ़ाइल नहीं मिली।",
+    "CUSTOMER_NOT_FOUND": "ग्राहक नहीं मिला।",
+    "CUSTOMER_NOT_LINKED": "ग्राहक इस वितरक से जुड़ा नहीं है।",
+    "NO_ACTIVE_PRICING": "चयनित उत्पाद के लिए कोई सक्रिय मूल्य नहीं है।",
+    "PRICING_NOT_FOUND": "मूल्य निर्धारण नहीं मिला।",
+    "PRICING_ALREADY_EXISTS": "इस उत्पाद और वसा प्रतिशत के लिए सक्रिय मूल्य पहले से मौजूद है।",
+    "INVALID_DELIVERY_SLOT": "अमान्य या निष्क्रिय डिलीवरी स्लॉट।",
+    "DELIVERY_SLOT_NOT_FOUND": "डिलीवरी स्लॉट नहीं मिला।",
+    "PRODUCT_NOT_AVAILABLE": "यह उत्पाद इस वितरक से उपलब्ध नहीं है।",
+    "PRODUCT_NOT_FOUND": "उत्पाद नहीं मिला।",
+    "PRODUCT_SKU_EXISTS": "यह SKU पहले से उपयोग में है।",
+    "PRODUCT_IN_USE": "इस उत्पाद की सक्रिय सदस्यताएं हैं, हटाया नहीं जा सकता।",
+    "PRODUCT_FORBIDDEN": "आप इस उत्पाद को संशोधित नहीं कर सकते।",
+    "GO_LIVE_NOT_APPROVED": "लाइव होने से पहले वितरक को स्वीकृत होना चाहिए।",
+    "GO_LIVE_NOT_READY": "लाइव होने की तैयारी पूरी नहीं है। पहले सभी सेटअप चरण पूरे करें।",
+    "ADDRESS_URBAN_LINE_REQUIRED": "शहरी पते के लिए फ्लैट, भवन, गली या पता पंक्ति आवश्यक है।",
+    "ADDRESS_CITY_REQUIRED": "शहरी पते के लिए शहर आवश्यक है।",
+    "ADDRESS_PINCODE_OR_MAP_REQUIRED": "मानचित्र पर स्थान सेट न करने पर पिनकोड आवश्यक है।",
+    "ADDRESS_VILLAGE_REQUIRED": "ग्रामीण पते के लिए गांव आवश्यक है।",
+    "ADDRESS_DISTRICT_REQUIRED": "ग्रामीण पते के लिए जिला आवश्यक है।",
+    "ADDRESS_STATE_REQUIRED": "ग्रामीण पते के लिए राज्य आवश्यक है।",
+    "ADDRESS_RURAL_LOCATION_REQUIRED": "ग्रामीण पते के लिए पिनकोड, लैंडमार्क या मानचित्र पिन आवश्यक है।",
+    "IDENTITY_DOCUMENT_REQUIRED": "कृपया एक पहचान दस्तावेज़ अपलोड करें।",
+    "IDENTITY_DOCUMENT_LIMIT": "आप अधिकतम दो पहचान दस्तावेज़ अपलोड कर सकते हैं।",
+    "IDENTITY_DOCUMENT_INVALID_TYPE": "केवल JPEG, PNG या PDF दस्तावेज़ अनुमत हैं।",
+    "IDENTITY_DOCUMENT_TOO_LARGE": "दस्तावेज़ 5 एमबी या उससे छोटा होना चाहिए।",
+    "IDENTITY_DOCUMENT_NOT_FOUND": "पहचान दस्तावेज़ नहीं मिला।",
+    "IDENTITY_NAME_MISMATCH": "दस्तावेज़ पर नाम आपके पंजीकृत नाम से मेल नहीं खाता।",
+    "IDENTITY_NOT_VERIFIED": "जारी रखने के लिए कम से कम एक सत्यापित पहचान दस्तावेज़ अपलोड करें।",
+    "GENERIC": "कुछ गलत हो गया। कृपया फिर प्रयास करें।"
+  },
+  "identity": {
+    "customerTitle": "पहचान दस्तावेज़",
+    "customerDescription": "आधार, पैन या अन्य पहचान पत्र अपलोड करें। वितरक खोजने से पहले दस्तावेज़ पर नाम आपके पंजीकृत नाम से मेल खाना चाहिए।",
+    "instructions": "1–2 पहचान दस्तावेज़ अपलोड करें और दस्तावेज़ पर छपा नाम ठीक वैसा ही लिखें। यदि पंजीकृत नाम से मेल नहीं खाता, दस्तावेज़ अस्वीकृत होगा और खाता खोज में नहीं दिखेगा।",
+    "registeredName": "मिलान के लिए पंजीकृत नाम",
+    "limits": "स्वीकृत: JPEG, PNG, PDF · अधिकतम 2 दस्तावेज़ · प्रत्येक अधिकतम 5 एमबी · कम से कम एक सत्यापित दस्तावेज़ आवश्यक",
+    "noneYet": "अभी कोई दस्तावेज़ अपलोड नहीं किया गया।",
+    "documentType": "दस्तावेज़ प्रकार",
+    "declaredName": "दस्तावेज़ पर नाम",
+    "declaredNamePlaceholder": "दस्तावेज़ पर छपा नाम लिखें",
+    "file": "दस्तावेज़ फ़ाइल",
+    "upload": "दस्तावेज़ अपलोड करें",
+    "uploadRequired": "फ़ाइल चुनें और दस्तावेज़ पर नाम लिखें।",
+    "uploadDocuments": "दस्तावेज़ अपलोड करें",
+    "verified": "सत्यापित",
+    "unverified": "असत्यापित",
+    "declined": "अस्वीकृत — पंजीकृत नाम दस्तावेज़ पर नाम से मेल नहीं खाता",
+    "maxReached": "आप पहले ही अधिकतम दो दस्तावेज़ अपलोड कर चुके हैं। दूसरा अपलोड करने के लिए एक हटाएं।",
+    "continue": "जारी रखें",
+    "needVerified": "जारी रखने के लिए सत्यापित दस्तावेज़ अपलोड करें",
+    "deleteTitle": "दस्तावेज़ हटाएं?",
+    "deleteDescription": "यह अपलोड किया गया दस्तावेज़ आपके खाते से हटा देगा।",
+    "findDistributors": "वितरक खोजें",
+    "customerGate": "वितरक खोजने से पहले पहचान सत्यापन पूरा करें। कम से कम एक ऐसा दस्तावेज़ अपलोड करें जिसका नाम आपके पंजीकृत नाम से मेल खाए।",
+    "distributorGate": "लाइव होने और ग्राहकों को दिखने के लिए कम से कम एक सत्यापित पहचान दस्तावेज़ अपलोड करें।",
+    "statusLabel": "पहचान",
+    "serviceRadius": "सेवा त्रिज्या (किमी)",
+    "serviceRadiusHint": "ग्राहक आपको तभी देखेंगे जब वे इस त्रिज्या और अपनी खोज त्रिज्या दोनों के अंदर हों।",
+    "radiusBothHint": "परिणाम आपकी खोज त्रिज्या और प्रत्येक वितरक की सेवा क्षेत्र दोनों का सम्मान करते हैं।",
+    "serves": "सेवा क्षेत्र",
+    "types": {
+      "AADHAAR": "आधार कार्ड",
+      "PAN": "पैन कार्ड",
+      "OTHER": "अन्य पहचान"
+    }
+  },
+  "subscription": {
+    "frequencies": {
+      "daily": "दैनिक",
+      "alternateDay": "एक दिन छोड़कर",
+      "weekdays": "कार्यदिवस",
+      "weekly": "साप्ताहिक",
+      "monthly": "मासिक"
+    },
+    "schedulePreview": "शेड्यूल पूर्वावलोकन",
+    "pausedHint": "चयनित अवधि के लिए डिलीवरी रोकी गई है।",
+    "deliveriesCount": "{count} डिलीवरी"
+  },
+  "empty": {
+    "noCustomers": "कोई ग्राहक नहीं मिला।",
+    "noDistributors": "कोई वितरक नहीं मिला।",
+    "noSubscriptions": "कोई सदस्यता नहीं मिली।",
+    "noResults": "कोई परिणाम नहीं मिला।"
+  },
+  "forms": {
+    "selectProduct": "उत्पाद चुनें",
+    "selectSlot": "डिलीवरी स्लॉट चुनें",
+    "selectCustomer": "ग्राहक चुनें"
+  }
+}

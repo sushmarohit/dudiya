@@ -1,0 +1,13 @@
+{
+  "name": "milk-distribution-saas",
+  "private": true,
+  "scripts": {
+    "dev:api": "cd backend && npm run start:dev",
+    "dev:web": "cd frontend && npm run dev",
+    "db:up": "docker compose up -d",
+    "db:setup": "cd backend && npx prisma db push && npm run prisma:seed",
+    "build": "cd backend && npm run build && cd ../frontend && npm run build",
+    "test": "cd backend && npm test",
+    "test:e2e": "cd frontend && npm run test:e2e"
+  }
+}

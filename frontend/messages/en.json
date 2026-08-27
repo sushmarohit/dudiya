@@ -1,0 +1,698 @@
+{
+  "common": {
+    "appName": "MilkFlow",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "getStarted": "Get started",
+    "createAccount": "Create account",
+    "creatingAccount": "Creating account...",
+    "sending": "Sending...",
+    "resetting": "Resetting...",
+    "activating": "Activating...",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "edit": "Edit",
+    "create": "Create",
+    "delete": "Delete",
+    "remove": "Remove",
+    "search": "Search",
+    "submit": "Submit",
+    "tryAgain": "Try again",
+    "saved": "Saved successfully",
+    "deleted": "Deleted successfully",
+    "updated": "Updated successfully",
+    "created": "Created successfully",
+    "confirmDeleteTitle": "Are you sure?",
+    "confirmDeleteDescription": "This action cannot be undone.",
+    "confirmActionTitle": "Confirm action",
+    "confirmGoLiveTitle": "Go live?",
+    "confirmGoLiveDescription": "Your distributor profile will become visible to customers.",
+    "confirmSuspendTitle": "Suspend distributor?",
+    "confirmSuspendDescription": "They will not be able to operate until unsuspended.",
+    "confirmApproveTitle": "Approve distributor?",
+    "confirmApproveDescription": "They will be able to complete setup and go live.",
+    "confirmDeactivateTitle": "Deactivate?",
+    "confirmDeactivateDescription": "This item will no longer be available.",
+    "confirmRemoveSlotTitle": "Remove delivery slot?",
+    "confirmRemoveSlotDescription": "Customers using this slot may be affected.",
+    "confirmMarkDeliveredTitle": "Mark all as delivered?",
+    "confirmMarkDeliveredDescription": "This will update every stop on today’s route.",
+    "confirmRunBillingTitle": "Run billing cycle?",
+    "confirmRunBillingDescription": "This will generate bills for the selected period.",
+    "pageNotFound": "Page not found",
+    "pageNotFoundDescription": "This page does not exist. You will be redirected to the home page shortly.",
+    "backToHome": "Back to home",
+    "somethingWrong": "Something went wrong",
+    "errorDescription": "An unexpected error occurred. Please try again.",
+    "skipToContent": "Skip to content",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "localeEn": "English",
+    "localeHi": "Hindi",
+    "email": "Email",
+    "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "phone": "Phone",
+    "name": "Name",
+    "quantity": "Quantity",
+    "frequency": "Frequency",
+    "status": "Status",
+    "city": "City",
+    "pincode": "Pincode",
+    "fullName": "Full name",
+    "businessName": "Business name",
+    "ownerName": "Owner name",
+    "yourName": "Your name",
+    "product": "Product",
+    "deliverySlot": "Delivery slot",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "date": "Date",
+    "fatPercent": "Fat percent",
+    "statuses": {
+      "active": "Active",
+      "pending": "Pending",
+      "suspended": "Suspended"
+    },
+    "onboardedVia": {
+      "self": "Self registered",
+      "distributor": "Added by distributor",
+      "admin": "Added by admin",
+      "import": "Imported"
+    }
+  },
+  "landing": {
+    "hero": {
+      "title": "Fresh milk delivery,",
+      "titleHighlight": " simplified",
+      "description": "Connect local milk distributors with customers. Manage subscriptions, delivery slots, and pricing - all in one platform.",
+      "customerCta": "Get Milk Delivered",
+      "distributorCta": "I'm a Distributor"
+    },
+    "features": {
+      "customers": {
+        "title": "For Customers",
+        "description": "Find nearby distributors, compare pricing, and subscribe to daily milk delivery with flexible frequencies.",
+        "cta": "Register as customer"
+      },
+      "distributors": {
+        "title": "For Distributors",
+        "description": "Set up your catalog, pricing matrix, delivery slots, and onboard customers - or let them self-subscribe.",
+        "cta": "Register as distributor"
+      },
+      "subscriptionEngine": {
+        "title": "Subscription Engine",
+        "description": "Daily, alternate day, weekdays, weekly, or monthly - pause and extra milk requests built in.",
+        "cta": "Sign in to manage"
+      }
+    },
+    "footer": {
+      "text": "MilkFlow - Milk Distribution SaaS · Phase 1"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "description": "Sign in to your MilkFlow account",
+      "button": "Sign in",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Create an account"
+    },
+    "register": {
+      "title": "Create your account",
+      "description": "Choose how you want to use MilkFlow",
+      "customerTitle": "Customer account",
+      "customerDescription": "Find distributors and manage your milk subscriptions.",
+      "distributorTitle": "Distributor account",
+      "distributorDescription": "Manage products, delivery slots, customers, and subscriptions.",
+      "customerButton": "Register as customer",
+      "distributorButton": "Register as distributor",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "backToRoleSelection": "Back to role selection"
+    },
+    "customerRegistration": {
+      "title": "Customer registration",
+      "description": "Create your account, enter your address (urban or village), and pin your delivery location on the map."
+    },
+    "distributorRegistration": {
+      "title": "Distributor registration",
+      "description": "Register your milk distribution business. Admin approval required before you can go live.",
+      "success": "Registration successful! Redirecting..."
+    },
+    "forgot": {
+      "title": "Forgot password",
+      "description": "Enter your email and we will send password reset instructions.",
+      "button": "Send reset link",
+      "backToLogin": "Back to sign in",
+      "emailSent": "Password reset instructions have been sent."
+    },
+    "reset": {
+      "title": "Reset password",
+      "description": "Create a new password for your MilkFlow account.",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "button": "Reset password",
+      "success": "Your password has been reset.",
+      "invalidToken": "Invalid or missing reset token.",
+      "invalidLink": "Invalid reset link. Please request a new one from the forgot password page."
+    },
+    "activate": {
+      "title": "Activate account",
+      "description": "Set your password to activate your MilkFlow account.",
+      "button": "Activate account",
+      "success": "Your account is active. You can now sign in.",
+      "expired": "This activation link has expired.",
+      "invalidToken": "Invalid or missing activation token.",
+      "invalidLink": "Invalid activation link. Please contact your distributor for a new invite.",
+      "alreadyActivated": "Already activated? Sign in"
+    }
+  },
+  "nav": {
+    "profileMenu": "Profile menu",
+    "notifications": "Notifications",
+    "portalTitles": {
+      "admin": "Admin Portal",
+      "distributor": "Distributor Portal",
+      "customer": "Customer Portal"
+    },
+    "adminNav": {
+      "dashboard": "Dashboard",
+      "verification": "Verification",
+      "distributors": "Distributors",
+      "customers": "Customers",
+      "subscriptions": "Subscriptions",
+      "products": "Products",
+      "settings": "Settings",
+      "operations": "Operations"
+    },
+    "distributorNav": {
+      "dashboard": "Dashboard",
+      "setup": "Setup",
+      "products": "Products",
+      "deliverySlots": "Delivery slots",
+      "customers": "Customers",
+      "subscriptions": "Subscriptions",
+      "deliveries": "Deliveries",
+      "billing": "Billing",
+      "settings": "Settings"
+    },
+    "customerNav": {
+      "profile": "Profile",
+      "documents": "Documents",
+      "findDistributor": "Find distributor",
+      "subscriptions": "Subscriptions",
+      "deliveries": "Delivery history",
+      "bills": "Bills"
+    }
+  },
+  "delivery": {
+    "title": "Deliveries",
+    "description": "Filter by day or month, by customer or all customers, then export CSV.",
+    "generate": "Generate list",
+    "markAllDelivered": "Mark all delivered",
+    "markDelivered": "Delivered",
+    "exportCsv": "Export CSV",
+    "exportReady": "CSV downloaded",
+    "allSlots": "All slots",
+    "allCustomers": "All customers",
+    "filterByDay": "By day",
+    "filterByMonth": "By month",
+    "empty": "No deliveries for this date. Generate the list first.",
+    "emptyRange": "No deliveries for this filter.",
+    "loadFailed": "Failed to load deliveries.",
+    "historyTitle": "Delivery history",
+    "historyDescription": "View past delivery status and quantities.",
+    "planned": "Planned",
+    "delivered": "Delivered"
+  },
+  "billing": {
+    "title": "Billing",
+    "description": "Invoices, payments, and billing cycles.",
+    "runCycle": "Run billing cycle",
+    "settings": "Settings",
+    "dues": "Outstanding dues",
+    "empty": "No bills yet.",
+    "cycle": "Cycle",
+    "total": "Total",
+    "paid": "Paid",
+    "balance": "Balance due",
+    "billDetail": "Bill detail",
+    "downloadPdf": "Download PDF",
+    "recordPayment": "Record payment",
+    "amount": "Amount",
+    "method": "Method",
+    "lineTotal": "Line total",
+    "settingsTitle": "Billing settings",
+    "settingsDescription": "Configure billing cycle and due days.",
+    "billingCycle": "Billing cycle",
+    "dueDays": "Due days after issue",
+    "duesTitle": "Outstanding dues",
+    "duesDescription": "Customers with unpaid balances.",
+    "outstanding": "Outstanding",
+    "customerTitle": "Your bills",
+    "customerDescription": "View invoices and download PDFs.",
+    "distributor": "Distributor"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Updates on deliveries, bills, and subscriptions.",
+    "markRead": "Mark read",
+    "markAllRead": "Mark all read"
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin dashboard",
+      "description": "Monitor distributors, customers, subscriptions, and platform activity.",
+      "kpis": {
+        "totalDistributors": "Total distributors",
+        "pendingVerifications": "Pending verifications",
+        "totalCustomers": "Total customers",
+        "activeSubscriptions": "Active subscriptions",
+        "monthlyRevenue": "Monthly revenue",
+        "deliveryVolume": "Delivery volume"
+      }
+    },
+    "verification": {
+      "title": "Identity overview",
+      "description": "Distributors no longer wait for admin approval. Identity documents are verified automatically by name match. Use Distributors to suspend accounts if needed.",
+      "approve": "Approve distributor",
+      "reject": "Reject distributor",
+      "pending": "No legacy pending applications",
+      "approved": "Verified distributor",
+      "rejected": "Rejected distributor",
+      "deprecatedNotice": "Registration approval is no longer required. Distributors become visible after identity documents match their registered name and they complete setup.",
+      "identityVerified": "Identity verified",
+      "identityUnverified": "Identity unverified",
+      "goToDistributors": "Manage distributors"
+    },
+    "customers": {
+      "title": "Customers",
+      "description": "View customer profiles, locations, and subscription activity.",
+      "searchPlaceholder": "Search customers",
+      "customerName": "Customer name",
+      "joinedOn": "Joined on",
+      "subscriptions": "Subscriptions",
+      "identity": "Identity"
+    },
+    "distributors": {
+      "title": "Distributors",
+      "description": "Manage distributor accounts, identity status, and service areas.",
+      "searchPlaceholder": "Search distributors",
+      "businessName": "Business name",
+      "ownerName": "Owner name",
+      "serviceArea": "Service area",
+      "identity": "Identity"
+    },
+    "subscriptions": {
+      "title": "Subscriptions",
+      "description": "Track active, pending, paused, and cancelled milk subscriptions.",
+      "customer": "Customer",
+      "distributor": "Distributor",
+      "nextDelivery": "Next delivery",
+      "amount": "Amount"
+    },
+    "settings": {
+      "title": "Admin settings",
+      "description": "Configure platform defaults, verification rules, and support details.",
+      "platformName": "Platform name",
+      "supportEmail": "Support email",
+      "cutoffTime": "Subscription cutoff time"
+    },
+    "operations": {
+      "title": "Operations",
+      "description": "Platform delivery and billing oversight.",
+      "deliveryStats": "Delivery performance",
+      "billingStats": "Billing overview"
+    },
+    "products": {
+      "title": "Product catalog",
+      "description": "Manage the default platform catalog and review distributor-created products.",
+      "catalogTab": "Global catalog",
+      "submissionsTab": "Distributor products",
+      "addProduct": "Add global product",
+      "editProduct": "Edit product",
+      "sku": "SKU",
+      "category": "Category",
+      "unit": "Unit",
+      "showInactive": "Show inactive",
+      "emptyCatalog": "No products in the global catalog yet.",
+      "emptySubmissions": "No distributor-created products.",
+      "inactive": "Inactive",
+      "deactivate": "Deactivate",
+      "deactivated": "Product deactivated",
+      "created": "Product created",
+      "updated": "Product updated",
+      "distributor": "Distributor",
+      "promotionStatus": "Status",
+      "actions": "Actions",
+      "promote": "Promote to catalog",
+      "keepPrivate": "Keep private",
+      "reject": "Reject request",
+      "promoted": "Product promoted to global catalog",
+      "keptPrivate": "Product kept private",
+      "rejected": "Promotion request rejected",
+      "promotionStatuses": {
+        "PRIVATE": "Private",
+        "PENDING_REVIEW": "Pending review",
+        "PROMOTED": "Promoted",
+        "REJECTED": "Rejected",
+        "NONE": "Global"
+      }
+    }
+  },
+  "distributor": {
+    "pending": {
+      "title": "Verification pending",
+      "description": "Your distributor account is under review. We will notify you after approval.",
+      "hint": "You can update your profile while verification is pending."
+    },
+    "rejected": {
+      "title": "Verification rejected",
+      "description": "Your distributor application was not approved.",
+      "contactSupport": "Contact support for next steps"
+    },
+    "dashboard": {
+      "title": "Distributor dashboard",
+      "description": "Manage daily deliveries, customers, products, and subscriptions.",
+      "todaysDeliveries": "Today's deliveries",
+      "activeCustomers": "Active customers",
+      "activeSubscriptions": "Active subscriptions",
+      "monthlyRevenue": "Monthly revenue"
+    },
+    "setup": {
+      "title": "Business setup",
+      "description": "Complete these steps to start accepting subscriptions.",
+      "steps": {
+        "profile": "Complete business profile",
+        "products": "Add milk products",
+        "pricing": "Set pricing",
+        "deliverySlots": "Create delivery slots",
+        "serviceArea": "Define service area"
+      }
+    },
+    "products": {
+      "title": "Products",
+      "description": "Enable platform products, add your own, and set pricing.",
+      "addProduct": "Add pricing",
+      "productName": "Product name",
+      "pricePerLiter": "Price per unit",
+      "fatPercent": "Fat percent",
+      "available": "Available",
+      "platformCatalog": "Platform catalog",
+      "myProducts": "My products",
+      "addCustomProduct": "Add my product",
+      "customBadge": "Custom",
+      "noCustomProducts": "You have not added any custom products yet.",
+      "customCreated": "Custom product created",
+      "customDeactivated": "Custom product deactivated",
+      "requestPromotion": "Request platform listing",
+      "promotionRequested": "Promotion request sent to admin",
+      "deactivateCustom": "Remove",
+      "category": "Category",
+      "unit": "Unit",
+      "addPricing": "Add pricing",
+      "pricingMatrix": "Pricing matrix",
+      "noPricing": "No pricing configured yet",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "price": "Price",
+      "promotionStatuses": {
+        "PRIVATE": "Private to your business",
+        "PENDING_REVIEW": "Pending admin review",
+        "PROMOTED": "Listed in platform catalog",
+        "REJECTED": "Platform listing rejected"
+      }
+    },
+    "slots": {
+      "title": "Delivery slots",
+      "description": "Set delivery windows for customer subscriptions.",
+      "addSlot": "Add slot",
+      "slotName": "Slot name",
+      "startTime": "Start time",
+      "endTime": "End time",
+      "capacity": "Capacity"
+    },
+    "customers": {
+      "list": {
+        "title": "Customers",
+        "description": "View and manage customers onboarded to your business.",
+        "addCustomer": "Add customer",
+        "searchPlaceholder": "Search customers"
+      },
+      "new": {
+        "title": "Add customer",
+        "description": "Create a customer profile and optionally start a subscription.",
+        "inviteCustomer": "Invite customer",
+        "createSubscription": "Create subscription"
+      },
+      "detail": {
+        "title": "Customer details",
+        "description": "Review customer contact, address, and subscription history.",
+        "contactInfo": "Contact information",
+        "addressInfo": "Address information",
+        "subscriptionHistory": "Subscription history"
+      }
+    },
+    "subscriptions": {
+      "title": "Subscriptions",
+      "description": "Create, review, pause, and manage customer subscriptions.",
+      "createSubscription": "Create subscription",
+      "pauseSubscription": "Pause subscription",
+      "resumeSubscription": "Resume subscription",
+      "extraMilkRequest": "Extra milk request"
+    },
+    "settings": {
+      "title": "Distributor settings",
+      "description": "Manage business profile, service areas, pricing, and notifications.",
+      "businessName": "Business name",
+      "ownerName": "Owner name",
+      "gstNumber": "GST number",
+      "notificationPhone": "Notification phone"
+    }
+  },
+  "customer": {
+    "profile": {
+      "title": "Profile",
+      "description": "Manage your personal details, phone number, and delivery address.",
+      "personalInfo": "Personal information",
+      "deliveryAddress": "Delivery address",
+      "updateProfile": "Update profile"
+    },
+    "findDistributor": {
+      "title": "Find distributor",
+      "description": "Search nearby milk distributors and compare available products.",
+      "radius": "Search radius",
+      "list": "List view",
+      "map": "Map view",
+      "nearbyDistributors": "Nearby distributors",
+      "viewDistributor": "View distributor"
+    },
+    "subscribe": {
+      "title": "Subscribe to milk delivery",
+      "description": "Choose a product, quantity, frequency, and delivery slot.",
+      "chooseProduct": "Choose product",
+      "chooseSlot": "Choose delivery slot",
+      "confirmSubscription": "Confirm subscription",
+      "subscriptionCreated": "Subscription created",
+      "fatFromDistributor": "Fat {fat}% · {price}/unit (set by distributor)"
+    },
+    "subscriptions": {
+      "list": {
+        "title": "My subscriptions",
+        "description": "View and manage all your milk subscriptions.",
+        "active": "Active subscriptions",
+        "past": "Past subscriptions"
+      },
+      "detail": {
+        "title": "Subscription details",
+        "description": "Review schedule, deliveries, pauses, and extra milk requests.",
+        "edit": "Edit subscription",
+        "pause": "Pause subscription",
+        "extra": "Request extra milk",
+        "deliveryHistory": "Delivery history"
+      }
+    }
+  },
+  "validation": {
+    "email": "Enter a valid email address.",
+    "password": "Password must be at least 8 characters.",
+    "required": "This field is required.",
+    "passwordsMatch": "Passwords do not match.",
+    "phone": "Enter a valid 10-digit phone number.",
+    "minQuantity": "Quantity must be greater than zero.",
+    "selectCustomer": "Select a customer.",
+    "selectProduct": "Select a product.",
+    "selectSlot": "Select a delivery slot.",
+    "nameMin": "Name must be at least 2 characters.",
+    "businessNameRequired": "Business name is required.",
+    "labelRequired": "Label is required.",
+    "startTimeRequired": "Start time is required.",
+    "endTimeRequired": "End time is required.",
+    "startDateRequired": "Start date is required.",
+    "endDateRequired": "End date is required.",
+    "rejectionReason": "Please provide a rejection reason.",
+    "minPrice": "Price must be greater than zero.",
+    "addressUrbanLine": "Enter flat, building, street, or address.",
+    "addressCity": "City is required.",
+    "addressPincodeOrMap": "Pincode required unless you pin location on map.",
+    "addressVillage": "Village is required.",
+    "addressDistrict": "District is required.",
+    "addressState": "State is required.",
+    "addressRuralLocation": "Add pincode, landmark, or pin on map."
+  },
+  "address": {
+    "urban": "Urban",
+    "rural": "Rural",
+    "flat": "Flat / house number",
+    "building": "Building / society",
+    "street": "Street",
+    "landmark": "Landmark",
+    "village": "Village",
+    "district": "District",
+    "state": "State",
+    "mapPin": "Map pin",
+    "addressPreview": "Address preview",
+    "type": "Address type",
+    "line1": "Address line 1",
+    "line2": "Address line 2",
+    "area": "Area",
+    "locality": "Locality",
+    "tehsil": "Tehsil",
+    "country": "Country",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "useCurrentLocation": "Use current location",
+    "shareLocationQuestion": "Share your location?",
+    "shareLocationHint": "Allow location access so we can save your exact coordinates. A map preview will show after capture.",
+    "shareLocationYes": "Yes, use my location",
+    "shareLocationNo": "No, address only",
+    "shareLocationSkipped": "Location will not be shared. You can still save using your address and pincode.",
+    "fetchingLocation": "Fetching your location…",
+    "locationCaptured": "Location captured",
+    "locationPreviewTitle": "Your location on the map",
+    "openInMaps": "Open in Google Maps",
+    "updateLocation": "Update to current location",
+    "retryLocation": "Retry location",
+    "locationFetchDenied": "Location permission was denied. Enable it in your browser settings, then retry.",
+    "locationFetchTimeout": "Location request timed out. Please try again, or check that Location Services are on.",
+    "locationFetchUnsupported": "This browser does not support location access.",
+    "locationFetchInsecure": "Location only works on https:// or http://localhost. Open the app via localhost (not a LAN IP like 192.168.x.x).",
+    "locationFetchUnavailable": "Could not get your location. Please try again."
+  },
+  "errors": {
+    "PHONE_ALREADY_REGISTERED": "This phone number is already registered.",
+    "EMAIL_ALREADY_REGISTERED": "This email address is already registered.",
+    "INVALID_CREDENTIALS": "Invalid email or password.",
+    "ACCOUNT_SUSPENDED": "This account has been suspended.",
+    "UNAUTHORIZED": "Please sign in to continue.",
+    "FORBIDDEN": "You do not have permission to perform this action.",
+    "NOT_FOUND": "The requested resource was not found.",
+    "SUBSCRIPTION_CUTOFF_PASSED": "The cutoff time for subscription changes has passed.",
+    "INVALID_REFRESH_TOKEN": "Your session has expired. Please sign in again.",
+    "INVALID_RESET_TOKEN": "This password reset link is invalid or has expired.",
+    "INVALID_ACTIVATION_TOKEN": "This activation link is invalid or has expired.",
+    "BUSINESS_NAME_REQUIRED": "Business name is required for distributor registration.",
+    "SUBSCRIPTION_NOT_FOUND": "Subscription not found.",
+    "SUBSCRIPTION_NOT_ACTIVE": "Only active subscriptions can be updated.",
+    "DISTRIBUTOR_NOT_LIVE": "This distributor is not live yet.",
+    "DISTRIBUTOR_NOT_ACCEPTING": "This distributor is not accepting subscriptions.",
+    "DISTRIBUTOR_NOT_APPROVED": "This distributor account is not approved.",
+    "DISTRIBUTOR_NOT_ELIGIBLE": "Distributor not found or not eligible.",
+    "DISTRIBUTOR_PROFILE_NOT_FOUND": "Distributor profile not found.",
+    "CUSTOMER_PROFILE_NOT_FOUND": "Customer profile not found.",
+    "CUSTOMER_NOT_FOUND": "Customer not found.",
+    "CUSTOMER_NOT_LINKED": "Customer is not linked to this distributor.",
+    "NO_ACTIVE_PRICING": "No active pricing for the selected product.",
+    "PRICING_NOT_FOUND": "Pricing not found.",
+    "PRICING_ALREADY_EXISTS": "Active price already exists for this product and fat percentage.",
+    "INVALID_DELIVERY_SLOT": "Invalid or inactive delivery slot.",
+    "DELIVERY_SLOT_NOT_FOUND": "Delivery slot not found.",
+    "PRODUCT_NOT_AVAILABLE": "Product not available from this distributor.",
+    "PRODUCT_NOT_FOUND": "Product not found.",
+    "PRODUCT_SKU_EXISTS": "This SKU is already in use.",
+    "PRODUCT_IN_USE": "This product has active subscriptions and cannot be removed.",
+    "PRODUCT_FORBIDDEN": "You cannot modify this product.",
+    "GO_LIVE_NOT_APPROVED": "Distributor must be approved before go-live.",
+    "GO_LIVE_NOT_READY": "Go-live readiness check failed. Complete all setup steps first.",
+    "ADDRESS_URBAN_LINE_REQUIRED": "Urban address requires flat, building, street, or address line.",
+    "ADDRESS_CITY_REQUIRED": "City is required for urban addresses.",
+    "ADDRESS_PINCODE_OR_MAP_REQUIRED": "Pincode is required unless you set location on the map.",
+    "ADDRESS_VILLAGE_REQUIRED": "Village is required for rural addresses.",
+    "ADDRESS_DISTRICT_REQUIRED": "District is required for rural addresses.",
+    "ADDRESS_STATE_REQUIRED": "State is required for rural addresses.",
+    "ADDRESS_RURAL_LOCATION_REQUIRED": "Rural address requires pincode, landmark, or a map pin.",
+    "IDENTITY_DOCUMENT_REQUIRED": "Please upload an identity document.",
+    "IDENTITY_DOCUMENT_LIMIT": "You can upload at most two identity documents.",
+    "IDENTITY_DOCUMENT_INVALID_TYPE": "Only JPEG, PNG, or PDF documents are allowed.",
+    "IDENTITY_DOCUMENT_TOO_LARGE": "Document must be 5 MB or smaller.",
+    "IDENTITY_DOCUMENT_NOT_FOUND": "Identity document not found.",
+    "IDENTITY_NAME_MISMATCH": "The name on the document does not match your registered name.",
+    "IDENTITY_NOT_VERIFIED": "Upload at least one verified identity document to continue.",
+    "GENERIC": "Something went wrong. Please try again."
+  },
+  "identity": {
+    "customerTitle": "Identity documents",
+    "customerDescription": "Upload Aadhaar, PAN, or another ID. The name on the document must match your registered name before you can find distributors.",
+    "instructions": "Upload 1–2 identity documents and type the name exactly as printed on the document. If it does not match your registered name, the document is declined and your account stays hidden from discovery.",
+    "registeredName": "Registered name used for matching",
+    "limits": "Accepted: JPEG, PNG, PDF · Max 2 documents · Max 5 MB each · At least one verified document required",
+    "noneYet": "No documents uploaded yet.",
+    "documentType": "Document type",
+    "declaredName": "Name as on document",
+    "declaredNamePlaceholder": "Enter the name printed on the document",
+    "file": "Document file",
+    "upload": "Upload document",
+    "uploadRequired": "Choose a file and enter the name on the document.",
+    "uploadDocuments": "Upload documents",
+    "verified": "Verified",
+    "unverified": "Not verified",
+    "declined": "Declined — registered name does not match the name on the document",
+    "maxReached": "You already uploaded the maximum of two documents. Delete one to upload another.",
+    "continue": "Continue",
+    "needVerified": "Upload a verified document to continue",
+    "deleteTitle": "Delete document?",
+    "deleteDescription": "This removes the uploaded document from your account.",
+    "findDistributors": "Find distributors",
+    "customerGate": "Complete identity verification before searching for distributors. Upload at least one document whose name matches your registered name.",
+    "distributorGate": "Upload at least one verified identity document to go live and become visible to customers.",
+    "statusLabel": "Identity",
+    "serviceRadius": "Service radius (km)",
+    "serviceRadiusHint": "Customers only see you if they are within this radius and their own search radius.",
+    "radiusBothHint": "Results respect both your search radius and each distributor’s service area.",
+    "serves": "serves",
+    "types": {
+      "AADHAAR": "Aadhaar card",
+      "PAN": "PAN card",
+      "OTHER": "Other ID"
+    }
+  },
+  "subscription": {
+    "frequencies": {
+      "daily": "Daily",
+      "alternateDay": "Alternate day",
+      "weekdays": "Weekdays",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "schedulePreview": "Schedule preview",
+    "pausedHint": "Deliveries are paused for the selected period.",
+    "deliveriesCount": "{count} deliveries"
+  },
+  "empty": {
+    "noCustomers": "No customers found.",
+    "noDistributors": "No distributors found.",
+    "noSubscriptions": "No subscriptions found.",
+    "noResults": "No results found."
+  },
+  "forms": {
+    "selectProduct": "Select a product",
+    "selectSlot": "Select a delivery slot",
+    "selectCustomer": "Select a customer"
+  }
+}
