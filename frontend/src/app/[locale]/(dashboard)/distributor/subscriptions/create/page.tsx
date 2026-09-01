@@ -94,9 +94,9 @@ export default function CreateSubscriptionPage() {
                 {...register("customerId")}
               >
                 <option value="">{tDistributor("customers.list.title")}</option>
-                {customers?.map((dc) => (
-                  <option key={dc.customerId} value={dc.customerId}>
-                    {dc.customer?.user?.name || dc.customerId}
+                {customers?.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.user?.name || customer.id}
                   </option>
                 ))}
               </select>

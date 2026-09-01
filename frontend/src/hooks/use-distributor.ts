@@ -6,6 +6,7 @@ import type {
   Pricing,
   DeliverySlot,
   DistributorCustomer,
+  DistributorCustomerListItem,
   Subscription,
   CustomerWithSubscriptions,
 } from "@/types";
@@ -278,9 +279,12 @@ export function useDistributorCustomers(search?: string) {
   return useQuery({
     queryKey: ["distributor", "customers", search],
     queryFn: async () => {
-      const res = await api.get<DistributorCustomer[]>("/distributor/customers", {
-        params: search ? { search } : undefined,
-      });
+      const res = await api.get<DistributorCustomerListItem[]>(
+        "/distributor/customers",
+        {
+          params: search ? { search } : undefined,
+        },
+      );
       return res.data;
     },
   });

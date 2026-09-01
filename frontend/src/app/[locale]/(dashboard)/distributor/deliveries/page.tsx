@@ -76,10 +76,7 @@ export default function DistributorDeliveriesPage() {
   const updateItem = useUpdateDeliveryItem();
   const bulkStatus = useBulkDeliveryStatus();
 
-  const customerOptions = (customers || []) as unknown as Array<{
-    id: string;
-    user?: { name?: string; phone?: string | null };
-  }>;
+  const customerOptions = customers ?? [];
 
   const handleGenerate = async () => {
     try {

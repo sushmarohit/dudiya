@@ -71,21 +71,21 @@ export default function DistributorCustomersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {data.map((dc) => (
-                <tr key={dc.id} className="bg-white hover:bg-slate-50">
+              {data.map((customer) => (
+                <tr key={customer.id} className="bg-white hover:bg-slate-50">
                   <td className="px-4 py-3 font-medium">
                     <Link
-                      href={`/distributor/customers/${dc.customerId}`}
+                      href={`/distributor/customers/${customer.id}`}
                       className="text-emerald-700 hover:underline"
                     >
-                      {dc.customer?.user?.name || "—"}
+                      {customer.user?.name || "—"}
                     </Link>
                   </td>
                   <td className="px-4 py-3">
-                    {dc.customer?.user?.phone || "—"}
+                    {customer.user?.phone || "—"}
                   </td>
-                  <td className="px-4 py-3">{dc.customer?.city || "—"}</td>
-                  <td className="px-4 py-3">{dc.onboardedVia}</td>
+                  <td className="px-4 py-3">{customer.city || "—"}</td>
+                  <td className="px-4 py-3">{customer.onboardedVia}</td>
                 </tr>
               ))}
             </tbody>

@@ -203,6 +203,14 @@ export interface SubscriptionExtra {
   requestedAt: string;
 }
 
+/** Flat customer row returned by GET /distributor/customers (customer profile + link fields). */
+export interface DistributorCustomerListItem extends CustomerProfile {
+  onboardedVia: OnboardedVia;
+  linkedAt?: string;
+  user?: User;
+}
+
+/** Link join row (used when nested customer is present). */
 export interface DistributorCustomer {
   id: string;
   distributorId: string;
