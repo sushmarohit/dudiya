@@ -3,11 +3,22 @@
 import { useTranslations } from "next-intl";
 import { PageHeader, ResponsiveTable } from "@/components/ui/responsive-table";
 import { useBillingDues } from "@/hooks/use-billing";
+import { FeatureDisabledNotice } from "@/components/feature-disabled-notice";
+import { isBillingEnabled } from "@/lib/feature-flags";
 
 export default function BillingDuesPage() {
   const t = useTranslations("billing");
   const tc = useTranslations("common");
   const { data, isLoading } = useBillingDues();
+
+  if (!isBillingEnabled()) {
+    return (
+      <FeatureDisabledNotice
+        feature="billing"
+        backHref="/distributor/dashboard"
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">

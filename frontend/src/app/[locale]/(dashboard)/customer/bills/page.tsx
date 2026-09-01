@@ -5,11 +5,19 @@ import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader, ResponsiveTable } from "@/components/ui/responsive-table";
 import { useCustomerBills } from "@/hooks/use-billing";
+import { FeatureDisabledNotice } from "@/components/feature-disabled-notice";
+import { isBillingEnabled } from "@/lib/feature-flags";
 
 export default function CustomerBillsPage() {
   const t = useTranslations("billing");
   const tc = useTranslations("common");
   const { data, isLoading } = useCustomerBills();
+
+  if (!isBillingEnabled()) {
+    return (
+      <FeatureDisabledNotice feature="billing" backHref="/customer/profile" />
+    );
+  }
 
   return (
     <div className="space-y-6">

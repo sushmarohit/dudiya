@@ -102,6 +102,19 @@ GOOGLE_MAPS_API_KEY=          # optional: Geocoding API for address resolve
 NEXT_PUBLIC_API_URL=http://localhost:3001/api
 ```
 
+### Feature flags (subscription & billing)
+
+By default, **milk delivery subscriptions** and **billing/payments** are disabled in the user flow. All code remains in the codebase and can be re-enabled via env vars:
+
+| Flag | Backend | Frontend |
+|------|---------|----------|
+| Subscription create flow | `FEATURE_SUBSCRIPTION_FLOW_ENABLED=true` | `NEXT_PUBLIC_FEATURE_SUBSCRIPTION_FLOW_ENABLED=true` |
+| Billing & payments | `FEATURE_BILLING_ENABLED=true` | `NEXT_PUBLIC_FEATURE_BILLING_ENABLED=true` |
+
+When disabled: nav items and create/subscribe CTAs are hidden; new subscriptions and payment recording are blocked via API; billing cron jobs are skipped. Existing subscriptions, deliveries, and read-only bill views continue to work.
+
+Public API: `GET /api/config/features`
+
 > Optional: set `GOOGLE_MAPS_API_KEY` on the backend for Geocoding API. Frontend uses browser GPS only (no map UI).
 ## Zustand auth store
 

@@ -86,6 +86,13 @@
       "import": "Imported"
     }
   },
+  "features": {
+    "subscriptionDisabledTitle": "Subscriptions are not available",
+    "subscriptionDisabledDescription": "Milk delivery subscriptions are temporarily disabled. You can still manage your profile and find distributors.",
+    "billingDisabledTitle": "Billing is not available",
+    "billingDisabledDescription": "Invoices and payments are temporarily disabled. No payment is required at this time.",
+    "backToDashboard": "Back to dashboard"
+  },
   "landing": {
     "hero": {
       "title": "Fresh milk delivery,",
@@ -644,6 +651,8 @@
     "SUBSCRIPTION_END_NOT_PENDING": "There is no pending end request for this subscription.",
     "SUBSCRIPTION_END_ALREADY_CONFIRMED": "You have already confirmed this end request.",
     "SUBSCRIPTION_END_NOT_ALLOWED": "This subscription end action is not allowed.",
+    "SUBSCRIPTION_FLOW_DISABLED": "Creating new subscriptions is temporarily disabled.",
+    "BILLING_DISABLED": "Billing and payments are temporarily disabled.",
     "GENERIC": "Something went wrong. Please try again."
   },
   "identity": {

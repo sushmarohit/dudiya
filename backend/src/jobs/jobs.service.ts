@@ -6,6 +6,7 @@ import { BillingService } from '../billing/billing.service';
 import { NotificationService } from '../notification/notification.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { startOfDay } from '../common/utils/date.util';
+import { isBillingEnabled } from '../common/config/feature-flags';
 
 @Injectable()
 export class JobsService {
@@ -28,6 +29,10 @@ export class JobsService {
 
   @Cron(CronExpression.EVERY_DAY_AT_1AM)
   async closeBillingCycles() {
+    if (!isBillingEnabled()) {
+      this.logger.debug('Billing disabled — skipping close_billing_cycles');
+      return;
+    }
     this.logger.log('Running close_billing_cycles');
     const result = await this.billing.runCycleForAllDistributors(new Date());
     this.logger.log(`Created ${result.billsCreated} bills`);
@@ -35,6 +40,10 @@ export class JobsService {
 
   @Cron(CronExpression.EVERY_DAY_AT_6AM)
   async markOverdueBills() {
+    if (!isBillingEnabled()) {
+      this.logger.debug('Billing disabled — skipping mark_overdue_bills');
+      return;
+    }
     this.logger.log('Running mark_overdue_bills');
     const result = await this.billing.markOverdueBills();
     this.logger.log(`Marked ${result.updated} bills overdue`);

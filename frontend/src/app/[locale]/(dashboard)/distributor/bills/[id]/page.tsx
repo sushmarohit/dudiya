@@ -14,6 +14,7 @@ import {
 } from "@/hooks/use-billing";
 import { useApiErrorMessage } from "@/hooks/use-api-error-message";
 import { showToast } from "@/components/providers";
+import { isBillingEnabled } from "@/lib/feature-flags";
 
 export default function DistributorBillDetailPage() {
   const params = useParams();
@@ -80,7 +81,7 @@ export default function DistributorBillDetailPage() {
         </div>
       ) : null}
 
-      {balance > 0 && bill.status !== "VOID" && (
+      {balance > 0 && bill.status !== "VOID" && isBillingEnabled() && (
         <div className="rounded-lg border bg-white p-4 space-y-3 max-w-md">
           <h3 className="font-medium">{t("recordPayment")}</h3>
           <div>

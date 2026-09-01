@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/responsive-table";
 import { downloadBillPdf, useCustomerBill } from "@/hooks/use-billing";
+import { FeatureDisabledNotice } from "@/components/feature-disabled-notice";
+import { isBillingEnabled } from "@/lib/feature-flags";
 
 export default function CustomerBillDetailPage() {
   const params = useParams();
@@ -12,6 +14,12 @@ export default function CustomerBillDetailPage() {
   const t = useTranslations("billing");
   const tc = useTranslations("common");
   const { data: bill, isLoading } = useCustomerBill(id);
+
+  if (!isBillingEnabled()) {
+    return (
+      <FeatureDisabledNotice feature="billing" backHref="/customer/profile" />
+    );
+  }
 
   if (isLoading || !bill) {
     return <p className="text-slate-500">{tc("loading")}</p>;

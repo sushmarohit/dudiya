@@ -28,6 +28,7 @@ import {
   UpdateCustomerSubscriptionDto,
 } from './dto/subscription.dto';
 import { CatalogService } from '../products/catalog.service';
+import { assertSubscriptionFlowEnabled } from '../common/config/feature-flags';
 
 interface NearbyDistributorRow {
   id: string;
@@ -312,6 +313,7 @@ export class CustomerService {
   }
 
   async createSubscription(userId: string, dto: CreateCustomerSubscriptionDto) {
+    assertSubscriptionFlowEnabled();
     await this.identity.assertCustomerIdentityVerified(userId);
     const profile = await this.getProfileByUserId(userId);
     const live = await this.readiness.isDistributorLive(dto.distributorId);

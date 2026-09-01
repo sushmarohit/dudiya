@@ -21,6 +21,8 @@ import { useApiErrorMessage } from "@/hooks/use-api-error-message";
 import { showToast } from "@/components/providers";
 import { formatCurrency } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
+import { FeatureDisabledNotice } from "@/components/feature-disabled-notice";
+import { isSubscriptionFlowEnabled } from "@/lib/feature-flags";
 
 const FREQUENCY_MESSAGE_KEYS: Record<SubscriptionFrequency, string> = {
   DAILY: "daily",
@@ -106,6 +108,15 @@ export default function SubscribePage({
 
   if (isLoading) {
     return <p className="text-slate-500">{tCommon("loading")}</p>;
+  }
+
+  if (!isSubscriptionFlowEnabled()) {
+    return (
+      <FeatureDisabledNotice
+        feature="subscription"
+        backHref="/customer/find-distributor"
+      />
+    );
   }
 
   if (existingActive) {

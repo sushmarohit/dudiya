@@ -86,6 +86,13 @@
       "import": "आयातित"
     }
   },
+  "features": {
+    "subscriptionDisabledTitle": "सदस्यता उपलब्ध नहीं है",
+    "subscriptionDisabledDescription": "दूध डिलीवरी सदस्यता अस्थायी रूप से अक्षम है। आप अभी भी अपनी प्रोफ़ाइल प्रबंधित कर सकते हैं और वितरक खोज सकते हैं।",
+    "billingDisabledTitle": "बिलिंग उपलब्ध नहीं है",
+    "billingDisabledDescription": "चालान और भुगतान अस्थायी रूप से अक्षम हैं। इस समय किसी भुगतान की आवश्यकता नहीं है।",
+    "backToDashboard": "डैशबोर्ड पर वापस जाएं"
+  },
   "landing": {
     "hero": {
       "title": "ताजा दूध डिलीवरी,",
@@ -644,6 +651,8 @@
     "SUBSCRIPTION_END_NOT_PENDING": "इस सदस्यता के लिए कोई लंबित समाप्ति अनुरोध नहीं है।",
     "SUBSCRIPTION_END_ALREADY_CONFIRMED": "आपने इस समाप्ति अनुरोध की पुष्टि पहले ही कर दी है।",
     "SUBSCRIPTION_END_NOT_ALLOWED": "यह सदस्यता समाप्ति कार्रवाई अनुमत नहीं है।",
+    "SUBSCRIPTION_FLOW_DISABLED": "नई सदस्यता बनाना अस्थायी रूप से अक्षम है।",
+    "BILLING_DISABLED": "बिलिंग और भुगतान अस्थायी रूप से अक्षम हैं।",
     "GENERIC": "कुछ गलत हो गया। कृपया फिर प्रयास करें।"
   },
   "identity": {

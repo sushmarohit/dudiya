@@ -9,6 +9,8 @@ import { useDistributorBills, useRunBillingCycle } from "@/hooks/use-billing";
 import { useApiErrorMessage } from "@/hooks/use-api-error-message";
 import { showToast } from "@/components/providers";
 import { useConfirm } from "@/components/ui/confirm-dialog";
+import { FeatureDisabledNotice } from "@/components/feature-disabled-notice";
+import { isBillingEnabled } from "@/lib/feature-flags";
 
 export default function DistributorBillingPage() {
   const t = useTranslations("billing");
@@ -17,6 +19,15 @@ export default function DistributorBillingPage() {
   const confirm = useConfirm();
   const { data, isLoading } = useDistributorBills();
   const runCycle = useRunBillingCycle();
+
+  if (!isBillingEnabled()) {
+    return (
+      <FeatureDisabledNotice
+        feature="billing"
+        backHref="/distributor/dashboard"
+      />
+    );
+  }
 
   const handleRunCycle = async () => {
     const ok = await confirm({

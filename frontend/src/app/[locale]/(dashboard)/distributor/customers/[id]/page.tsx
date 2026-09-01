@@ -24,6 +24,7 @@ import type { SubscriptionFrequency } from "@/types";
 import { formatDate } from "@/lib/utils";
 import { useApiErrorMessage } from "@/hooks/use-api-error-message";
 import { showToast } from "@/components/providers";
+import { isSubscriptionFlowEnabled } from "@/lib/feature-flags";
 
 const FREQUENCY_MESSAGE_KEYS: Record<SubscriptionFrequency, string> = {
   DAILY: "daily",
@@ -159,13 +160,18 @@ export default function DistributorCustomerDetailPage({
           <CardContent>
             {!customer.subscriptions?.length ? (
               <p className="text-sm text-slate-500">
-                {tEmpty("noSubscriptions")}{" "}
-                <Link
-                  href="/distributor/subscriptions/create"
-                  className="font-medium text-emerald-700 underline"
-                >
-                  Create one
-                </Link>
+                {tEmpty("noSubscriptions")}
+                {isSubscriptionFlowEnabled() ? (
+                  <>
+                    {" "}
+                    <Link
+                      href="/distributor/subscriptions/create"
+                      className="font-medium text-emerald-700 underline"
+                    >
+                      Create one
+                    </Link>
+                  </>
+                ) : null}
               </p>
             ) : (
               <ul className="divide-y divide-slate-200">

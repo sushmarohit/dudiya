@@ -25,6 +25,7 @@ import { UpdateBillingSettingsDto } from './dto/billing-settings.dto';
 import { RecordPaymentDto } from './dto/record-payment.dto';
 import { BillAdjustmentDto } from './dto/bill-adjustment.dto';
 import { VoidBillDto } from './dto/void-bill.dto';
+import { assertBillingEnabled } from '../common/config/feature-flags';
 
 @Injectable()
 export class BillingService {
@@ -104,6 +105,7 @@ export class BillingService {
   }
 
   async updateSettings(userId: string, dto: UpdateBillingSettingsDto) {
+    assertBillingEnabled();
     const profile = await this.getDistributorProfile(userId);
     return this.prisma.distributorProfile.update({
       where: { id: profile.id },
@@ -143,6 +145,7 @@ export class BillingService {
   }
 
   async runCycle(userId: string, referenceDate?: string) {
+    assertBillingEnabled();
     const profile = await this.getDistributorProfile(userId);
     const ref = referenceDate ? parseDateInput(referenceDate) : new Date();
     const { cycleStart, cycleEnd } = this.getCycleWindow(
@@ -299,6 +302,7 @@ export class BillingService {
   }
 
   async recordPayment(userId: string, billId: string, dto: RecordPaymentDto) {
+    assertBillingEnabled();
     const profile = await this.getDistributorProfile(userId);
     const bill = await this.prisma.bill.findFirst({
       where: { id: billId, distributorId: profile.id },
@@ -356,6 +360,7 @@ export class BillingService {
   }
 
   async addAdjustment(userId: string, billId: string, dto: BillAdjustmentDto) {
+    assertBillingEnabled();
     const profile = await this.getDistributorProfile(userId);
     const bill = await this.prisma.bill.findFirst({
       where: { id: billId, distributorId: profile.id },
@@ -394,6 +399,7 @@ export class BillingService {
   }
 
   async voidBill(userId: string, billId: string, dto: VoidBillDto) {
+    assertBillingEnabled();
     const profile = await this.getDistributorProfile(userId);
     const bill = await this.prisma.bill.findFirst({
       where: { id: billId, distributorId: profile.id },

@@ -9,6 +9,7 @@ import { useDistributorSubscriptions } from "@/hooks/use-distributor";
 import type { SubscriptionFrequency } from "@/types";
 import { formatDate } from "@/lib/utils";
 import { PageHeader, ResponsiveTable } from "@/components/ui/responsive-table";
+import { isSubscriptionFlowEnabled } from "@/lib/feature-flags";
 
 const FREQUENCY_MESSAGE_KEYS: Record<SubscriptionFrequency, string> = {
   DAILY: "daily",
@@ -32,12 +33,14 @@ export default function DistributorSubscriptionsPage() {
           title={tDistributor("subscriptions.title")}
           description={tDistributor("subscriptions.description")}
         />
-        <Link href="/distributor/subscriptions/create" className="shrink-0">
-          <Button className="w-full sm:w-auto">
-            <Plus className="h-4 w-4" />
-            {tDistributor("subscriptions.createSubscription")}
-          </Button>
-        </Link>
+        {isSubscriptionFlowEnabled() ? (
+          <Link href="/distributor/subscriptions/create" className="shrink-0">
+            <Button className="w-full sm:w-auto">
+              <Plus className="h-4 w-4" />
+              {tDistributor("subscriptions.createSubscription")}
+            </Button>
+          </Link>
+        ) : null}
       </div>
 
       {error && (

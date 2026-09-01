@@ -22,6 +22,8 @@ import type { SubscriptionFrequency } from "@/types";
 import { todayDateKey } from "@/lib/utils";
 import { useApiErrorMessage } from "@/hooks/use-api-error-message";
 import { showToast } from "@/components/providers";
+import { FeatureDisabledNotice } from "@/components/feature-disabled-notice";
+import { isSubscriptionFlowEnabled } from "@/lib/feature-flags";
 
 const FREQUENCY_MESSAGE_KEYS: Record<SubscriptionFrequency, string> = {
   DAILY: "daily",
@@ -69,6 +71,15 @@ export default function CreateSubscriptionPage() {
       showToast(getApiErrorMessage(err), "error");
     }
   };
+
+  if (!isSubscriptionFlowEnabled()) {
+    return (
+      <FeatureDisabledNotice
+        feature="subscription"
+        backHref="/distributor/subscriptions"
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">

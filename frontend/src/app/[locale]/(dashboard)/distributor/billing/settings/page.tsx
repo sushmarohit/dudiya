@@ -8,12 +8,23 @@ import {
   useBillingSettings,
   useUpdateBillingSettings,
 } from "@/hooks/use-billing";
+import { FeatureDisabledNotice } from "@/components/feature-disabled-notice";
+import { isBillingEnabled } from "@/lib/feature-flags";
 
 export default function BillingSettingsPage() {
   const t = useTranslations("billing");
   const tc = useTranslations("common");
   const { data, isLoading } = useBillingSettings();
   const update = useUpdateBillingSettings();
+
+  if (!isBillingEnabled()) {
+    return (
+      <FeatureDisabledNotice
+        feature="billing"
+        backHref="/distributor/dashboard"
+      />
+    );
+  }
 
   if (isLoading || !data) {
     return <p className="text-slate-500">{tc("loading")}</p>;

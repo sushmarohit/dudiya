@@ -26,6 +26,10 @@ import { Button } from "@/components/ui/button";
 import { DashboardNavbar } from "@/components/layouts/dashboard-navbar";
 import { useDistributorProfile } from "@/hooks/use-distributor";
 import { useCustomerProfile } from "@/hooks/use-customer";
+import {
+  isBillingEnabled,
+  isSubscriptionFlowEnabled,
+} from "@/lib/feature-flags";
 import type { UserRole } from "@/types";
 
 interface NavItem {
@@ -67,16 +71,31 @@ const customerNav: NavItem[] = [
 ];
 
 function getNavForRole(role: UserRole): NavItem[] {
-  switch (role) {
-    case "ADMIN":
-      return adminNav;
-    case "DISTRIBUTOR":
-      return distributorNav;
-    case "CUSTOMER":
-      return customerNav;
-    default:
-      return [];
-  }
+  const items = (() => {
+    switch (role) {
+      case "ADMIN":
+        return adminNav;
+      case "DISTRIBUTOR":
+        return distributorNav;
+      case "CUSTOMER":
+        return customerNav;
+      default:
+        return [];
+    }
+  })();
+
+  return items.filter((item) => {
+    if (!isSubscriptionFlowEnabled() && item.href.includes("/subscriptions")) {
+      return false;
+    }
+    if (!isBillingEnabled() && item.href.includes("/billing")) {
+      return false;
+    }
+    if (!isBillingEnabled() && item.href.includes("/bills")) {
+      return false;
+    }
+    return true;
+  });
 }
 
 function getNavNamespace(role: UserRole): "adminNav" | "distributorNav" | "customerNav" {

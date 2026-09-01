@@ -25,6 +25,7 @@ import { PhoneValidationService } from '../common/services/phone-validation.serv
 import { NotificationService } from '../notification/notification.service';
 import { ApiErrorCode } from '../common/errors/api-error-code.enum';
 import { throwApi } from '../common/errors/throw-api';
+import { assertSubscriptionFlowEnabled } from '../common/config/feature-flags';
 import { formatDateKey, parseDateInput } from '../common/utils/date.util';
 import { UpdateDistributorProfileDto } from './dto/update-profile.dto';
 import { SetupStep } from './dto/complete-setup-step.dto';
@@ -513,6 +514,7 @@ export class DistributorService {
   }
 
   async createSubscription(userId: string, dto: CreateDistributorSubscriptionDto) {
+    assertSubscriptionFlowEnabled();
     const profile = await this.getProfileByUserId(userId);
     await this.validateSubscriptionCreation(profile.id, dto);
     await this.subscriptionEnd.assertNoActiveSubscription(

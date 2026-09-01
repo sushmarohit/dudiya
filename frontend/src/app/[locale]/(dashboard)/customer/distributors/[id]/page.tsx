@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDistributorDetail } from "@/hooks/use-customer";
 import { formatCurrency } from "@/lib/utils";
+import { isSubscriptionFlowEnabled } from "@/lib/feature-flags";
 
 export default function DistributorDetailPage({
   params,
@@ -94,7 +95,7 @@ export default function DistributorDetailPage({
         </CardContent>
       </Card>
 
-      {isLive && (
+      {isLive && isSubscriptionFlowEnabled() && (
         <Link href={`/customer/subscribe/${id}`}>
           <Button>{tCustomer("subscribe.confirmSubscription")}</Button>
         </Link>
