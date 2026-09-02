@@ -1,4 +1,4 @@
-import { PrismaClient, ProductCategory, MilkSpecies, UserRole, UserStatus, ProductScope, ProductPromotionStatus, SetupStatus, ApprovalStatus } from '@prisma/client';
+import { PrismaClient, ProductCategory, MilkSpecies, UserRole, UserStatus, ProductScope, ProductPromotionStatus, ApprovalStatus } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -66,17 +66,13 @@ async function main() {
     },
   });
 
-  // Existing live / previously approved distributors stay discoverable after identity gate
+  // Admin approval removed — keep all distributor rows approved
   await prisma.distributorProfile.updateMany({
-    where: {
-      OR: [
-        { setupStatus: SetupStatus.GO_LIVE },
-        { approvalStatus: ApprovalStatus.APPROVED },
-      ],
-      identityVerified: false,
-    },
-    data: { identityVerified: true },
+    where: { approvalStatus: { not: ApprovalStatus.APPROVED } },
+    data: { approvalStatus: ApprovalStatus.APPROVED, rejectionReason: null },
   });
+
+  // Do NOT auto-set identityVerified — uploaded verified documents are compulsory before go-live
 
   console.log('Seed completed: admin user, products, platform settings');
 }

@@ -368,14 +368,22 @@ export default function DistributorSetupPage() {
               </ul>
               <p className="text-sm text-slate-600">
                 Pricing: {pricing?.length || 0} entries · Slots: {slots?.length || 0}
-                {profile?.identityVerified ? " · Identity verified" : " · Identity pending"}
+                {profile?.identityVerified
+                  ? " · Identity document verified"
+                  : " · Upload a verified identity document (required)"}
               </p>
+              {!profile?.identityVerified ? (
+                <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                  Identity document upload is compulsory before go-live.
+                </p>
+              ) : null}
               <Button
                 onClick={handleGoLive}
                 disabled={
                   goLive.isPending ||
                   profile?.setupStatus === "GO_LIVE" ||
-                  !profile?.identityVerified
+                  !profile?.identityVerified ||
+                  profile?.readiness?.ready === false
                 }
               >
                 {profile?.setupStatus === "GO_LIVE" ? "Already live" : "Go Live"}

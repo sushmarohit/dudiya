@@ -205,23 +205,41 @@ export function SubscriptionEndPanel({
         )}
 
         {isCancelled && (
-          <div className="space-y-2 text-sm">
+          <div className="space-y-3 text-sm">
             <p className="font-medium text-emerald-800">{t("ended")}</p>
-            {endRequest?.settlementBillId && (
-              <Link
-                href={
-                  party === "customer"
-                    ? `/customer/bills/${endRequest.settlementBillId}`
-                    : `/distributor/billing`
-                }
-                className="text-emerald-700 underline"
-              >
-                {t("viewSettlement")}
-              </Link>
-            )}
-            {!endRequest?.settlementBillId && (
-              <p className="text-slate-600">{t("noSettlementNeeded")}</p>
-            )}
+            {party === "customer" ? (
+              <p className="text-slate-600">{t("endedHint")}</p>
+            ) : null}
+            <div className="flex flex-wrap gap-2">
+              {endRequest?.settlementBillId && (
+                <Link
+                  href={
+                    party === "customer"
+                      ? `/customer/bills/${endRequest.settlementBillId}`
+                      : `/distributor/bills/${endRequest.settlementBillId}`
+                  }
+                >
+                  <Button size="sm" variant="outline">
+                    {t("viewSettlement")}
+                  </Button>
+                </Link>
+              )}
+              {!endRequest?.settlementBillId && (
+                <p className="w-full text-slate-600">{t("noSettlementNeeded")}</p>
+              )}
+              {party === "customer" ? (
+                <>
+                  <Link href="/customer/find-distributor">
+                    <Button size="sm">{t("startFresh")}</Button>
+                  </Link>
+                  <Link href="/customer/bills">
+                    <Button size="sm" variant="ghost">
+                      {t("viewBills")}
+                    </Button>
+                  </Link>
+                </>
+              ) : null}
+            </div>
           </div>
         )}
       </CardContent>

@@ -7,7 +7,6 @@ import {
   LayoutDashboard,
   Users,
   Building2,
-  ClipboardList,
   Settings,
   Milk,
   Package,
@@ -24,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
 import { Button } from "@/components/ui/button";
 import { DashboardNavbar } from "@/components/layouts/dashboard-navbar";
+import { NotificationArrivalWatcher } from "@/components/notifications/notification-arrival-watcher";
 import { useDistributorProfile } from "@/hooks/use-distributor";
 import { useCustomerProfile } from "@/hooks/use-customer";
 import {
@@ -40,7 +40,6 @@ interface NavItem {
 
 const adminNav: NavItem[] = [
   { href: "/admin/dashboard", labelKey: "dashboard", icon: LayoutDashboard },
-  { href: "/admin/verification", labelKey: "verification", icon: ClipboardList },
   { href: "/admin/distributors", labelKey: "distributors", icon: Building2 },
   { href: "/admin/customers", labelKey: "customers", icon: Users },
   { href: "/admin/subscriptions", labelKey: "subscriptions", icon: Package },
@@ -281,6 +280,7 @@ export function DashboardLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
+      <NotificationArrivalWatcher />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-emerald-600 focus:px-4 focus:py-2 focus:text-white"

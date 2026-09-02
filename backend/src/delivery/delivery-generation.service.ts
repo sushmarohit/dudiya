@@ -22,6 +22,16 @@ export class DeliveryGenerationService {
     slotId?: string,
   ) {
     const day = startOfDay(deliveryDate);
+
+    const unavailable = await this.prisma.distributorUnavailableDay.findUnique({
+      where: {
+        distributorId_date: { distributorId, date: day },
+      },
+    });
+    if (unavailable) {
+      return { generated: 0, items: [], skippedReason: 'distributor_unavailable' };
+    }
+
     const subscriptions = await this.prisma.subscription.findMany({
       where: {
         distributorId,

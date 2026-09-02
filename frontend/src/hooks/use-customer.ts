@@ -63,6 +63,25 @@ export function useNearbyDistributors(params: {
   });
 }
 
+export function useSearchDistributorsByName(params: {
+  q: string;
+  page?: number;
+  enabled?: boolean;
+}) {
+  const { enabled, q, page } = params;
+  return useQuery({
+    queryKey: ["customer", "distributors", "search", q, page],
+    queryFn: async () => {
+      const res = await api.get<NearbyDistributorsResponse>(
+        "/customers/distributors/search",
+        { params: { q, page } },
+      );
+      return res.data.items;
+    },
+    enabled: (enabled ?? true) && q.trim().length >= 2,
+  });
+}
+
 export function useDistributorDetail(id: string) {
   return useQuery({
     queryKey: ["customer", "distributors", id],

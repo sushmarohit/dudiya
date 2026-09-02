@@ -33,7 +33,7 @@ export function usePendingDistributors() {
   });
 }
 
-export function useAdminDistributors(params?: { status?: string; search?: string }) {
+export function useAdminDistributors(params?: { search?: string }) {
   return useQuery({
     queryKey: ["admin", "distributors", params],
     queryFn: async () => {
@@ -43,32 +43,6 @@ export function useAdminDistributors(params?: { status?: string; search?: string
       );
       const data = res.data;
       return Array.isArray(data) ? data : data.data;
-    },
-  });
-}
-
-export function useApproveDistributor() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: string) => {
-      const res = await api.post(`/admin/distributors/${id}/approve`);
-      return res.data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["admin"] });
-    },
-  });
-}
-
-export function useRejectDistributor() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
-      const res = await api.post(`/admin/distributors/${id}/reject`, { reason });
-      return res.data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["admin"] });
     },
   });
 }

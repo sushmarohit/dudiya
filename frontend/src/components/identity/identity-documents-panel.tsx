@@ -111,6 +111,14 @@ export function IdentityDocumentsPanel({
                 <p className="text-slate-600">
                   {t("declaredName")}: {doc.declaredName}
                 </p>
+                {doc.ocrExtractedName ? (
+                  <p className="text-slate-500">
+                    {t("ocrMatched")}: {doc.ocrExtractedName}
+                    {typeof doc.ocrScore === "number"
+                      ? ` (${Math.round(doc.ocrScore * 100)}%)`
+                      : ""}
+                  </p>
+                ) : null}
                 {doc.status === "VERIFIED" ? (
                   <p className="flex items-center gap-1 text-emerald-700">
                     <CheckCircle2 className="h-4 w-4" />
@@ -169,15 +177,19 @@ export function IdentityDocumentsPanel({
             </div>
           </div>
           <div className="space-y-2">
-            <Label>{t("file")}</Label>
+            <Label>
+              {t("file")} <span className="text-red-600">*</span>
+            </Label>
             <Input
               type="file"
+              required
               accept="image/jpeg,image/png,application/pdf"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             />
+            <p className="text-xs text-slate-500">{t("fileRequiredHint")}</p>
           </div>
           <Button type="submit" disabled={upload.isPending}>
-            {upload.isPending ? tCommon("loading") : t("upload")}
+            {upload.isPending ? t("uploadingOcr") : t("upload")}
           </Button>
         </form>
       ) : (

@@ -59,6 +59,10 @@ export default function SubscriptionDetailPage({
     resolver: zodResolver(schemas.pauseRequestSchema),
   });
 
+  const skipForm = useForm({
+    defaultValues: { date: "" },
+  });
+
   const extraForm = useForm({
     resolver: zodResolver(schemas.extraRequestSchema),
   });
@@ -89,6 +93,20 @@ export default function SubscriptionDetailPage({
       await pauseSubscription.mutateAsync({ id, ...data });
       showToast("Pause request submitted", "success");
       pauseForm.reset();
+    } catch (err) {
+      showToast(getApiErrorMessage(err), "error");
+    }
+  };
+
+  const onSkipSubmit = async (data: { date: string }) => {
+    try {
+      await pauseSubscription.mutateAsync({
+        id,
+        startDate: data.date,
+        endDate: data.date,
+      });
+      showToast(tCustomer("subscriptions.detail.skipSuccess"), "success");
+      skipForm.reset();
     } catch (err) {
       showToast(getApiErrorMessage(err), "error");
     }
@@ -234,6 +252,37 @@ export default function SubscriptionDetailPage({
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
+            <CardTitle>{tCustomer("subscriptions.detail.skip")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-slate-600">
+              {tCustomer("subscriptions.detail.skipHint")}
+            </p>
+            <form
+              onSubmit={skipForm.handleSubmit(onSkipSubmit)}
+              className="space-y-4"
+            >
+              <div className="space-y-2">
+                <Label htmlFor="skipDate">{tCommon("date")}</Label>
+                <Input
+                  id="skipDate"
+                  type="date"
+                  {...skipForm.register("date", { required: true })}
+                />
+              </div>
+              <Button
+                type="submit"
+                variant="outline"
+                disabled={pauseSubscription.isPending}
+              >
+                {tCustomer("subscriptions.detail.skipSubmit")}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
             <CardTitle>{tCustomer("subscriptions.detail.pause")}</CardTitle>
           </CardHeader>
           <CardContent>
@@ -260,14 +309,14 @@ export default function SubscriptionDetailPage({
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle>{tCustomer("subscriptions.detail.extra")}</CardTitle>
           </CardHeader>
           <CardContent>
             <form
               onSubmit={extraForm.handleSubmit(onExtraSubmit)}
-              className="space-y-4"
+              className="grid max-w-xl gap-4 sm:grid-cols-2"
             >
               <div className="space-y-2">
                 <Label htmlFor="extraDate">{tCommon("date")}</Label>
@@ -286,6 +335,7 @@ export default function SubscriptionDetailPage({
                 type="submit"
                 variant="outline"
                 disabled={extraSubscription.isPending}
+                className="sm:col-span-2"
               >
                 Submit extra request
               </Button>

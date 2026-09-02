@@ -89,6 +89,82 @@ export function useBulkDeliveryStatus() {
   });
 }
 
+export function useStartJourney() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { date: string; slotId?: string }) => {
+      const res = await api.post("/distributor/deliveries/start-journey", data);
+      return res.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["distributor", "deliveries"] });
+      qc.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+}
+
+export function useCompleteJourney() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { date: string; slotId?: string }) => {
+      const res = await api.post(
+        "/distributor/deliveries/complete-journey",
+        data,
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["distributor", "deliveries"] });
+    },
+  });
+}
+
+export type UnavailableDay = {
+  id: string;
+  date: string;
+  reason?: string | null;
+};
+
+export function useUnavailableDays() {
+  return useQuery({
+    queryKey: ["distributor", "unavailable-days"],
+    queryFn: async () => {
+      const res = await api.get<UnavailableDay[]>(
+        "/distributor/unavailable-days",
+      );
+      return res.data;
+    },
+  });
+}
+
+export function useCreateUnavailableDay() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { date: string; reason?: string }) => {
+      const res = await api.post("/distributor/unavailable-days", data);
+      return res.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["distributor", "unavailable-days"] });
+      qc.invalidateQueries({ queryKey: ["distributor", "deliveries"] });
+      qc.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+}
+
+export function useDeleteUnavailableDay() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.delete(`/distributor/unavailable-days/${id}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["distributor", "unavailable-days"] });
+    },
+  });
+}
+
 export function useCustomerDeliveries(from: string, to: string) {
   return useQuery({
     queryKey: ["customer", "deliveries", from, to],

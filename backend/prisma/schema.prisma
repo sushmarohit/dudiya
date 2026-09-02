@@ -166,6 +166,8 @@ enum NotificationType {
   SUBSCRIPTION_END_REQUESTED
   SUBSCRIPTION_END_CONFIRMED
   SUBSCRIPTION_END_REJECTED
+  DISTRIBUTOR_UNAVAILABLE
+  DELIVERY_JOURNEY_STARTED
 }
 
 model User {
@@ -231,7 +233,7 @@ model DistributorProfile {
   userId          String         @unique @map("user_id")
   businessName    String         @map("business_name")
   ownerName       String?        @map("owner_name")
-  approvalStatus  ApprovalStatus @default(PENDING) @map("approval_status")
+  approvalStatus  ApprovalStatus @default(APPROVED) @map("approval_status")
   rejectionReason String?        @map("rejection_reason")
   setupStatus     SetupStatus    @default(INCOMPLETE) @map("setup_status")
   setupSteps      String[]       @default([]) @map("setup_steps")
@@ -268,11 +270,26 @@ model DistributorProfile {
   deliveries        Delivery[]
   bills             Bill[]
   ownedProducts     Product[]            @relation("DistributorOwnedProducts")
+  unavailableDays   DistributorUnavailableDay[]
 
   @@index([approvalStatus, setupStatus])
   @@index([identityVerified, setupStatus])
   @@index([serviceLat, serviceLng])
   @@map("distributor_profiles")
+}
+
+model DistributorUnavailableDay {
+  id            String   @id @default(cuid())
+  distributorId String   @map("distributor_id")
+  date          DateTime
+  reason        String?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  distributor DistributorProfile @relation(fields: [distributorId], references: [id], onDelete: Cascade)
+
+  @@unique([distributorId, date])
+  @@index([distributorId, date])
+  @@map("distributor_unavailable_days")
 }
 
 model CustomerProfile {
@@ -312,12 +329,14 @@ model IdentityDocument {
   filePath       String                  @map("file_path")
   mimeType       String                  @map("mime_type")
   originalName   String?                 @map("original_name")
-  declaredName   String                  @map("declared_name")
-  matchedAgainst String                  @map("matched_against")
-  status         IdentityDocumentStatus  @default(PENDING)
-  declineReason  String?                 @map("decline_reason")
-  createdAt      DateTime                @default(now()) @map("created_at")
-  updatedAt      DateTime                @updatedAt @map("updated_at")
+  declaredName      String                  @map("declared_name")
+  matchedAgainst    String                  @map("matched_against")
+  ocrExtractedName  String?                 @map("ocr_extracted_name")
+  ocrScore          Float?                  @map("ocr_score")
+  status            IdentityDocumentStatus  @default(PENDING)
+  declineReason     String?                 @map("decline_reason")
+  createdAt         DateTime                @default(now()) @map("created_at")
+  updatedAt         DateTime                @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -517,6 +536,8 @@ model Delivery {
   slotId        String            @map("slot_id")
   status        DeliveryRunStatus @default(GENERATED)
   generatedAt   DateTime          @default(now()) @map("generated_at")
+  startedAt     DateTime?         @map("started_at")
+  completedAt   DateTime?         @map("completed_at")
 
   distributor DistributorProfile @relation(fields: [distributorId], references: [id], onDelete: Cascade)
   slot        DeliverySlot       @relation(fields: [slotId], references: [id])
@@ -528,20 +549,21 @@ model Delivery {
 }
 
 model DeliveryItem {
-  id             String              @id @default(cuid())
-  deliveryId     String              @map("delivery_id")
-  subscriptionId String              @map("subscription_id")
-  customerId     String              @map("customer_id")
-  productId      String              @map("product_id")
-  deliveryDate   DateTime            @map("delivery_date")
-  plannedQty     Float               @map("planned_qty")
-  deliveredQty   Float?              @map("delivered_qty")
-  status         DeliveryItemStatus  @default(PENDING)
-  routeOrder     Int?                @map("route_order")
-  notes          String?
-  deliveredAt    DateTime?           @map("delivered_at")
-  createdAt      DateTime            @default(now()) @map("created_at")
-  updatedAt      DateTime            @updatedAt @map("updated_at")
+  id                 String              @id @default(cuid())
+  deliveryId         String              @map("delivery_id")
+  subscriptionId     String              @map("subscription_id")
+  customerId         String              @map("customer_id")
+  productId          String              @map("product_id")
+  deliveryDate       DateTime            @map("delivery_date")
+  plannedQty         Float               @map("planned_qty")
+  deliveredQty       Float?              @map("delivered_qty")
+  status             DeliveryItemStatus  @default(PENDING)
+  routeOrder         Int?                @map("route_order")
+  estimatedArrivalAt DateTime?           @map("estimated_arrival_at")
+  notes              String?
+  deliveredAt        DateTime?           @map("delivered_at")
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
 
   delivery     Delivery          @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
   subscription Subscription      @relation(fields: [subscriptionId], references: [id])

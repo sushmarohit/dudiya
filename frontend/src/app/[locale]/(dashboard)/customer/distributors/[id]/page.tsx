@@ -32,7 +32,7 @@ export default function DistributorDetailPage({
     );
   }
 
-  const isLive = data.setupStatus === "GO_LIVE" && data.approvalStatus === "APPROVED";
+  const isLive = data.setupStatus === "GO_LIVE";
 
   return (
     <div className="space-y-6">

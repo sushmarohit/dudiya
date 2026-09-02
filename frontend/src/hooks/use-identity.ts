@@ -11,6 +11,8 @@ export interface IdentityDocument {
   originalName?: string | null;
   declaredName: string;
   matchedAgainst: string;
+  ocrExtractedName?: string | null;
+  ocrScore?: number | null;
   status: IdentityDocumentStatus;
   declineReason?: string | null;
   createdAt: string;
@@ -59,6 +61,7 @@ export function useUploadIdentityDocument() {
       form.append("documentType", data.documentType);
       form.append("declaredName", data.declaredName);
       const res = await api.post<IdentityDocument>("/identity/documents", form, {
+        timeout: 120_000,
         headers: { "Content-Type": "multipart/form-data" },
         transformRequest: [
           (data, headers) => {

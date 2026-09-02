@@ -225,6 +225,65 @@ export class CustomerService {
     };
   }
 
+  async searchDistributorsByName(
+    userId: string,
+    q: string,
+    page = 1,
+    pageSize = 20,
+  ) {
+    await this.identity.assertCustomerIdentityVerified(userId);
+    const query = q.trim();
+    if (query.length < 2) {
+      throwApi(ApiErrorCode.GENERIC, HttpStatus.BAD_REQUEST);
+    }
+
+    const offset = (page - 1) * pageSize;
+    const profiles = await this.prisma.distributorProfile.findMany({
+      where: {
+        identityVerified: true,
+        setupStatus: SetupStatus.GO_LIVE,
+        OR: [
+          { businessName: { contains: query, mode: 'insensitive' } },
+          { city: { contains: query, mode: 'insensitive' } },
+        ],
+        pricing: { some: { active: true } },
+        deliverySlots: { some: { active: true } },
+      },
+      orderBy: { businessName: 'asc' },
+      skip: offset,
+      take: pageSize,
+    });
+
+    const enriched = await Promise.all(
+      profiles.map(async (row) => {
+        const products = await this.prisma.distributorProduct.findMany({
+          where: { distributorId: row.id, enabled: true },
+          include: { product: { select: { id: true, name: true, category: true } } },
+          take: 5,
+        });
+        const slots = await this.prisma.deliverySlot.findMany({
+          where: { distributorId: row.id, active: true },
+          select: { id: true, label: true, startTime: true, endTime: true },
+        });
+        return {
+          id: row.id,
+          businessName: row.businessName,
+          city: row.city,
+          serviceLat: row.serviceLat,
+          serviceLng: row.serviceLng,
+          distanceKm: null as number | null,
+          serviceRadiusKm: row.serviceRadiusKm,
+          productsSummary: products.map((p) => p.product.name).join(', '),
+          products: products.map((p) => p.product),
+          deliverySlots: slots,
+          slotCount: slots.length,
+        };
+      }),
+    );
+
+    return { page, pageSize, items: enriched };
+  }
+
   async getDistributorDetail(userId: string, distributorId: string) {
     await this.identity.assertCustomerIdentityVerified(userId);
     const profile = await this.prisma.distributorProfile.findFirst({
@@ -518,9 +577,13 @@ export class CustomerService {
       await this.notifications.create({
         userId: distributor.userId,
         type: NotificationType.PAUSE_APPLIED,
-        title: 'Pause request',
-        body: `Customer paused subscription from ${startDate} to ${endDate}.`,
-        payload: { subscriptionId, pauseId: pause.id },
+        title:
+          startDate === endDate ? 'Delivery skip request' : 'Pause request',
+        body:
+          startDate === endDate
+            ? `Customer skipped delivery on ${startDate}.`
+            : `Customer paused subscription from ${startDate} to ${endDate}.`,
+        payload: { subscriptionId, pauseId: pause.id, startDate, endDate },
         eventId: `pause-applied:${pause.id}`,
       });
     }

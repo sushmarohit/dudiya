@@ -21,6 +21,7 @@ import { DeliveryService } from './delivery.service';
 import {
   BulkDeliveryStatusDto,
   GenerateDeliveriesDto,
+  JourneyActionDto,
   ReorderDeliveryItemsDto,
   UpdateDeliveryItemDto,
 } from './dto/delivery.dto';
@@ -36,6 +37,16 @@ export class DistributorDeliveryController {
   @Post('generate')
   generate(@CurrentUser() user: AuthUser, @Body() dto: GenerateDeliveriesDto) {
     return this.deliveryService.generate(user.id, dto.date, dto.slotId);
+  }
+
+  @Post('start-journey')
+  startJourney(@CurrentUser() user: AuthUser, @Body() dto: JourneyActionDto) {
+    return this.deliveryService.startJourney(user.id, dto.date, dto.slotId);
+  }
+
+  @Post('complete-journey')
+  completeJourney(@CurrentUser() user: AuthUser, @Body() dto: JourneyActionDto) {
+    return this.deliveryService.completeJourney(user.id, dto.date, dto.slotId);
   }
 
   @Get()

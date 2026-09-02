@@ -13,14 +13,20 @@ import {
 import {
   downloadDeliveryExport,
   useBulkDeliveryStatus,
+  useCompleteJourney,
+  useCreateUnavailableDay,
+  useDeleteUnavailableDay,
   useDistributorDeliveries,
   useGenerateDeliveries,
+  useStartJourney,
+  useUnavailableDays,
   useUpdateDeliveryItem,
   type DeliveryListFilters,
 } from "@/hooks/use-delivery";
 import { useApiErrorMessage } from "@/hooks/use-api-error-message";
 import { showToast } from "@/components/providers";
 import { useConfirm } from "@/components/ui/confirm-dialog";
+import { Label } from "@/components/ui/label";
 
 function todayStr() {
   const d = new Date();
@@ -56,9 +62,12 @@ export default function DistributorDeliveriesPage() {
   const [month, setMonth] = useState(currentMonthStr());
   const [slotId, setSlotId] = useState("");
   const [customerId, setCustomerId] = useState("");
+  const [unavailableReason, setUnavailableReason] = useState("");
 
   const { data: slots } = useDeliverySlots();
   const { data: customers } = useDistributorCustomers();
+  const { data: unavailableDays, refetch: refetchUnavailable } =
+    useUnavailableDays();
 
   const filters: DeliveryListFilters = useMemo(() => {
     const base: DeliveryListFilters = {
@@ -75,6 +84,10 @@ export default function DistributorDeliveriesPage() {
   const generate = useGenerateDeliveries();
   const updateItem = useUpdateDeliveryItem();
   const bulkStatus = useBulkDeliveryStatus();
+  const startJourney = useStartJourney();
+  const completeJourney = useCompleteJourney();
+  const createUnavailable = useCreateUnavailableDay();
+  const deleteUnavailable = useDeleteUnavailableDay();
 
   const customerOptions = customers ?? [];
 
@@ -112,6 +125,59 @@ export default function DistributorDeliveriesPage() {
     try {
       await downloadDeliveryExport(filters);
       showToast(t("exportReady"), "success");
+    } catch (err) {
+      showToast(getApiErrorMessage(err), "error");
+    }
+  };
+
+  const handleStartJourney = async () => {
+    const ok = await confirm({
+      title: t("startJourney"),
+      description: t("journeyStartHint"),
+      confirmLabel: t("startJourney"),
+    });
+    if (!ok) return;
+    try {
+      await startJourney.mutateAsync({
+        date,
+        slotId: slotId || undefined,
+      });
+      showToast(t("journeyStarted"), "success");
+      void refetch();
+    } catch (err) {
+      showToast(getApiErrorMessage(err), "error");
+    }
+  };
+
+  const handleCompleteJourney = async () => {
+    try {
+      await completeJourney.mutateAsync({
+        date,
+        slotId: slotId || undefined,
+      });
+      showToast(t("journeyCompleted"), "success");
+      void refetch();
+    } catch (err) {
+      showToast(getApiErrorMessage(err), "error");
+    }
+  };
+
+  const handleMarkUnavailable = async () => {
+    const ok = await confirm({
+      title: t("markUnavailable"),
+      description: t("unavailableHint"),
+      confirmLabel: t("markUnavailable"),
+    });
+    if (!ok) return;
+    try {
+      await createUnavailable.mutateAsync({
+        date,
+        reason: unavailableReason.trim() || undefined,
+      });
+      showToast(t("unavailableSaved"), "success");
+      setUnavailableReason("");
+      void refetch();
+      void refetchUnavailable();
     } catch (err) {
       showToast(getApiErrorMessage(err), "error");
     }
@@ -197,6 +263,19 @@ export default function DistributorDeliveriesPage() {
             >
               {t("markAllDelivered")}
             </Button>
+            <Button
+              onClick={() => void handleStartJourney()}
+              disabled={startJourney.isPending}
+            >
+              {t("startJourney")}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => void handleCompleteJourney()}
+              disabled={completeJourney.isPending}
+            >
+              {t("completeJourney")}
+            </Button>
           </>
         )}
 
@@ -204,6 +283,67 @@ export default function DistributorDeliveriesPage() {
           {t("exportCsv")}
         </Button>
       </div>
+
+      {mode === "day" && (
+        <Card>
+          <CardContent className="space-y-3 py-4">
+            <p className="font-medium text-slate-900">{t("unavailableTitle")}</p>
+            <p className="text-sm text-slate-600">{t("unavailableHint")}</p>
+            <div className="flex flex-wrap items-end gap-3">
+              <div className="space-y-1">
+                <Label htmlFor="unavailReason">{t("unavailableReason")}</Label>
+                <Input
+                  id="unavailReason"
+                  value={unavailableReason}
+                  onChange={(e) => setUnavailableReason(e.target.value)}
+                  className="w-64"
+                />
+              </div>
+              <Button
+                variant="destructive"
+                onClick={() => void handleMarkUnavailable()}
+                disabled={createUnavailable.isPending}
+              >
+                {t("markUnavailable")}
+              </Button>
+            </div>
+            {unavailableDays && unavailableDays.length > 0 ? (
+              <div className="space-y-2 pt-2">
+                <p className="text-xs font-medium uppercase text-slate-500">
+                  {t("unavailableListed")}
+                </p>
+                <ul className="space-y-1 text-sm">
+                  {unavailableDays.slice(0, 10).map((d) => (
+                    <li
+                      key={d.id}
+                      className="flex items-center justify-between gap-2 rounded border border-slate-100 px-3 py-2"
+                    >
+                      <span>
+                        {String(d.date).slice(0, 10)}
+                        {d.reason ? ` · ${d.reason}` : ""}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={async () => {
+                          try {
+                            await deleteUnavailable.mutateAsync(d.id);
+                            void refetchUnavailable();
+                          } catch (err) {
+                            showToast(getApiErrorMessage(err), "error");
+                          }
+                        }}
+                      >
+                        {t("removeUnavailable")}
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </CardContent>
+        </Card>
+      )}
 
       {error && (
         <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">

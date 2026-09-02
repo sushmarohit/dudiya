@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {
   DeliveryItemStatus,
+  DeliveryRunStatus,
   NotificationType,
   UserRole,
 } from '@prisma/client';
@@ -14,6 +15,9 @@ import { DeliveryGenerationService } from './delivery-generation.service';
 import { UpdateDeliveryItemDto } from './dto/update-delivery-item.dto';
 import { BulkDeliveryStatusDto } from './dto/bulk-delivery-status.dto';
 import { ReorderDeliveryItemsDto } from './dto/reorder-delivery-items.dto';
+
+const MINUTES_PER_STOP = 8;
+const ETA_WINDOW_BUFFER_MIN = 5;
 
 @Injectable()
 export class DeliveryService {
@@ -331,5 +335,131 @@ export class DeliveryService {
       dto,
       UserRole.ADMIN,
     );
+  }
+
+  async startJourney(userId: string, date: string, slotId?: string) {
+    const profile = await this.getDistributorProfile(userId);
+    const deliveryDate = parseDateInput(date);
+
+    // Ensure items exist for the day
+    await this.generation.generateForDistributor(
+      profile.id,
+      deliveryDate,
+      slotId,
+    );
+
+    const deliveries = await this.prisma.delivery.findMany({
+      where: {
+        distributorId: profile.id,
+        deliveryDate,
+        ...(slotId ? { slotId } : {}),
+      },
+      include: {
+        items: {
+          where: { status: DeliveryItemStatus.PENDING },
+          include: {
+            customer: { include: { user: true } },
+            product: true,
+          },
+          orderBy: { routeOrder: 'asc' },
+        },
+        slot: true,
+      },
+    });
+
+    if (!deliveries.length) {
+      throwApi(ApiErrorCode.GENERIC, HttpStatus.BAD_REQUEST);
+    }
+
+    const startedAt = new Date();
+    const notifiedUserIds = new Set<string>();
+
+    for (const delivery of deliveries) {
+      if (delivery.status === DeliveryRunStatus.IN_PROGRESS) {
+        continue;
+      }
+      if (delivery.status === DeliveryRunStatus.COMPLETED) {
+        throwApi(ApiErrorCode.GENERIC, HttpStatus.BAD_REQUEST);
+      }
+
+      await this.prisma.delivery.update({
+        where: { id: delivery.id },
+        data: {
+          status: DeliveryRunStatus.IN_PROGRESS,
+          startedAt,
+          completedAt: null,
+        },
+      });
+
+      for (const item of delivery.items) {
+        const order = item.routeOrder && item.routeOrder > 0 ? item.routeOrder : 1;
+        const eta = new Date(
+          startedAt.getTime() + (order - 1) * MINUTES_PER_STOP * 60_000,
+        );
+        await this.prisma.deliveryItem.update({
+          where: { id: item.id },
+          data: { estimatedArrivalAt: eta },
+        });
+
+        const customerUserId = item.customer.user.id;
+        if (notifiedUserIds.has(customerUserId)) continue;
+        notifiedUserIds.add(customerUserId);
+
+        const windowStart = new Date(
+          eta.getTime() - ETA_WINDOW_BUFFER_MIN * 60_000,
+        );
+        const windowEnd = new Date(
+          eta.getTime() + ETA_WINDOW_BUFFER_MIN * 60_000,
+        );
+        const fmt = (d: Date) =>
+          d.toLocaleTimeString('en-IN', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+            timeZone: profile.timezone || 'Asia/Kolkata',
+          });
+
+        await this.notifications.create({
+          userId: customerUserId,
+          type: NotificationType.DELIVERY_JOURNEY_STARTED,
+          title: 'Delivery on the way',
+          body: `${profile.businessName} started delivery. Your ${item.product.name} is expected around ${fmt(windowStart)}–${fmt(windowEnd)}.`,
+          payload: {
+            deliveryId: delivery.id,
+            deliveryItemId: item.id,
+            date: formatDateKey(deliveryDate),
+            estimatedArrivalAt: eta.toISOString(),
+            subscriptionId: item.subscriptionId,
+          },
+          eventId: `journey-started:${delivery.id}:${customerUserId}`,
+        });
+      }
+    }
+
+    return {
+      startedAt,
+      deliveries: deliveries.length,
+      notified: notifiedUserIds.size,
+    };
+  }
+
+  async completeJourney(userId: string, date: string, slotId?: string) {
+    const profile = await this.getDistributorProfile(userId);
+    const deliveryDate = parseDateInput(date);
+
+    const result = await this.prisma.delivery.updateMany({
+      where: {
+        distributorId: profile.id,
+        deliveryDate,
+        status: DeliveryRunStatus.IN_PROGRESS,
+        ...(slotId ? { slotId } : {}),
+      },
+      data: {
+        status: DeliveryRunStatus.COMPLETED,
+        completedAt: new Date(),
+      },
+    });
+
+    return { completed: result.count };
   }
 }

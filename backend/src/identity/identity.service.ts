@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import {
   IdentityDocumentStatus,
   IdentityDocumentType,
@@ -11,7 +11,8 @@ import * as path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiErrorCode } from '../common/errors/api-error-code.enum';
 import { throwApi } from '../common/errors/throw-api';
-import { defaultNameMatcher } from './name-matcher';
+import { documentNameMatcher, type NameMatchResult } from './name-matcher';
+import { OcrService } from './ocr.service';
 
 const MAX_DOCUMENTS = 2;
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
@@ -20,6 +21,20 @@ const ALLOWED_MIME = new Set([
   'image/png',
   'application/pdf',
 ]);
+
+const DOC_SELECT = {
+  id: true,
+  documentType: true,
+  mimeType: true,
+  originalName: true,
+  declaredName: true,
+  matchedAgainst: true,
+  ocrExtractedName: true,
+  ocrScore: true,
+  status: true,
+  declineReason: true,
+  createdAt: true,
+} as const;
 
 export interface UploadedFileLike {
   buffer: Buffer;
@@ -30,13 +45,17 @@ export interface UploadedFileLike {
 
 @Injectable()
 export class IdentityService {
+  private readonly logger = new Logger(IdentityService.name);
   private readonly uploadsRoot = path.resolve(
     process.cwd(),
     'uploads',
     'identity',
   );
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private ocr: OcrService,
+  ) {}
 
   private async ensureUserDir(userId: string) {
     const dir = path.join(this.uploadsRoot, userId);
@@ -117,22 +136,11 @@ export class IdentityService {
   }
 
   async listDocuments(userId: string) {
-    const docs = await this.prisma.identityDocument.findMany({
+    return this.prisma.identityDocument.findMany({
       where: { userId },
       orderBy: { createdAt: 'asc' },
-      select: {
-        id: true,
-        documentType: true,
-        mimeType: true,
-        originalName: true,
-        declaredName: true,
-        matchedAgainst: true,
-        status: true,
-        declineReason: true,
-        createdAt: true,
-      },
+      select: DOC_SELECT,
     });
-    return docs;
   }
 
   async uploadDocument(
@@ -166,13 +174,39 @@ export class IdentityService {
       throwApi(ApiErrorCode.FORBIDDEN, HttpStatus.FORBIDDEN);
     }
 
-    const match = defaultNameMatcher.match(declaredName, registeredName);
-    const status = match.matched
-      ? IdentityDocumentStatus.VERIFIED
-      : IdentityDocumentStatus.DECLINED;
-    const declineReason = match.matched
-      ? null
-      : 'Registered name does not match the name on the document';
+    const trimmedDeclared = declaredName.trim();
+    const accountMatch = documentNameMatcher.matchAccount(
+      trimmedDeclared,
+      registeredName,
+    );
+
+    let status: IdentityDocumentStatus;
+    let declineReason: string | null = null;
+    let docMatch: NameMatchResult = { matched: false, score: 0 };
+
+    if (!accountMatch.matched) {
+      status = IdentityDocumentStatus.DECLINED;
+      declineReason =
+        'Name you entered does not match your registered account name';
+    } else {
+      const ocr = await this.ocr.extractText(file.buffer, file.mimetype);
+      this.logger.log(
+        `Identity OCR user=${userId} engine=${ocr.engine} chars=${ocr.text.length}`,
+      );
+      docMatch = documentNameMatcher.matchDocument(trimmedDeclared, ocr.text);
+
+      if (!ocr.text || ocr.engine === 'none') {
+        status = IdentityDocumentStatus.DECLINED;
+        declineReason =
+          'Could not read text from the document. Upload a clearer JPEG or PNG photo of the ID';
+      } else if (!docMatch.matched) {
+        status = IdentityDocumentStatus.DECLINED;
+        declineReason =
+          'Name on the uploaded document does not match the name you provided';
+      } else {
+        status = IdentityDocumentStatus.VERIFIED;
+      }
+    }
 
     const dir = await this.ensureUserDir(userId);
     const ext =
@@ -195,22 +229,14 @@ export class IdentityService {
         filePath: relativePath,
         mimeType: file.mimetype,
         originalName: file.originalname?.slice(0, 255) || null,
-        declaredName: declaredName.trim(),
-        matchedAgainst: registeredName,
+        declaredName: trimmedDeclared,
+        matchedAgainst: docMatch.extractedCandidate || registeredName,
+        ocrExtractedName: docMatch.extractedCandidate?.slice(0, 255) || null,
+        ocrScore: docMatch.score > 0 ? docMatch.score : null,
         status,
         declineReason,
       },
-      select: {
-        id: true,
-        documentType: true,
-        mimeType: true,
-        originalName: true,
-        declaredName: true,
-        matchedAgainst: true,
-        status: true,
-        declineReason: true,
-        createdAt: true,
-      },
+      select: DOC_SELECT,
     });
 
     await this.syncIdentityVerified(userId, role);
@@ -272,6 +298,29 @@ export class IdentityService {
       if (!status.identityVerified) {
         throwApi(ApiErrorCode.IDENTITY_NOT_VERIFIED, HttpStatus.FORBIDDEN);
       }
+    }
+  }
+
+  /** At least one uploaded document with VERIFIED status (file on record). */
+  async hasVerifiedUploadedDocument(userId: string): Promise<boolean> {
+    const count = await this.prisma.identityDocument.count({
+      where: {
+        userId,
+        status: IdentityDocumentStatus.VERIFIED,
+        filePath: { not: '' },
+      },
+    });
+    return count > 0;
+  }
+
+  /**
+   * Distributor go-live / visibility gate: uploaded + verified identity document is compulsory.
+   */
+  async assertDistributorIdentityForGoLive(userId: string) {
+    await this.syncIdentityVerified(userId, UserRole.DISTRIBUTOR);
+    const ok = await this.hasVerifiedUploadedDocument(userId);
+    if (!ok) {
+      throwApi(ApiErrorCode.IDENTITY_NOT_VERIFIED, HttpStatus.BAD_REQUEST);
     }
   }
 }

@@ -55,6 +55,19 @@ export class CustomerController {
     );
   }
 
+  @Get('distributors/search')
+  searchByName(
+    @CurrentUser() user: AuthUser,
+    @Query('q') q: string,
+    @Query('page') page?: string,
+  ) {
+    return this.customerService.searchDistributorsByName(
+      user.id,
+      q ?? '',
+      page ? parseInt(page, 10) : 1,
+    );
+  }
+
   @Get('distributors/:id')
   getDistributor(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     return this.customerService.getDistributorDetail(user.id, id);

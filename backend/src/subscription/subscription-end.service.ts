@@ -234,10 +234,11 @@ export class SubscriptionEndService {
         userId: sub.customer.user.id,
         type: NotificationType.SUBSCRIPTION_END_CONFIRMED,
         title: 'Subscription ended',
-        body: `Your ${sub.product.name} subscription is closed. Settlement invoice: ${totalLabel}.`,
+        body: `Your ${sub.product.name} subscription is closed. Settlement invoice: ${totalLabel}. You can find a distributor and start a new subscription anytime.`,
         payload: {
           subscriptionId: sub.id,
           billId: settlement?.id ?? null,
+          startFresh: true,
         },
         eventId: `subscription-end-confirmed:${pending.id}:customer`,
       },

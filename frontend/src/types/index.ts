@@ -34,7 +34,12 @@ export type NotificationType =
   | "PAYMENT_RECORDED"
   | "DISTRIBUTOR_APPROVED"
   | "DELIVERY_FAILED_SKIPPED"
-  | "DELIVERY_REMINDER";
+  | "DELIVERY_REMINDER"
+  | "SUBSCRIPTION_END_REQUESTED"
+  | "SUBSCRIPTION_END_CONFIRMED"
+  | "SUBSCRIPTION_END_REJECTED"
+  | "DISTRIBUTOR_UNAVAILABLE"
+  | "DELIVERY_JOURNEY_STARTED";
 export type RequestStatus = "PENDING" | "APPROVED" | "REJECTED";
 export type ProductCategory =
   | "MILK"
@@ -111,6 +116,7 @@ export interface DistributorProfile extends StructuredAddressFields {
   serviceRadiusKm: number;
   identityVerified?: boolean;
   goLiveAt?: string | null;
+  readiness?: { ready: boolean; missing: string[] };
   createdAt?: string;
   user?: User;
 }
@@ -222,7 +228,7 @@ export interface DistributorCustomer {
 export interface NearbyDistributor {
   id: string;
   businessName: string;
-  distanceKm: number;
+  distanceKm: number | null;
   serviceRadiusKm: number;
   serviceLat?: number | null;
   serviceLng?: number | null;

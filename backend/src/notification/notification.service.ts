@@ -67,10 +67,22 @@ export class NotificationService {
   }
 
   async unreadCount(userId: string) {
-    const count = await this.prisma.notification.count({
-      where: { userId, readAt: null },
-    });
-    return { count };
+    const [count, latest] = await Promise.all([
+      this.prisma.notification.count({
+        where: { userId, readAt: null },
+      }),
+      this.prisma.notification.findFirst({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+        select: { createdAt: true, title: true, body: true },
+      }),
+    ]);
+    return {
+      count,
+      latestCreatedAt: latest?.createdAt?.toISOString() ?? null,
+      latestTitle: latest?.title ?? null,
+      latestBody: latest?.body ?? null,
+    };
   }
 
   async markRead(userId: string, id: string) {

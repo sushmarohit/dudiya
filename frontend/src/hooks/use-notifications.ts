@@ -2,6 +2,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import type { Notification, NotificationType } from "@/types";
 
+export type UnreadCountResponse = {
+  count: number;
+  latestCreatedAt?: string | null;
+  latestTitle?: string | null;
+  latestBody?: string | null;
+};
+
 export function useNotifications(page = 1, type?: NotificationType) {
   return useQuery({
     queryKey: ["notifications", page, type],
@@ -17,14 +24,16 @@ export function useNotifications(page = 1, type?: NotificationType) {
   });
 }
 
-export function useUnreadNotificationCount() {
+export function useUnreadNotificationCount(options?: { pollMs?: number }) {
   return useQuery({
     queryKey: ["notifications", "unread-count"],
     queryFn: async () => {
-      const res = await api.get<{ count: number }>("/notifications/unread-count");
-      return res.data.count;
+      const res = await api.get<UnreadCountResponse>(
+        "/notifications/unread-count",
+      );
+      return res.data;
     },
-    refetchInterval: 60000,
+    refetchInterval: options?.pollMs ?? 15_000,
   });
 }
 

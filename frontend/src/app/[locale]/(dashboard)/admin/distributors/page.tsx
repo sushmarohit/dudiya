@@ -17,7 +17,9 @@ import { PageHeader, ResponsiveTable } from "@/components/ui/responsive-table";
 function StatusBadge({ label, status }: { label: string; status: string }) {
   const colors: Record<string, string> = {
     PENDING: "bg-amber-100 text-amber-800",
+    ACTIVE: "bg-emerald-100 text-emerald-800",
     APPROVED: "bg-emerald-100 text-emerald-800",
+    SUSPENDED: "bg-red-100 text-red-800",
     REJECTED: "bg-red-100 text-red-800",
   };
   return (
@@ -37,11 +39,6 @@ export default function AdminDistributorsPage() {
   const [search, setSearch] = useState("");
   const { data, isLoading, error } = useAdminDistributors({ search });
   const suspend = useSuspendDistributor();
-  const approvalStatusLabels: Record<string, string> = {
-    PENDING: tAdmin("verification.pending"),
-    APPROVED: tAdmin("verification.approved"),
-    REJECTED: tAdmin("verification.rejected"),
-  };
 
   const handleSuspend = async (id: string, suspendFlag: boolean) => {
     const ok = await confirm({
@@ -112,48 +109,49 @@ export default function AdminDistributorsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {data.map((d) => (
-                <tr key={d.id} className="bg-white">
-                  <td className="px-4 py-3 font-medium">{d.businessName}</td>
-                  <td className="px-4 py-3">
-                    <StatusBadge
-                      label={approvalStatusLabels[d.approvalStatus] || d.approvalStatus}
-                      status={d.approvalStatus}
-                    />
-                  </td>
-                  <td className="px-4 py-3">
-                    <StatusBadge
-                      label={
-                        d.identityVerified
-                          ? tAdmin("verification.identityVerified")
-                          : tAdmin("verification.identityUnverified")
-                      }
-                      status={d.identityVerified ? "APPROVED" : "PENDING"}
-                    />
-                  </td>
-                  <td className="px-4 py-3">{d.setupStatus}</td>
-                  <td className="px-4 py-3">{d.city || "—"}</td>
-                  <td className="px-4 py-3">
-                    {(d.approvalStatus === "APPROVED" ||
-                      d.user?.status === "ACTIVE") && (
+              {data.map((d) => {
+                const accountStatus = d.user?.status ?? "ACTIVE";
+                return (
+                  <tr key={d.id} className="bg-white">
+                    <td className="px-4 py-3 font-medium">{d.businessName}</td>
+                    <td className="px-4 py-3">
+                      <StatusBadge
+                        label={
+                          accountStatus === "SUSPENDED"
+                            ? tCommon("statuses.suspended")
+                            : tCommon("statuses.active")
+                        }
+                        status={accountStatus}
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <StatusBadge
+                        label={
+                          d.identityVerified
+                            ? tAdmin("verification.identityVerified")
+                            : tAdmin("verification.identityUnverified")
+                        }
+                        status={d.identityVerified ? "APPROVED" : "PENDING"}
+                      />
+                    </td>
+                    <td className="px-4 py-3">{d.setupStatus}</td>
+                    <td className="px-4 py-3">{d.city || "—"}</td>
+                    <td className="px-4 py-3">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() =>
-                          handleSuspend(
-                            d.id,
-                            d.user?.status !== "SUSPENDED",
-                          )
+                          handleSuspend(d.id, accountStatus !== "SUSPENDED")
                         }
                       >
-                        {d.user?.status === "SUSPENDED"
+                        {accountStatus === "SUSPENDED"
                           ? tCommon("statuses.active")
                           : tCommon("statuses.suspended")}
                       </Button>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </ResponsiveTable>

@@ -244,4 +244,33 @@ export class DistributorController {
   ) {
     return this.distributorService.previewSubscription(user.id, id, from, to);
   }
+
+  @Get('unavailable-days')
+  @UseGuards(DistributorApprovedGuard)
+  listUnavailableDays(
+    @CurrentUser() user: AuthUser,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    return this.distributorService.listUnavailableDays(user.id, from, to);
+  }
+
+  @Post('unavailable-days')
+  @UseGuards(DistributorApprovedGuard)
+  createUnavailableDay(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: { date: string; reason?: string },
+  ) {
+    return this.distributorService.createUnavailableDay(
+      user.id,
+      dto.date,
+      dto.reason,
+    );
+  }
+
+  @Delete('unavailable-days/:id')
+  @UseGuards(DistributorApprovedGuard)
+  deleteUnavailableDay(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.distributorService.deleteUnavailableDay(user.id, id);
+  }
 }

@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { SetupStatus } from '@prisma/client';
+import { IdentityDocumentStatus, SetupStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiErrorCode } from '../common/errors/api-error-code.enum';
 import { throwApi } from '../common/errors/throw-api';
@@ -32,7 +32,14 @@ export class ReadinessService {
       missing.push('business_profile');
     }
 
-    if (!profile.identityVerified) {
+    const verifiedDocs = await this.prisma.identityDocument.count({
+      where: {
+        userId: profile.userId,
+        status: IdentityDocumentStatus.VERIFIED,
+        filePath: { not: '' },
+      },
+    });
+    if (verifiedDocs === 0 || !profile.identityVerified) {
       missing.push('identity_documents');
     }
 
@@ -74,9 +81,16 @@ export class ReadinessService {
     const profile = await this.prisma.distributorProfile.findUnique({
       where: { id: distributorId },
     });
-    return (
-      profile?.setupStatus === SetupStatus.GO_LIVE &&
-      profile.identityVerified === true
-    );
+    if (!profile || profile.setupStatus !== SetupStatus.GO_LIVE) {
+      return false;
+    }
+    const verifiedDocs = await this.prisma.identityDocument.count({
+      where: {
+        userId: profile.userId,
+        status: IdentityDocumentStatus.VERIFIED,
+        filePath: { not: '' },
+      },
+    });
+    return profile.identityVerified === true && verifiedDocs > 0;
   }
 }

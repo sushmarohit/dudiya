@@ -10,6 +10,8 @@ import {
   UserRole,
   UserStatus,
   ProductScope,
+  DeliveryItemStatus,
+  ApprovalStatus,
 } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { GeocodingService } from '../geocoding/geocoding.service';
@@ -45,6 +47,7 @@ import {
 import { CatalogService } from '../products/catalog.service';
 import { CreateCustomProductDto } from '../products/dto/create-custom-product.dto';
 import { UpdateCustomProductDto } from '../products/dto/update-custom-product.dto';
+import { IdentityService } from '../identity/identity.service';
 
 @Injectable()
 export class DistributorService {
@@ -58,6 +61,7 @@ export class DistributorService {
     private notifications: NotificationService,
     private catalog: CatalogService,
     private subscriptionEnd: SubscriptionEndService,
+    private identity: IdentityService,
   ) {}
 
   private async getProfileByUserId(userId: string) {
@@ -102,6 +106,9 @@ export class DistributorService {
   }
 
   async completeSetupStep(userId: string, step: SetupStep) {
+    if (step === 'identity_documents') {
+      await this.identity.assertDistributorIdentityForGoLive(userId);
+    }
     const profile = await this.getProfileByUserId(userId);
     const steps = new Set(profile.setupSteps);
     steps.add(step);
@@ -112,14 +119,16 @@ export class DistributorService {
   }
 
   async goLive(userId: string) {
+    await this.identity.assertDistributorIdentityForGoLive(userId);
     const profile = await this.getProfileByUserId(userId);
-    if (!profile.identityVerified) {
-      throwApi(ApiErrorCode.IDENTITY_NOT_VERIFIED, HttpStatus.BAD_REQUEST);
-    }
     await this.readiness.assertGoLiveEligible(profile.id);
     return this.prisma.distributorProfile.update({
       where: { id: profile.id },
       data: {
+        // Admin approval removed — keep legacy rows discoverable
+        approvalStatus: ApprovalStatus.APPROVED,
+        rejectionReason: null,
+        identityVerified: true,
         setupStatus: SetupStatus.GO_LIVE,
         goLiveAt: new Date(),
         setupSteps: [
@@ -700,5 +709,109 @@ export class DistributorService {
     if (!slot) {
       throwApi(ApiErrorCode.INVALID_DELIVERY_SLOT, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async listUnavailableDays(userId: string, from?: string, to?: string) {
+    const profile = await this.getProfileByUserId(userId);
+    return this.prisma.distributorUnavailableDay.findMany({
+      where: {
+        distributorId: profile.id,
+        ...(from || to
+          ? {
+              date: {
+                ...(from ? { gte: parseDateInput(from) } : {}),
+                ...(to ? { lte: parseDateInput(to) } : {}),
+              },
+            }
+          : {}),
+      },
+      orderBy: { date: 'asc' },
+    });
+  }
+
+  async createUnavailableDay(userId: string, date: string, reason?: string) {
+    const profile = await this.getProfileByUserId(userId);
+    const day = parseDateInput(date);
+
+    const existing = await this.prisma.distributorUnavailableDay.findUnique({
+      where: {
+        distributorId_date: { distributorId: profile.id, date: day },
+      },
+    });
+    if (existing) {
+      return existing;
+    }
+
+    const row = await this.prisma.distributorUnavailableDay.create({
+      data: {
+        distributorId: profile.id,
+        date: day,
+        reason: reason?.trim() || null,
+      },
+    });
+
+    const activeSubs = await this.prisma.subscription.findMany({
+      where: {
+        distributorId: profile.id,
+        status: SubscriptionStatus.ACTIVE,
+      },
+      include: {
+        customer: { include: { user: { select: { id: true } } } },
+      },
+    });
+
+    const dateLabel = formatDateKey(day);
+    const reasonSuffix = reason?.trim() ? ` Reason: ${reason.trim()}.` : '';
+    await this.notifications.createMany(
+      activeSubs.map((sub) => ({
+        userId: sub.customer.user.id,
+        type: NotificationType.DISTRIBUTOR_UNAVAILABLE,
+        title: 'Distributor unavailable',
+        body: `${profile.businessName} will not deliver on ${dateLabel}.${reasonSuffix}`,
+        payload: {
+          distributorId: profile.id,
+          date: dateLabel,
+          subscriptionId: sub.id,
+        },
+        eventId: `dist-unavailable:${profile.id}:${dateLabel}:${sub.customer.user.id}`,
+      })),
+    );
+
+    // Cancel any already-generated pending items for that day
+    const pendingItems = await this.prisma.deliveryItem.findMany({
+      where: {
+        deliveryDate: day,
+        status: DeliveryItemStatus.PENDING,
+        delivery: { distributorId: profile.id },
+      },
+      include: {
+        customer: { include: { user: true } },
+        product: true,
+      },
+    });
+
+    for (const item of pendingItems) {
+      await this.prisma.deliveryItem.update({
+        where: { id: item.id },
+        data: {
+          status: DeliveryItemStatus.SKIPPED,
+          notes: reason?.trim() || 'Distributor unavailable',
+        },
+      });
+    }
+
+    return row;
+  }
+
+  async deleteUnavailableDay(userId: string, id: string) {
+    const profile = await this.getProfileByUserId(userId);
+    const row = await this.prisma.distributorUnavailableDay.findFirst({
+      where: { id, distributorId: profile.id },
+    });
+    if (!row) {
+      throwApi(ApiErrorCode.NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    await this.prisma.distributorUnavailableDay.delete({ where: { id } });
+    return { success: true };
   }
 }

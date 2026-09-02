@@ -55,3 +55,14 @@ export class BulkDeliveryStatusDto {
   @IsString()
   notes?: string;
 }
+
+export class JourneyActionDto {
+  @ApiProperty()
+  @IsString()
+  date!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  slotId?: string;
+}
