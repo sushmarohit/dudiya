@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Sans_Devanagari } from "next/font/google";
+import { Fraunces, Outfit, Noto_Sans_Devanagari } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -8,14 +8,16 @@ import { routing } from "@/i18n/routing";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const display = Fraunces({
+  variable: "--font-display",
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const body = Outfit({
+  variable: "--font-body",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const notoDevanagari = Noto_Sans_Devanagari({
@@ -25,8 +27,9 @@ const notoDevanagari = Noto_Sans_Devanagari({
 });
 
 export const metadata: Metadata = {
-  title: "MilkFlow — Milk Distribution SaaS",
-  description: "Fresh milk delivery platform for distributors and customers",
+  title: "dudiya — Fresh milk delivery for Indian homes",
+  description:
+    "dudiya connects local milk distributors with families. Simple daily milk delivery across India.",
 };
 
 export const viewport = {
@@ -58,9 +61,9 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${notoDevanagari.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} ${notoDevanagari.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="flex min-h-full flex-col font-sans">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>

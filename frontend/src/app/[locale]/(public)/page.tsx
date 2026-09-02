@@ -1,119 +1,261 @@
-import { Milk, Truck, Users, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, CheckCircle2, Home, MapPin, Truck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Link } from "@/i18n/navigation";
+
+const STEP_ICONS = [MapPin, Home, Truck, CheckCircle2] as const;
 
 export default function HomePage() {
   const t = useTranslations("landing");
   const tc = useTranslations("common");
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-emerald-50 to-white">
-      <header className="sticky top-0 z-40 border-b border-emerald-100 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
-          <div className="flex min-w-0 items-center justify-between gap-2 sm:justify-start">
-            <div className="flex min-w-0 items-center gap-2">
-              <Milk className="h-7 w-7 shrink-0 text-emerald-600" aria-hidden="true" />
-              <span className="truncate text-lg font-bold text-slate-900 sm:text-xl">
-                {tc("appName")}
-              </span>
-            </div>
-            <LocaleSwitcher className="sm:hidden" />
-          </div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <LocaleSwitcher className="hidden sm:inline-flex" />
-            <Link href="/login" className="flex-1 sm:flex-none">
-              <Button variant="ghost" className="w-full sm:w-auto">
-                {tc("signIn")}
-              </Button>
-            </Link>
-            <Link href="/register" className="flex-1 sm:flex-none">
-              <Button className="w-full sm:w-auto">{tc("getStarted")}</Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+    <main>
+      {/* Full-bleed hero */}
+      <section className="relative isolate min-h-[88vh] overflow-hidden">
+        <Image
+          src="/images/hero-banner.jpg"
+          alt={t("hero.imageAlt")}
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-[var(--brand-navy)]/90 via-[var(--brand-navy)]/70 to-[var(--brand-navy)]/25"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-[var(--brand-navy)]/55 via-transparent to-[var(--brand-navy)]/20"
+          aria-hidden="true"
+        />
 
-      <main>
-        <section className="mx-auto max-w-6xl px-4 py-12 text-center sm:px-6 sm:py-20">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 break-words sm:text-4xl md:text-5xl">
+        <div className="relative mx-auto flex min-h-[88vh] max-w-6xl flex-col justify-end px-4 pb-14 pt-28 sm:justify-center sm:px-6 sm:pb-20 sm:pt-24">
+          <p className="animate-fade-up font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-[var(--brand-saffron)] sm:text-5xl md:text-6xl">
+            {tc("appName")}
+          </p>
+          <h1 className="animate-fade-up-delay-1 mt-3 max-w-xl text-2xl font-semibold leading-snug tracking-tight text-white sm:text-3xl md:text-4xl">
             {t("hero.title")}
-            <span className="text-emerald-600">{t("hero.titleHighlight")}</span>
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600 break-words sm:mt-6 sm:text-lg">
+          <p className="animate-fade-up-delay-2 mt-4 max-w-lg text-base leading-relaxed text-white/85 sm:text-lg">
             {t("hero.description")}
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center sm:justify-center sm:gap-4">
+          <div className="animate-fade-up-delay-3 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link href="/register/customer" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                className="w-full bg-[var(--brand-saffron)] text-[var(--brand-navy)] hover:bg-[var(--brand-saffron-deep)] sm:w-auto"
+              >
                 {t("hero.customerCta")}
                 <ArrowRight className="h-4 w-4 shrink-0" />
               </Button>
             </Link>
             <Link href="/register/distributor" className="w-full sm:w-auto">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full border-white/40 bg-white/10 text-white hover:bg-white/20 sm:w-auto"
+              >
                 {t("hero.distributorCta")}
                 <Truck className="h-4 w-4 shrink-0" />
               </Button>
             </Link>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="mx-auto max-w-6xl px-4 pb-12 sm:px-6 sm:pb-20">
-          <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-              <Users className="h-8 w-8 text-emerald-600" aria-hidden="true" />
-              <h3 className="mt-4 text-lg font-semibold break-words">
-                {t("features.customers.title")}
+      {/* How it works */}
+      <section
+        id="how-it-works"
+        className="scroll-mt-24 border-b border-[var(--brand-border)] bg-[var(--brand-sand)]"
+      >
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+          <p className="text-sm font-semibold uppercase tracking-wider text-[var(--brand-saffron-deep)]">
+            {t("howItWorks.eyebrow")}
+          </p>
+          <h2 className="mt-2 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-[var(--brand-navy)] sm:text-4xl">
+            {t("howItWorks.title")}
+          </h2>
+          <p className="mt-3 max-w-2xl text-base text-[var(--brand-ink-muted)] sm:text-lg">
+            {t("howItWorks.description")}
+          </p>
+
+          <ol className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {STEP_ICONS.map((Icon, index) => {
+              const step = String(index + 1);
+              return (
+                <li key={step} className="relative">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--brand-navy)] text-[var(--brand-saffron)]">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-[var(--brand-saffron-deep)]">
+                    {t("howItWorks.stepLabel", { step })}
+                  </p>
+                  <h3 className="mt-1 text-lg font-semibold text-[var(--brand-navy)]">
+                    {t(`howItWorks.steps.${step}.title`)}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--brand-ink-muted)]">
+                    {t(`howItWorks.steps.${step}.body`)}
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      </section>
+
+      {/* Who it's for — image-led, not card grid in hero style */}
+      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+        <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-[var(--brand-navy)] sm:text-4xl">
+          {t("audiences.title")}
+        </h2>
+        <p className="mt-3 max-w-2xl text-base text-[var(--brand-ink-muted)] sm:text-lg">
+          {t("audiences.description")}
+        </p>
+
+        <div className="mt-10 grid gap-10 lg:grid-cols-2">
+          <article className="overflow-hidden rounded-2xl bg-[var(--brand-sand)]">
+            <div className="relative aspect-[16/10]">
+              <Image
+                src="/images/hero-milk-pour.jpg"
+                alt={t("audiences.customers.imageAlt")}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+            <div className="p-6 sm:p-8">
+              <h3 className="text-xl font-semibold text-[var(--brand-navy)]">
+                {t("audiences.customers.title")}
               </h3>
-              <p className="mt-2 text-sm text-slate-600 break-words">
-                {t("features.customers.description")}
+              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-ink-muted)]">
+                {t("audiences.customers.description")}
               </p>
-              <Link
-                href="/register/customer"
-                className="mt-4 inline-flex text-sm font-medium text-emerald-600 hover:underline"
-              >
-                {t("features.customers.cta")} →
+              <ul className="mt-4 space-y-2 text-sm text-[var(--brand-ink)]">
+                <li className="flex gap-2">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-saffron-deep)]" />
+                  {t("audiences.customers.points.0")}
+                </li>
+                <li className="flex gap-2">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-saffron-deep)]" />
+                  {t("audiences.customers.points.1")}
+                </li>
+                <li className="flex gap-2">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-saffron-deep)]" />
+                  {t("audiences.customers.points.2")}
+                </li>
+              </ul>
+              <Link href="/register/customer" className="mt-6 inline-block">
+                <Button>
+                  {t("audiences.customers.cta")}
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
               </Link>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-              <Truck className="h-8 w-8 text-emerald-600" aria-hidden="true" />
-              <h3 className="mt-4 text-lg font-semibold break-words">
-                {t("features.distributors.title")}
+          </article>
+
+          <article className="overflow-hidden rounded-2xl bg-[var(--brand-sand)]">
+            <div className="relative aspect-[16/10]">
+              <Image
+                src="/images/plain-milk-bottles.jpg"
+                alt={t("audiences.distributors.imageAlt")}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+            <div className="p-6 sm:p-8">
+              <h3 className="text-xl font-semibold text-[var(--brand-navy)]">
+                {t("audiences.distributors.title")}
               </h3>
-              <p className="mt-2 text-sm text-slate-600 break-words">
-                {t("features.distributors.description")}
+              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-ink-muted)]">
+                {t("audiences.distributors.description")}
               </p>
-              <Link
-                href="/register/distributor"
-                className="mt-4 inline-flex text-sm font-medium text-emerald-600 hover:underline"
-              >
-                {t("features.distributors.cta")} →
+              <ul className="mt-4 space-y-2 text-sm text-[var(--brand-ink)]">
+                <li className="flex gap-2">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-saffron-deep)]" />
+                  {t("audiences.distributors.points.0")}
+                </li>
+                <li className="flex gap-2">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-saffron-deep)]" />
+                  {t("audiences.distributors.points.1")}
+                </li>
+                <li className="flex gap-2">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-saffron-deep)]" />
+                  {t("audiences.distributors.points.2")}
+                </li>
+              </ul>
+              <Link href="/register/distributor" className="mt-6 inline-block">
+                <Button variant="outline">
+                  {t("audiences.distributors.cta")}
+                  <Truck className="h-4 w-4" />
+                </Button>
               </Link>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-              <Milk className="h-8 w-8 text-emerald-600" aria-hidden="true" />
-              <h3 className="mt-4 text-lg font-semibold break-words">
-                {t("features.subscriptionEngine.title")}
-              </h3>
-              <p className="mt-2 text-sm text-slate-600 break-words">
-                {t("features.subscriptionEngine.description")}
-              </p>
-              <Link
-                href="/login"
-                className="mt-4 inline-flex text-sm font-medium text-emerald-600 hover:underline"
-              >
-                {t("features.subscriptionEngine.cta")} →
-              </Link>
+          </article>
+        </div>
+      </section>
+
+      {/* Everyday milk strip */}
+      <section className="relative overflow-hidden">
+        <div className="grid md:grid-cols-3">
+          {[
+            {
+              src: "/images/hero-milk-pour.jpg",
+              alt: t("gallery.alts.0"),
+            },
+            {
+              src: "/images/plain-dairy-table.jpg",
+              alt: t("gallery.alts.1"),
+            },
+            {
+              src: "/images/plain-cow-pasture.jpg",
+              alt: t("gallery.alts.2"),
+            },
+          ].map((item) => (
+            <div key={item.src} className="relative aspect-[4/3] md:aspect-[5/4]">
+              <Image
+                src={item.src}
+                alt={item.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
             </div>
+          ))}
+        </div>
+        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-[var(--brand-navy)]/80 via-[var(--brand-navy)]/20 to-transparent">
+          <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+            <p className="font-[family-name:var(--font-display)] text-2xl font-semibold text-white sm:text-3xl">
+              {t("gallery.caption")}
+            </p>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
-      <footer className="border-t border-slate-200 px-4 py-6 text-center text-sm text-slate-500 sm:py-8">
-        {t("footer.text")}
-      </footer>
-    </div>
+      {/* Simple CTA */}
+      <section className="bg-[var(--brand-navy)]">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-14 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-16">
+          <div>
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-white sm:text-3xl">
+              {t("cta.title")}
+            </h2>
+            <p className="mt-2 max-w-lg text-sm text-white/75 sm:text-base">
+              {t("cta.description")}
+            </p>
+          </div>
+          <Link href="/register">
+            <Button
+              size="lg"
+              className="bg-[var(--brand-saffron)] text-[var(--brand-navy)] hover:bg-[var(--brand-saffron-deep)]"
+            >
+              {tc("getStarted")}
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+    </main>
   );
 }

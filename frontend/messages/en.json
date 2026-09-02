@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "MilkFlow",
+    "appName": "dudiya",
     "signIn": "Sign in",
     "signOut": "Sign out",
     "getStarted": "Get started",
@@ -94,38 +94,183 @@
     "backToDashboard": "Back to dashboard"
   },
   "landing": {
-    "hero": {
-      "title": "Fresh milk delivery,",
-      "titleHighlight": " simplified",
-      "description": "Connect local milk distributors with customers. Manage subscriptions, delivery slots, and pricing - all in one platform.",
-      "customerCta": "Get Milk Delivered",
-      "distributorCta": "I'm a Distributor"
+    "nav": {
+      "main": "Main menu",
+      "about": "About",
+      "contact": "Contact",
+      "howItWorks": "How it works",
+      "company": "Company",
+      "legal": "Legal",
+      "privacy": "Privacy policy",
+      "terms": "Terms & conditions"
     },
-    "features": {
-      "customers": {
-        "title": "For Customers",
-        "description": "Find nearby distributors, compare pricing, and subscribe to daily milk delivery with flexible frequencies.",
-        "cta": "Register as customer"
-      },
-      "distributors": {
-        "title": "For Distributors",
-        "description": "Set up your catalog, pricing matrix, delivery slots, and onboard customers - or let them self-subscribe.",
-        "cta": "Register as distributor"
-      },
-      "subscriptionEngine": {
-        "title": "Subscription Engine",
-        "description": "Daily, alternate day, weekdays, weekly, or monthly - pause and extra milk requests built in.",
-        "cta": "Sign in to manage"
+    "hero": {
+      "title": "Fresh milk at your door, every morning",
+      "description": "dudiya helps Indian families get milk from trusted local distributors — no long queues, no last-minute rush.",
+      "customerCta": "Order milk for home",
+      "distributorCta": "I deliver milk",
+      "imageAlt": "Fresh milk in glass bottles and a glass"
+    },
+    "howItWorks": {
+      "eyebrow": "Simple steps",
+      "title": "How dudiya works",
+      "description": "You do not need any technical knowledge. Follow these easy steps and milk starts arriving at your home.",
+      "stepLabel": "Step {step}",
+      "steps": {
+        "1": {
+          "title": "Create your account",
+          "body": "Sign up with your name, phone, and address. It takes only a few minutes."
+        },
+        "2": {
+          "title": "Choose a milk seller near you",
+          "body": "See local distributors, their milk types, and prices. Pick the one you trust."
+        },
+        "3": {
+          "title": "Set your daily milk plan",
+          "body": "Tell us how much milk you need and which days. Change or pause anytime."
+        },
+        "4": {
+          "title": "Get milk at your door",
+          "body": "Your distributor delivers on time. Track deliveries and bills in one place."
+        }
       }
     },
+    "audiences": {
+      "title": "Made for homes and milk sellers",
+      "description": "Whether you want morning milk for chai, or you run a milk route — dudiya keeps things simple.",
+      "customers": {
+        "title": "For families",
+        "description": "Stop worrying about milk every morning. Set once, and fresh milk comes to you.",
+        "imageAlt": "Hand pouring fresh milk into a glass",
+        "points": {
+          "0": "Find nearby milk sellers",
+          "1": "Daily, alternate day, or custom plans",
+          "2": "Pause when you travel"
+        },
+        "cta": "Start as a customer"
+      },
+      "distributors": {
+        "title": "For milk distributors",
+        "description": "Manage customers, routes, and prices without paper registers or confusing apps.",
+        "imageAlt": "Glass bottles and a glass filled with fresh milk",
+        "points": {
+          "0": "Add products and morning slots",
+          "1": "Onboard customers yourself or let them join",
+          "2": "See today’s deliveries clearly"
+        },
+        "cta": "Start as a distributor"
+      }
+    },
+    "gallery": {
+      "caption": "From farm-fresh milk to your family’s morning chai.",
+      "alts": {
+        "0": "Hand pouring fresh milk into a glass",
+        "1": "Fresh milk bottle with eggs and butter on a farm table",
+        "2": "Cow in a green pasture"
+      }
+    },
+    "cta": {
+      "title": "Ready for simpler milk delivery?",
+      "description": "Join dudiya today — built for Indian homes, villages, and local milk sellers."
+    },
     "footer": {
-      "text": "MilkFlow - Milk Distribution SaaS · Phase 1"
+      "tagline": "Fresh milk delivery made simple for Indian families and local distributors.",
+      "copyright": "© dudiya. Fresh milk, delivered with care."
+    }
+  },
+  "pages": {
+    "about": {
+      "title": "About dudiya",
+      "bannerAlt": "Cow standing in a green pasture",
+      "intro": "dudiya is a simple milk delivery service for India. We connect local milk distributors with families who want fresh milk at home — without complicated apps or confusing words.",
+      "mission": {
+        "title": "Our mission",
+        "body": "Make daily milk as easy as morning chai. Everyone — from a small town family to a busy city household — should get reliable milk without stress."
+      },
+      "promise": {
+        "title": "Our promise",
+        "body": "Clear prices, local sellers you can trust, and tools that feel easy even if you are not used to technology."
+      },
+      "india": {
+        "title": "Built for India",
+        "body": "Village addresses, city apartments, morning and evening slots, Hindi and English — dudiya is designed around how milk really works in India."
+      },
+      "cta": "Join dudiya"
+    },
+    "contact": {
+      "title": "Contact us",
+      "subtitle": "Questions about milk delivery, your account, or becoming a distributor? We are here to help.",
+      "bannerAlt": "Fresh milk bottle with eggs and butter on a farm table",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "addressLabel": "Office",
+      "address": "India — serving homes and local milk distributors nationwide",
+      "success": "Thank you. We will get back to you soon.",
+      "form": {
+        "name": "Your name",
+        "email": "Email",
+        "message": "How can we help?",
+        "submit": "Send message",
+        "sending": "Sending..."
+      }
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "updated": "Last updated: September 2026",
+      "sections": {
+        "collect": {
+          "title": "What we collect",
+          "body": "We collect information you share when you create an account — such as your name, phone, email, and delivery address. We may also store delivery and billing details needed to run the service."
+        },
+        "use": {
+          "title": "How we use it",
+          "body": "We use your information to deliver milk, manage subscriptions, send important updates, and improve dudiya. We do not sell your personal data."
+        },
+        "share": {
+          "title": "Who we share with",
+          "body": "Your distributor may see the details needed for delivery. We may share data with trusted service providers who help us run the platform, under strict confidentiality."
+        },
+        "rights": {
+          "title": "Your choices",
+          "body": "You can update your profile, pause deliveries, or contact us to ask about your data. We keep information only as long as needed for the service and legal requirements."
+        },
+        "contact": {
+          "title": "Questions",
+          "body": "For privacy questions, email hello@dudiya.in. We will respond as soon as we can."
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms & conditions",
+      "updated": "Last updated: September 2026",
+      "sections": {
+        "service": {
+          "title": "Using dudiya",
+          "body": "dudiya helps customers and milk distributors arrange delivery. By creating an account, you agree to use the service honestly and follow these terms."
+        },
+        "accounts": {
+          "title": "Your account",
+          "body": "Keep your login details safe. You are responsible for activity on your account. Give accurate address and contact information so milk can reach you."
+        },
+        "delivery": {
+          "title": "Milk delivery",
+          "body": "Delivery times and products depend on your chosen distributor. You can pause or change plans as allowed in the app. Issues with a specific delivery should be raised with your distributor or through dudiya support."
+        },
+        "payments": {
+          "title": "Prices and bills",
+          "body": "Prices are set by distributors. Bills and payment options shown in dudiya are for your convenience. Pay on time as agreed with your distributor."
+        },
+        "changes": {
+          "title": "Changes to these terms",
+          "body": "We may update these terms as dudiya grows. Continued use of the service after updates means you accept the revised terms. For questions, contact hello@dudiya.in."
+        }
+      }
     }
   },
   "auth": {
     "login": {
       "title": "Welcome back",
-      "description": "Sign in to your MilkFlow account",
+      "description": "Sign in to your dudiya account",
       "button": "Sign in",
       "forgotPassword": "Forgot password?",
       "noAccount": "Don't have an account?",
@@ -133,7 +278,7 @@
     },
     "register": {
       "title": "Create your account",
-      "description": "Choose how you want to use MilkFlow",
+      "description": "Choose how you want to use dudiya",
       "customerTitle": "Customer account",
       "customerDescription": "Find distributors and manage your milk subscriptions.",
       "distributorTitle": "Distributor account",
@@ -162,7 +307,7 @@
     },
     "reset": {
       "title": "Reset password",
-      "description": "Create a new password for your MilkFlow account.",
+      "description": "Create a new password for your dudiya account.",
       "newPassword": "New password",
       "confirmPassword": "Confirm password",
       "button": "Reset password",
@@ -172,7 +317,7 @@
     },
     "activate": {
       "title": "Activate account",
-      "description": "Set your password to activate your MilkFlow account.",
+      "description": "Set your password to activate your dudiya account.",
       "button": "Activate account",
       "success": "Your account is active. You can now sign in.",
       "expired": "This activation link has expired.",

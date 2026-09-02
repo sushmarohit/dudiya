@@ -20,7 +20,6 @@ import { useFormSchemas } from "@/hooks/use-form-schemas";
 import { useLogin } from "@/hooks/use-auth";
 import { useApiErrorMessage } from "@/hooks/use-api-error-message";
 import { showToast } from "@/components/providers";
-import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { UserRole } from "@/types";
 
@@ -64,14 +63,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-slate-50 px-4">
-      <div className="absolute right-4 top-4">
-        <LocaleSwitcher />
-      </div>
+    <div className="flex items-center justify-center px-4 py-12 sm:py-16">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
-            <Milk className="h-6 w-6 text-emerald-600" />
+          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--brand-sand)]">
+            <Milk className="h-6 w-6 text-[var(--brand-navy)]" />
           </div>
           <CardTitle>{t("title")}</CardTitle>
           <CardDescription>{t("description")}</CardDescription>
@@ -104,17 +100,16 @@ export default function LoginPage() {
           <div className="mt-4 text-center text-sm text-slate-600">
             <Link
               href="/forgot-password"
-              className="text-emerald-600 hover:underline"
+              className="text-[var(--brand-saffron-deep)] hover:underline"
             >
               {t("forgotPassword")}
             </Link>
             <span className="mx-2">·</span>
-            <Link href="/register" className="text-emerald-600 hover:underline">
+            <Link
+              href="/register"
+              className="text-[var(--brand-saffron-deep)] hover:underline"
+            >
               {t("registerLink")}
-            </Link>
-            <span className="mx-2">·</span>
-            <Link href="/" className="text-emerald-600 hover:underline">
-              {tc("backToHome")}
             </Link>
           </div>
         </CardContent>

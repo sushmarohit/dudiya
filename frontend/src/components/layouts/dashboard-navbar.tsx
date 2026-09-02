@@ -2,7 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Menu, Milk } from "lucide-react";
+import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LocaleSwitcher } from "@/components/locale-switcher";
@@ -74,11 +74,11 @@ export function DashboardNavbar({
           }
           className="flex min-w-0 items-center gap-2.5"
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
-            <Milk className="h-5 w-5" aria-hidden />
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-navy)] text-sm font-bold text-[var(--brand-saffron)]">
+            दू
           </span>
           <span className="min-w-0">
-            <span className="block truncate text-sm font-semibold text-slate-900 sm:text-base">
+            <span className="block truncate font-[family-name:var(--font-display)] text-sm font-semibold text-slate-900 sm:text-base">
               {tc("appName")}
             </span>
             <span className="block truncate text-xs text-slate-500">
