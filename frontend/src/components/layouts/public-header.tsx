@@ -57,7 +57,7 @@ export function PublicHeader() {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <LocaleSwitcher className="hidden sm:inline-flex" />
+          <LocaleSwitcher />
           <Link href="/login" className="hidden sm:block">
             <Button variant="ghost">{tc("signIn")}</Button>
           </Link>
@@ -98,7 +98,6 @@ export function PublicHeader() {
             </Link>
           ))}
           <div className="mt-2 flex flex-col gap-2 border-t border-[var(--brand-border)] pt-3">
-            <LocaleSwitcher />
             <Link href="/login" onClick={() => setOpen(false)}>
               <Button variant="outline" className="w-full">
                 {tc("signIn")}
