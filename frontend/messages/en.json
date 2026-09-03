@@ -110,7 +110,7 @@
       "description": "dudiya helps Indian families get milk from trusted local distributors — no long queues, no last-minute rush.",
       "customerCta": "Order milk for home",
       "distributorCta": "I deliver milk",
-      "imageAlt": "Fresh milk in glass bottles and a glass"
+      "imageAlt": "Glass pitcher of fresh milk with a cow in a sunny pasture"
     },
     "howItWorks": {
       "eyebrow": "Simple steps",
@@ -183,7 +183,7 @@
     "about": {
       "title": "About dudiya",
       "bannerAlt": "Cow standing in a green pasture",
-      "intro": "dudiya is a simple milk delivery service for India. We connect local milk distributors with families who want fresh milk at home — without complicated apps or confusing words.",
+      "intro": "dudiya is a simple milk delivery service for your area. We connect local milk distributors with families who want fresh milk at home — without complicated apps or confusing words.",
       "mission": {
         "title": "Our mission",
         "body": "Make daily milk as easy as morning chai. Everyone — from a small town family to a busy city household — should get reliable milk without stress."
@@ -642,9 +642,22 @@
       },
       "new": {
         "title": "Add customer",
-        "description": "Create a customer profile and optionally start a subscription.",
+        "description": "Create a customer profile and share an activation link so they can set a password and log in.",
         "inviteCustomer": "Invite customer",
-        "createSubscription": "Create subscription"
+        "createSubscription": "Create subscription",
+        "emailOptional": "Email (optional)",
+        "creating": "Creating...",
+        "created": "Customer created",
+        "createdShareLink": "Customer created — share the activation link",
+        "shareTitle": "Share this activation link with the customer",
+        "shareHint": "Copy the link and send it on WhatsApp, SMS, or any chat. The customer opens it, sets a password, then can sign in.",
+        "copyLink": "Copy link",
+        "copied": "Copied",
+        "linkCopied": "Activation link copied — paste it in WhatsApp or any chat",
+        "linkCopyFailed": "Could not copy automatically. Please select and copy the link manually.",
+        "shareWhatsApp": "Share on WhatsApp",
+        "whatsappMessage": "Namaste! Please open this dudiya link to activate your milk delivery account and set your password:\n\n{link}",
+        "done": "Done"
       },
       "detail": {
         "title": "Customer details",

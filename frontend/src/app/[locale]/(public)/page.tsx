@@ -15,7 +15,7 @@ export default function HomePage() {
       {/* Full-bleed hero */}
       <section className="relative isolate min-h-[88vh] overflow-hidden">
         <Image
-          src="/images/hero-banner.jpg"
+          src="/images/cow_man.webp"
           alt={t("hero.imageAlt")}
           fill
           priority

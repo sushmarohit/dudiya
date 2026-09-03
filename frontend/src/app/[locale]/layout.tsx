@@ -27,9 +27,9 @@ const notoDevanagari = Noto_Sans_Devanagari({
 });
 
 export const metadata: Metadata = {
-  title: "dudiya — Fresh milk delivery for Indian homes",
+  title: "dudiya — Fresh milk delivery for your home",
   description:
-    "dudiya connects local milk distributors with families. Simple daily milk delivery across India.",
+    "dudiya connects local milk distributors with families. Simple daily milk delivery across your area.",
 };
 
 export const viewport = {
