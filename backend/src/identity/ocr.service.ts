@@ -1,6 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PDFParse } from 'pdf-parse';
+import { DOMMatrix, Image, ImageData, Path2D } from '@napi-rs/canvas';
 import { createWorker } from 'tesseract.js';
+
+// pdfjs-dist (via pdf-parse) expects browser globals; set them before require.
+Object.assign(globalThis, { DOMMatrix, Path2D, ImageData, Image });
+
+// Subpath exports need node16+ moduleResolution; Nest uses classic CommonJS.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { CanvasFactory } = require('pdf-parse/worker') as {
+  CanvasFactory: new () => unknown;
+};
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { PDFParse } = require('pdf-parse') as typeof import('pdf-parse');
 
 export interface OcrExtractResult {
   text: string;
@@ -50,7 +61,10 @@ export class OcrService {
   }
 
   private async extractFromPdf(buffer: Buffer): Promise<OcrExtractResult> {
-    const parser = new PDFParse({ data: new Uint8Array(buffer) });
+    const parser = new PDFParse({
+      data: new Uint8Array(buffer),
+      CanvasFactory,
+    });
     try {
       const textResult = await parser.getText();
       const embedded = (textResult?.text ?? '').trim();
