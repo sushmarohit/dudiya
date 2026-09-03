@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="dudiya">
+  <circle cx="32" cy="32" r="32" fill="#1A365D"/>
+  <text
+    x="32"
+    y="33"
+    fill="#F0A202"
+    font-family="Noto Sans Devanagari, Nirmala UI, Mangal, 'Segoe UI', sans-serif"
+    font-size="30"
+    font-weight="700"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >&B</text>
+</svg>

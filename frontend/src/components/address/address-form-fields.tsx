@@ -23,6 +23,8 @@ interface AddressFormFieldsProps {
   showMap?: boolean;
   /** @deprecated Location opt-in is always used when showLocation is true. */
   locationOptIn?: boolean;
+  /** Tighter multi-column layout for wide desktop forms. */
+  dense?: boolean;
   className?: string;
 }
 
@@ -33,6 +35,7 @@ export function AddressFormFields({
   errors,
   showLocation,
   showMap = true,
+  dense = false,
   className,
 }: AddressFormFieldsProps) {
   const ta = useTranslations("address");
@@ -62,7 +65,7 @@ export function AddressFormFields({
     <div className={cn("space-y-4", className)}>
       <div className="space-y-2">
         <Label>{ta("type")}</Label>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {(["URBAN", "RURAL"] as const).map((type) => (
             <button
               key={type}
@@ -84,67 +87,73 @@ export function AddressFormFields({
       </div>
 
       {addressType === "URBAN" ? (
-        <>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>{ta("flat")}</Label>
-              <Input placeholder={ta("flat")} {...register("flatOrHouseNo")} />
-            </div>
-            <div className="space-y-2">
-              <Label>{ta("building")}</Label>
-              <Input
-                placeholder={ta("building")}
-                {...register("buildingOrSociety")}
-              />
-            </div>
+        <div
+          className={cn(
+            "grid gap-4",
+            dense
+              ? "sm:grid-cols-2 lg:grid-cols-3"
+              : "sm:grid-cols-2",
+          )}
+        >
+          <div className="space-y-2">
+            <Label>{ta("flat")}</Label>
+            <Input placeholder={ta("flat")} {...register("flatOrHouseNo")} />
           </div>
           <div className="space-y-2">
+            <Label>{ta("building")}</Label>
+            <Input
+              placeholder={ta("building")}
+              {...register("buildingOrSociety")}
+            />
+          </div>
+          <div className={cn("space-y-2", dense && "lg:col-span-1", !dense && "sm:col-span-2")}>
             <Label>{ta("street")}</Label>
             <Input placeholder={ta("area")} {...register("streetOrLane")} />
           </div>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="space-y-2">
-              <Label>{tc("city")} *</Label>
-              <Input {...register("city")} />
-              {errors.city && (
-                <p className="text-sm text-red-600">
-                  {errors.city.message as string}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label>{ta("state")}</Label>
-              <Input placeholder={ta("state")} {...register("state")} />
-            </div>
-            <div className="space-y-2">
-              <Label>{tc("pincode")}</Label>
-              <Input {...register("pincode")} />
-              {errors.pincode && (
-                <p className="text-sm text-red-600">
-                  {errors.pincode.message as string}
-                </p>
-              )}
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>{ta("flat")}</Label>
-              <Input placeholder={ta("flat")} {...register("flatOrHouseNo")} />
-            </div>
-            <div className="space-y-2">
-              <Label>{ta("village")} *</Label>
-              <Input {...register("village")} />
-              {errors.village && (
-                <p className="text-sm text-red-600">
-                  {errors.village.message as string}
-                </p>
-              )}
-            </div>
+          <div className="space-y-2">
+            <Label>{tc("city")} *</Label>
+            <Input {...register("city")} />
+            {errors.city && (
+              <p className="text-sm text-red-600">
+                {errors.city.message as string}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
+            <Label>{ta("state")}</Label>
+            <Input placeholder={ta("state")} {...register("state")} />
+          </div>
+          <div className="space-y-2">
+            <Label>{tc("pincode")}</Label>
+            <Input {...register("pincode")} />
+            {errors.pincode && (
+              <p className="text-sm text-red-600">
+                {errors.pincode.message as string}
+              </p>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div
+          className={cn(
+            "grid gap-4",
+            dense ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2",
+          )}
+        >
+          <div className="space-y-2">
+            <Label>{ta("flat")}</Label>
+            <Input placeholder={ta("flat")} {...register("flatOrHouseNo")} />
+          </div>
+          <div className="space-y-2">
+            <Label>{ta("village")} *</Label>
+            <Input {...register("village")} />
+            {errors.village && (
+              <p className="text-sm text-red-600">
+                {errors.village.message as string}
+              </p>
+            )}
+          </div>
+          <div className={cn("space-y-2", !dense && "sm:col-span-2")}>
             <Label>{ta("landmark")}</Label>
             <Input placeholder={ta("landmark")} {...register("landmark")} />
             {errors.landmark && (
@@ -153,31 +162,29 @@ export function AddressFormFields({
               </p>
             )}
           </div>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="space-y-2">
-              <Label>{ta("district")} *</Label>
-              <Input {...register("district")} />
-              {errors.district && (
-                <p className="text-sm text-red-600">
-                  {errors.district.message as string}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label>{ta("state")} *</Label>
-              <Input {...register("state")} />
-              {errors.state && (
-                <p className="text-sm text-red-600">
-                  {errors.state.message as string}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label>{tc("pincode")}</Label>
-              <Input {...register("pincode")} />
-            </div>
+          <div className="space-y-2">
+            <Label>{ta("district")} *</Label>
+            <Input {...register("district")} />
+            {errors.district && (
+              <p className="text-sm text-red-600">
+                {errors.district.message as string}
+              </p>
+            )}
           </div>
-        </>
+          <div className="space-y-2">
+            <Label>{ta("state")} *</Label>
+            <Input {...register("state")} />
+            {errors.state && (
+              <p className="text-sm text-red-600">
+                {errors.state.message as string}
+              </p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <Label>{tc("pincode")}</Label>
+            <Input {...register("pincode")} />
+          </div>
+        </div>
       )}
 
       <div className="space-y-2">

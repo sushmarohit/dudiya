@@ -292,12 +292,15 @@
     },
     "customerRegistration": {
       "title": "Customer registration",
-      "description": "Create your account, enter your address (urban or village), and pin your delivery location on the map."
+      "description": "Create your account and delivery address. Urban and village formats are both supported.",
+      "accountSection": "Account",
+      "addressSection": "Delivery address"
     },
     "distributorRegistration": {
       "title": "Distributor registration",
       "description": "Register your milk distribution business. Upload identity documents and complete setup to go live — no admin approval needed.",
-      "success": "Registration successful! Redirecting..."
+      "success": "Registration successful! Redirecting...",
+      "accountSection": "Business & account"
     },
     "forgot": {
       "title": "Forgot password",

@@ -30,6 +30,11 @@ export const metadata: Metadata = {
   title: "dudiya — Fresh milk delivery for your home",
   description:
     "dudiya connects local milk distributors with families. Simple daily milk delivery across your area.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    shortcut: "/favicon.svg",
+    apple: "/brand/dudiya-mark.svg",
+  },
 };
 
 export const viewport = {

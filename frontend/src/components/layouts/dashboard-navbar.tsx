@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { ProfileMenu } from "@/components/layouts/profile-menu";
+import { DudiyaMark } from "@/components/brand/dudiya-mark";
 import type { UserRole } from "@/types";
 
 function getPortalTitleKey(role: UserRole): "admin" | "distributor" | "customer" {
@@ -74,9 +75,7 @@ export function DashboardNavbar({
           }
           className="flex min-w-0 items-center gap-2.5"
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-navy)] text-sm font-bold text-[var(--brand-saffron)]">
-            दू
-          </span>
+          <DudiyaMark className="h-9 w-9" decorative />
           <span className="min-w-0">
             <span className="block truncate font-[family-name:var(--font-display)] text-sm font-semibold text-slate-900 sm:text-base">
               {tc("appName")}
