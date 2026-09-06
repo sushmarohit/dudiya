@@ -78,6 +78,11 @@
     "statuses": {
       "active": "Active",
       "pending": "Pending",
+      "pendingApproval": "Pending approval",
+      "pendingCancel": "Ending",
+      "cancelled": "Cancelled",
+      "rejected": "Declined",
+      "paused": "Paused",
       "suspended": "Suspended"
     },
     "onboardedVia": {
@@ -438,6 +443,8 @@
     "unread": "Unread",
     "viewSubscription": "View subscription",
     "viewSubscriptions": "View subscriptions",
+    "reviewRequest": "Review request",
+    "findDistributor": "Find a distributor",
     "viewBill": "View bill",
     "viewBills": "View bills",
     "continueSetup": "Continue setup",
@@ -448,6 +455,8 @@
     "findDistributorLink": "Looking for a new distributor? Search nearby",
     "types": {
       "subscriptionActivated": "Subscription",
+      "subscriptionRequested": "Subscription request",
+      "subscriptionRejected": "Subscription declined",
       "pauseApplied": "Pause / skip",
       "extraMilk": "Extra milk",
       "billGenerated": "Billing",
@@ -462,6 +471,26 @@
       "journeyStarted": "On the way",
       "generic": "Update"
     }
+  },
+  "subscriptionApproval": {
+    "distributorTitle": "Customer subscription request",
+    "distributorDescription": "This customer asked to subscribe. Accept to activate deliveries, or decline if you cannot serve them.",
+    "approve": "Accept",
+    "reject": "Decline",
+    "approveTitle": "Accept subscription?",
+    "approveDescription": "The subscription will become active and deliveries can start.",
+    "rejectTitle": "Decline subscription?",
+    "rejectDescription": "The customer will be notified. They can request another distributor.",
+    "rejectReason": "Reason (optional)",
+    "rejectReasonPlaceholder": "Why are you declining?",
+    "approved": "Subscription accepted",
+    "rejected": "Subscription declined",
+    "customerPendingTitle": "Waiting for distributor approval",
+    "customerPendingDescription": "Your subscription request was sent. Deliveries start after the distributor accepts.",
+    "customerRejectedTitle": "Subscription declined",
+    "customerRejectedDescription": "The distributor declined this request. You can find another distributor.",
+    "customerRejectedReason": "The distributor declined this request: {reason}",
+    "findAnother": "Find a distributor"
   },
   "admin": {
     "dashboard": {
@@ -717,8 +746,10 @@
       "chooseSlot": "Choose delivery slot",
       "confirmSubscription": "Confirm subscription",
       "subscriptionCreated": "Subscription created",
+      "requestSent": "Request sent — waiting for distributor approval",
       "fatFromDistributor": "Fat {fat}% · {price}/unit (set by distributor)",
       "alreadyActive": "You already have an active subscription with this distributor. End it before starting a new one.",
+      "pendingApproval": "You already have a subscription request waiting for this distributor's approval.",
       "endPending": "A subscription end request is pending with this distributor. Finish or wait for confirmation before starting a new one.",
       "manageExisting": "Manage existing subscription"
     },
@@ -858,7 +889,8 @@
     "IDENTITY_DOCUMENT_NOT_FOUND": "Identity document not found.",
     "IDENTITY_NAME_MISMATCH": "The name on the document does not match your registered name.",
     "IDENTITY_NOT_VERIFIED": "Upload at least one verified identity document to continue.",
-    "SUBSCRIPTION_ALREADY_ACTIVE": "You already have an active subscription with this distributor. End it before starting a new one.",
+    "SUBSCRIPTION_ALREADY_ACTIVE": "You already have an active or pending subscription with this distributor. End it or wait for approval before starting a new one.",
+    "SUBSCRIPTION_NOT_PENDING_APPROVAL": "This subscription is not waiting for approval.",
     "SUBSCRIPTION_END_PENDING": "A subscription end request is already pending confirmation.",
     "SUBSCRIPTION_END_NOT_PENDING": "There is no pending end request for this subscription.",
     "SUBSCRIPTION_END_ALREADY_CONFIRMED": "You have already confirmed this end request.",
@@ -879,6 +911,10 @@
     "declaredNamePlaceholder": "Enter the name printed on the document",
     "file": "Document file",
     "fileRequiredHint": "A clear photo of the ID is required so we can read the printed name.",
+    "preview": "Preview",
+    "previewAlt": "Selected document preview",
+    "pdfPreview": "PDF selected",
+    "clearFile": "Clear",
     "upload": "Upload & verify with OCR",
     "uploadRequired": "Choose a file and enter the name on the document.",
     "uploadDocuments": "Upload documents",

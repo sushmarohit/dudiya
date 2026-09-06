@@ -8,7 +8,7 @@ import { useUnreadNotificationCount } from "@/hooks/use-notifications";
 
 export function NotificationBell({ className }: { className?: string }) {
   const t = useTranslations("nav");
-  const { data } = useUnreadNotificationCount({ pollMs: 15_000 });
+  const { data } = useUnreadNotificationCount({ pollMs: false });
   const count = data?.count ?? 0;
 
   return (

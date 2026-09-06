@@ -51,12 +51,14 @@ export function useUpdateDeliveryItem() {
   return useMutation({
     mutationFn: async ({
       id,
+      date: _date,
       ...data
     }: {
       id: string;
       status?: DeliveryItemStatus;
       deliveredQty?: number;
       notes?: string;
+      /** Client-only for cache invalidation; not sent to the API. */
       date?: string;
     }) => {
       const res = await api.patch(`/distributor/delivery-items/${id}`, data);

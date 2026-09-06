@@ -149,6 +149,7 @@ export function usePauseSubscription() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["customer", "subscriptions"] });
+      qc.invalidateQueries({ queryKey: ["schedule-preview"] });
     },
   });
 }
@@ -164,7 +165,7 @@ export function useSubscriptionPreview(
   to.setDate(to.getDate() + days);
 
   return useQuery({
-    queryKey: ["subscription-preview", role, id, days],
+    queryKey: ["schedule-preview", role, id, days],
     queryFn: async () => {
       const base =
         role === "customer"
@@ -200,7 +201,7 @@ export function useUpdateCustomerSubscription() {
       qc.invalidateQueries({
         queryKey: ["customer", "subscriptions", variables.id],
       });
-      qc.invalidateQueries({ queryKey: ["subscription-preview"] });
+      qc.invalidateQueries({ queryKey: ["schedule-preview"] });
     },
   });
 }
@@ -225,6 +226,7 @@ export function useExtraSubscription() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["customer", "subscriptions"] });
+      qc.invalidateQueries({ queryKey: ["schedule-preview"] });
     },
   });
 }

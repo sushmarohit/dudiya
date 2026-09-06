@@ -32,6 +32,7 @@ import {
   CreateDistributorSubscriptionDto,
   UpdateDistributorSubscriptionDto,
 } from './dto/subscription.dto';
+import { RejectSubscriptionDto } from './dto/reject-subscription.dto';
 import { CreateCustomProductDto } from '../products/dto/create-custom-product.dto';
 import { UpdateCustomProductDto } from '../products/dto/update-custom-product.dto';
 
@@ -204,6 +205,25 @@ export class DistributorController {
     @Body() dto: UpdateDistributorSubscriptionDto,
   ) {
     return this.distributorService.updateSubscription(user.id, id, dto);
+  }
+
+  @Post('subscriptions/:id/approve')
+  @UseGuards(DistributorApprovedGuard)
+  approveSubscription(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+  ) {
+    return this.distributorService.approveSubscription(user.id, id);
+  }
+
+  @Post('subscriptions/:id/reject')
+  @UseGuards(DistributorApprovedGuard)
+  rejectSubscription(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: RejectSubscriptionDto,
+  ) {
+    return this.distributorService.rejectSubscription(user.id, id, dto.reason);
   }
 
   @Post('subscriptions/:id/end-request')

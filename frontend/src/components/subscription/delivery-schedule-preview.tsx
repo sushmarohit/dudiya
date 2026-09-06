@@ -64,16 +64,7 @@ export function DeliverySchedulePreview({
       range.to,
     ],
     queryFn: async () => {
-      if (subscriptionId) {
-        const base =
-          role === "customer"
-            ? `/customers/subscriptions/${subscriptionId}/preview`
-            : `/distributor/subscriptions/${subscriptionId}/preview`;
-        const res = await api.get<SchedulePreviewResponse>(base, {
-          params: range,
-        });
-        return res.data;
-      }
+      // Prefer draft params so frequency/startDate edits update the preview immediately
       if (scheduleParams?.frequency && scheduleParams.startDate) {
         const res = await api.post<SchedulePreviewResponse>(
           "/subscriptions/preview-schedule",
@@ -82,6 +73,16 @@ export function DeliverySchedulePreview({
             ...range,
           },
         );
+        return res.data;
+      }
+      if (subscriptionId) {
+        const base =
+          role === "customer"
+            ? `/customers/subscriptions/${subscriptionId}/preview`
+            : `/distributor/subscriptions/${subscriptionId}/preview`;
+        const res = await api.get<SchedulePreviewResponse>(base, {
+          params: range,
+        });
         return res.data;
       }
       return null;

@@ -95,6 +95,14 @@ JWT_REFRESH_SECRET=change-me-refresh-secret
 PORT=3001
 FRONTEND_URL=http://localhost:3000
 GOOGLE_MAPS_API_KEY=          # optional: Geocoding API for address resolve
+
+# SMTP — required for forgot-password and customer activation emails
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASS=
+SMTP_SECURE=false
+SMTP_FROM=Dudiya <noreply@yourdomain.com>
 ```
 
 **frontend/.env.local**
@@ -109,9 +117,12 @@ By default, **milk delivery subscriptions** and **billing/payments** are disable
 | Flag | Backend | Frontend |
 |------|---------|----------|
 | Subscription create flow | `FEATURE_SUBSCRIPTION_FLOW_ENABLED=true` | `NEXT_PUBLIC_FEATURE_SUBSCRIPTION_FLOW_ENABLED=true` |
+| Subscription approval (customer self-subscribe waits for distributor accept/decline) | `FEATURE_SUBSCRIPTION_APPROVAL_ENABLED=true` | `NEXT_PUBLIC_FEATURE_SUBSCRIPTION_APPROVAL_ENABLED=true` |
 | Billing & payments | `FEATURE_BILLING_ENABLED=true` | `NEXT_PUBLIC_FEATURE_BILLING_ENABLED=true` |
 
-When disabled: nav items and create/subscribe CTAs are hidden; new subscriptions and payment recording are blocked via API; billing cron jobs are skipped. Existing subscriptions, deliveries, and read-only bill views continue to work.
+When subscription approval is enabled, customer self-service subscribe creates `PENDING_APPROVAL` until the distributor accepts (`ACTIVE`) or declines (`REJECTED`). Distributor-led create stays instantly `ACTIVE`. When the flag is off, customer subscribe activates immediately (legacy behavior).
+
+When subscription/billing flows are disabled: nav items and create/subscribe CTAs are hidden; new subscriptions and payment recording are blocked via API; billing cron jobs are skipped. Existing subscriptions, deliveries, and read-only bill views continue to work.
 
 Public API: `GET /api/config/features`
 

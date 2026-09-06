@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCustomerSubscriptions } from "@/hooks/use-customer";
 import type { SubscriptionFrequency } from "@/types";
 import { formatDate } from "@/lib/utils";
+import { subscriptionStatusMessageKey } from "@/lib/subscription-status";
 
 const FREQUENCY_MESSAGE_KEYS: Record<SubscriptionFrequency, string> = {
   DAILY: "daily",
@@ -75,12 +76,13 @@ export default function CustomerSubscriptionsPage() {
                     · {tCommon("quantity")} {s.quantity}
                   </p>
                   <p className="text-xs text-slate-400">
-                    Started {formatDate(s.startDate)} · {s.status}
+                    Started {formatDate(s.startDate)} ·{" "}
+                    {tCommon(subscriptionStatusMessageKey(s.status))}
                   </p>
                 </div>
                 <Link href={`/customer/subscriptions/${s.id}`}>
                   <Button size="sm" variant="outline">
-                    {tCommon("edit")}
+                    {s.status === "ACTIVE" ? tCommon("edit") : tCommon("view")}
                   </Button>
                 </Link>
               </CardContent>

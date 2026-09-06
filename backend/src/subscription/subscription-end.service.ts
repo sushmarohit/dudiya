@@ -31,7 +31,11 @@ export class SubscriptionEndService {
         distributorId,
         customerId,
         status: {
-          in: [SubscriptionStatus.ACTIVE, SubscriptionStatus.PENDING_CANCEL],
+          in: [
+            SubscriptionStatus.ACTIVE,
+            SubscriptionStatus.PENDING_CANCEL,
+            SubscriptionStatus.PENDING_APPROVAL,
+          ],
         },
       },
       select: { id: true, status: true },
@@ -40,7 +44,9 @@ export class SubscriptionEndService {
       throwApi(
         existing.status === SubscriptionStatus.PENDING_CANCEL
           ? ApiErrorCode.SUBSCRIPTION_END_PENDING
-          : ApiErrorCode.SUBSCRIPTION_ALREADY_ACTIVE,
+          : existing.status === SubscriptionStatus.PENDING_APPROVAL
+            ? ApiErrorCode.SUBSCRIPTION_ALREADY_ACTIVE
+            : ApiErrorCode.SUBSCRIPTION_ALREADY_ACTIVE,
         HttpStatus.CONFLICT,
       );
     }

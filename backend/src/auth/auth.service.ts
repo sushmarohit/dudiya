@@ -18,6 +18,7 @@ import { LoginDto } from './dto/login.dto';
 import { PhoneValidationService } from '../common/services/phone-validation.service';
 import { ApiErrorCode } from '../common/errors/api-error-code.enum';
 import { throwApi } from '../common/errors/throw-api';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +28,7 @@ export class AuthService {
     private configService: ConfigService,
     private geocoding: GeocodingService,
     private phoneValidation: PhoneValidationService,
+    private emailService: EmailService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -172,8 +174,25 @@ export class AuthService {
     await this.prisma.passwordResetToken.create({
       data: { token, userId: user.id, expiresAt },
     });
-    const frontendUrl = this.configService.get('FRONTEND_URL') || 'http://localhost:3000';
-    console.log(`[dev] Password reset link: ${frontendUrl}/reset-password?token=${token}`);
+    const frontendUrl =
+      this.configService.get('FRONTEND_URL') || 'http://localhost:3000';
+    const locale = user.preferredLocale === 'hi' ? 'hi' : 'en';
+    const resetUrl = `${frontendUrl}/${locale}/reset-password?token=${token}`;
+
+    try {
+      const result = await this.emailService.sendPasswordReset(
+        user.email,
+        resetUrl,
+        user.name,
+      );
+      if (!result.sent) {
+        // Dev / misconfigured SMTP: keep link visible in server logs.
+        console.log(`[dev] Password reset link: ${resetUrl}`);
+      }
+    } catch {
+      console.log(`[dev] Password reset link (email failed): ${resetUrl}`);
+    }
+
     return { message: 'If the email exists, a reset link has been sent' };
   }
 

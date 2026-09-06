@@ -9,6 +9,9 @@ export type UnreadCountResponse = {
   latestBody?: string | null;
 };
 
+/** Fallback poll while SSE is disconnected. */
+export const UNREAD_COUNT_FALLBACK_POLL_MS = 60_000;
+
 export function useNotifications(page = 1, type?: NotificationType) {
   return useQuery({
     queryKey: ["notifications", page, type],
@@ -24,7 +27,15 @@ export function useNotifications(page = 1, type?: NotificationType) {
   });
 }
 
-export function useUnreadNotificationCount(options?: { pollMs?: number }) {
+export function useUnreadNotificationCount(options?: {
+  /** Poll interval in ms. Pass `false` to only read the shared cache (no polling). */
+  pollMs?: number | false;
+}) {
+  const pollMs =
+    options?.pollMs === false
+      ? false
+      : (options?.pollMs ?? UNREAD_COUNT_FALLBACK_POLL_MS);
+
   return useQuery({
     queryKey: ["notifications", "unread-count"],
     queryFn: async () => {
@@ -33,7 +44,13 @@ export function useUnreadNotificationCount(options?: { pollMs?: number }) {
       );
       return res.data;
     },
-    refetchInterval: options?.pollMs ?? 15_000,
+    // Avoid refetch storms when multiple components mount/remount.
+    staleTime: 30_000,
+    // Only the dashboard watcher should poll; bell just shares this cache.
+    refetchInterval: pollMs,
+    // Stop network traffic when the browser tab is in the background.
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: true,
   });
 }
 

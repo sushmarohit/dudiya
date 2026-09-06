@@ -279,7 +279,7 @@ export function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex h-svh flex-col overflow-hidden bg-slate-50">
       <NotificationArrivalWatcher />
       <a
         href="#main-content"
@@ -297,9 +297,9 @@ export function DashboardLayout({
         onOpenMenu={() => setMobileNavOpen(true)}
       />
 
-      <div className="flex min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 overflow-hidden">
         {isCustomer ? (
-          <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-200 bg-white lg:flex">
+          <aside className="hidden h-full w-64 shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white lg:flex">
             <SidebarNav navItems={navItems} pathname={pathname} tNav={tNav} tc={tc} />
           </aside>
         ) : (
@@ -312,7 +312,7 @@ export function DashboardLayout({
                   aria-label={tc("closeMenu")}
                   onClick={() => setMobileNavOpen(false)}
                 />
-                <aside className="fixed bottom-0 left-0 z-50 flex w-[min(100vw-2.5rem,280px)] max-w-full flex-col border-r border-slate-200 bg-white shadow-xl top-14 sm:top-16 lg:static lg:z-auto lg:w-64 lg:shrink-0 lg:shadow-none">
+                <aside className="fixed bottom-0 left-0 z-50 flex w-[min(100vw-2.5rem,280px)] max-w-full flex-col overflow-hidden border-r border-slate-200 bg-white shadow-xl top-14 sm:top-16 lg:static lg:z-auto lg:h-full lg:w-64 lg:shrink-0 lg:shadow-none">
                   <SidebarNav
                     navItems={navItems}
                     pathname={pathname}
@@ -325,7 +325,7 @@ export function DashboardLayout({
                 </aside>
               </>
             ) : (
-              <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-200 bg-white lg:flex">
+              <aside className="hidden h-full w-64 shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white lg:flex">
                 <SidebarNav navItems={navItems} pathname={pathname} tNav={tNav} tc={tc} />
               </aside>
             )}
@@ -335,7 +335,7 @@ export function DashboardLayout({
         <main
           id="main-content"
           className={cn(
-            "min-w-0 flex-1 overflow-x-hidden overflow-y-auto",
+            "min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto",
             isCustomer && "pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] lg:pb-0",
           )}
           tabIndex={-1}

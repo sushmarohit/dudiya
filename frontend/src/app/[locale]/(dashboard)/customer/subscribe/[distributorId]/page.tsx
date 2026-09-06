@@ -22,7 +22,10 @@ import { showToast } from "@/components/providers";
 import { formatCurrency } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
 import { FeatureDisabledNotice } from "@/components/feature-disabled-notice";
-import { isSubscriptionFlowEnabled } from "@/lib/feature-flags";
+import {
+  isSubscriptionApprovalEnabled,
+  isSubscriptionFlowEnabled,
+} from "@/lib/feature-flags";
 
 const FREQUENCY_MESSAGE_KEYS: Record<SubscriptionFrequency, string> = {
   DAILY: "daily",
@@ -53,7 +56,9 @@ export default function SubscribePage({
       mySubscriptions?.find(
         (s) =>
           s.distributorId === distributorId &&
-          (s.status === "ACTIVE" || s.status === "PENDING_CANCEL"),
+          (s.status === "ACTIVE" ||
+            s.status === "PENDING_CANCEL" ||
+            s.status === "PENDING_APPROVAL"),
       ),
     [mySubscriptions, distributorId],
   );
@@ -99,7 +104,12 @@ export default function SubscribePage({
         startDate: data.startDate,
         // Fat comes from distributor pricing — do not send customer-entered value
       });
-      showToast("Subscription created!", "success");
+      showToast(
+        isSubscriptionApprovalEnabled()
+          ? tCustomer("subscribe.requestSent")
+          : tCustomer("subscribe.subscriptionCreated"),
+        "success",
+      );
       router.push("/customer/subscriptions");
     } catch (err) {
       showToast(getApiErrorMessage(err), "error");
@@ -132,7 +142,9 @@ export default function SubscribePage({
             <p className="text-sm text-amber-900">
               {existingActive.status === "PENDING_CANCEL"
                 ? tCustomer("subscribe.endPending")
-                : tCustomer("subscribe.alreadyActive")}
+                : existingActive.status === "PENDING_APPROVAL"
+                  ? tCustomer("subscribe.pendingApproval")
+                  : tCustomer("subscribe.alreadyActive")}
             </p>
             <Link href={`/customer/subscriptions/${existingActive.id}`}>
               <Button>{tCustomer("subscribe.manageExisting")}</Button>

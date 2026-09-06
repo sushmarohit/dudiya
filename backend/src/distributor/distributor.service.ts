@@ -48,6 +48,7 @@ import { CatalogService } from '../products/catalog.service';
 import { CreateCustomProductDto } from '../products/dto/create-custom-product.dto';
 import { UpdateCustomProductDto } from '../products/dto/update-custom-product.dto';
 import { IdentityService } from '../identity/identity.service';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class DistributorService {
@@ -62,6 +63,7 @@ export class DistributorService {
     private catalog: CatalogService,
     private subscriptionEnd: SubscriptionEndService,
     private identity: IdentityService,
+    private emailService: EmailService,
   ) {}
 
   private async getProfileByUserId(userId: string) {
@@ -399,8 +401,29 @@ export class DistributorService {
     });
 
     const frontendUrl = this.config.get('FRONTEND_URL') || 'http://localhost:3000';
-    const activationUrl = `${frontendUrl}/activate?token=${token}`;
-    console.log(`[dev] Customer activation link: ${activationUrl}`);
+    const locale =
+      customerUser.preferredLocale === 'hi' ? 'hi' : 'en';
+    const activationUrl = `${frontendUrl}/${locale}/activate?token=${token}`;
+
+    const isPlaceholderEmail = customerUser.email.endsWith('@invite.milk.local');
+    if (!isPlaceholderEmail) {
+      try {
+        const result = await this.emailService.sendAccountActivation(
+          customerUser.email,
+          activationUrl,
+          customerUser.name,
+        );
+        if (!result.sent) {
+          console.log(`[dev] Customer activation link: ${activationUrl}`);
+        }
+      } catch {
+        console.log(
+          `[dev] Customer activation link (email failed): ${activationUrl}`,
+        );
+      }
+    } else {
+      console.log(`[dev] Customer activation link: ${activationUrl}`);
+    }
 
     return {
       customer: {
@@ -600,7 +623,9 @@ export class DistributorService {
     }
     if (
       dto.status === SubscriptionStatus.CANCELLED ||
-      dto.status === SubscriptionStatus.PENDING_CANCEL
+      dto.status === SubscriptionStatus.PENDING_CANCEL ||
+      dto.status === SubscriptionStatus.PENDING_APPROVAL ||
+      dto.status === SubscriptionStatus.REJECTED
     ) {
       throwApi(ApiErrorCode.SUBSCRIPTION_END_NOT_ALLOWED, HttpStatus.BAD_REQUEST);
     }
@@ -609,6 +634,114 @@ export class DistributorService {
       data: dto,
       include: { product: true, deliverySlot: true, customer: true },
     });
+  }
+
+  async approveSubscription(userId: string, subscriptionId: string) {
+    assertSubscriptionFlowEnabled();
+    const profile = await this.getProfileByUserId(userId);
+    const sub = await this.prisma.subscription.findFirst({
+      where: { id: subscriptionId, distributorId: profile.id },
+      include: {
+        product: true,
+        customer: { include: { user: true } },
+      },
+    });
+    if (!sub) {
+      throwApi(ApiErrorCode.SUBSCRIPTION_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    if (sub.status !== SubscriptionStatus.PENDING_APPROVAL) {
+      throwApi(
+        ApiErrorCode.SUBSCRIPTION_NOT_PENDING_APPROVAL,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const updated = await this.prisma.subscription.update({
+      where: { id: subscriptionId },
+      data: {
+        status: SubscriptionStatus.ACTIVE,
+        reviewedAt: new Date(),
+        rejectionReason: null,
+      },
+      include: {
+        product: true,
+        deliverySlot: true,
+        customer: { include: { user: true } },
+      },
+    });
+
+    await this.notifications.createMany([
+      {
+        userId: sub.customer.user.id,
+        type: NotificationType.SUBSCRIPTION_ACTIVATED,
+        title: 'Subscription accepted',
+        body: `${profile.businessName} accepted your ${sub.product.name} subscription.`,
+        payload: { subscriptionId: sub.id },
+        eventId: `subscription-activated:${sub.id}:customer`,
+      },
+      {
+        userId: profile.userId,
+        type: NotificationType.SUBSCRIPTION_ACTIVATED,
+        title: 'Subscription accepted',
+        body: `You accepted ${sub.customer.user.name}'s ${sub.product.name} subscription.`,
+        payload: { subscriptionId: sub.id },
+        eventId: `subscription-activated:${sub.id}:distributor`,
+      },
+    ]);
+
+    return updated;
+  }
+
+  async rejectSubscription(
+    userId: string,
+    subscriptionId: string,
+    reason?: string,
+  ) {
+    assertSubscriptionFlowEnabled();
+    const profile = await this.getProfileByUserId(userId);
+    const sub = await this.prisma.subscription.findFirst({
+      where: { id: subscriptionId, distributorId: profile.id },
+      include: {
+        product: true,
+        customer: { include: { user: true } },
+      },
+    });
+    if (!sub) {
+      throwApi(ApiErrorCode.SUBSCRIPTION_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    if (sub.status !== SubscriptionStatus.PENDING_APPROVAL) {
+      throwApi(
+        ApiErrorCode.SUBSCRIPTION_NOT_PENDING_APPROVAL,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const updated = await this.prisma.subscription.update({
+      where: { id: subscriptionId },
+      data: {
+        status: SubscriptionStatus.REJECTED,
+        reviewedAt: new Date(),
+        rejectionReason: reason?.trim() || null,
+        endedAt: new Date(),
+      },
+      include: {
+        product: true,
+        deliverySlot: true,
+        customer: { include: { user: true } },
+      },
+    });
+
+    const reasonSuffix = reason?.trim() ? ` Reason: ${reason.trim()}` : '';
+    await this.notifications.create({
+      userId: sub.customer.user.id,
+      type: NotificationType.SUBSCRIPTION_REJECTED,
+      title: 'Subscription declined',
+      body: `${profile.businessName} declined your ${sub.product.name} request.${reasonSuffix}`,
+      payload: { subscriptionId: sub.id, reason: reason?.trim() || null },
+      eventId: `subscription-rejected:${sub.id}`,
+    });
+
+    return updated;
   }
 
   async requestSubscriptionEnd(userId: string, subscriptionId: string, reason?: string) {

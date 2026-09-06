@@ -379,3 +379,36 @@ export function useUpdateDistributorSubscription() {
     },
   });
 }
+
+export function useApproveSubscription() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.post<Subscription>(
+        `/distributor/subscriptions/${id}/approve`,
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["distributor", "subscriptions"] });
+      qc.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+}
+
+export function useRejectSubscription() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, reason }: { id: string; reason?: string }) => {
+      const res = await api.post<Subscription>(
+        `/distributor/subscriptions/${id}/reject`,
+        { reason },
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["distributor", "subscriptions"] });
+      qc.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+}

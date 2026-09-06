@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationType, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { NotificationSseHub } from './notification-sse.hub';
 
 export interface CreateNotificationInput {
   userId: string;
@@ -13,7 +14,10 @@ export interface CreateNotificationInput {
 
 @Injectable()
 export class NotificationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private sseHub: NotificationSseHub,
+  ) {}
 
   async create(input: CreateNotificationInput) {
     if (input.eventId) {
@@ -28,7 +32,7 @@ export class NotificationService {
       if (existing) return existing;
     }
 
-    return this.prisma.notification.create({
+    const created = await this.prisma.notification.create({
       data: {
         userId: input.userId,
         type: input.type,
@@ -38,6 +42,11 @@ export class NotificationService {
         eventId: input.eventId,
       },
     });
+
+    // Fire-and-forget live update; never block / fail create on SSE issues.
+    void this.publishUnreadSnapshot(input.userId);
+
+    return created;
   }
 
   async createMany(inputs: CreateNotificationInput[]) {
@@ -90,10 +99,12 @@ export class NotificationService {
       where: { id, userId },
     });
     if (!notification) return null;
-    return this.prisma.notification.update({
+    const updated = await this.prisma.notification.update({
       where: { id },
       data: { readAt: new Date() },
     });
+    void this.publishUnreadSnapshot(userId);
+    return updated;
   }
 
   async markAllRead(userId: string) {
@@ -101,6 +112,7 @@ export class NotificationService {
       where: { userId, readAt: null },
       data: { readAt: new Date() },
     });
+    void this.publishUnreadSnapshot(userId);
     return { success: true };
   }
 
@@ -112,5 +124,14 @@ export class NotificationService {
     _data: Record<string, unknown>,
   ) {
     return { queued: false, reason: 'channel_not_enabled_phase_2' };
+  }
+
+  private async publishUnreadSnapshot(userId: string) {
+    try {
+      const snapshot = await this.unreadCount(userId);
+      this.sseHub.publish(userId, snapshot);
+    } catch {
+      // SSE is best-effort; persistence already succeeded.
+    }
   }
 }

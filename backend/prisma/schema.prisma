@@ -46,8 +46,10 @@ enum SubscriptionFrequency {
 enum SubscriptionStatus {
   ACTIVE
   PAUSED
+  PENDING_APPROVAL
   PENDING_CANCEL
   CANCELLED
+  REJECTED
 }
 
 enum EndRequestInitiator {
@@ -156,6 +158,8 @@ enum BillAdjustmentType {
 
 enum NotificationType {
   SUBSCRIPTION_ACTIVATED
+  SUBSCRIPTION_REQUESTED
+  SUBSCRIPTION_REJECTED
   PAUSE_APPLIED
   EXTRA_MILK_REQUEST
   BILL_GENERATED
@@ -444,6 +448,8 @@ model Subscription {
   billingActivationDate DateTime?             @map("billing_activation_date")
   fatPercent            Float?                @map("fat_percent")
   endedAt               DateTime?             @map("ended_at")
+  rejectionReason       String?               @map("rejection_reason")
+  reviewedAt            DateTime?             @map("reviewed_at")
   createdAt             DateTime              @default(now()) @map("created_at")
   updatedAt             DateTime              @updatedAt @map("updated_at")
 

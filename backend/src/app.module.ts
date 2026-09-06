@@ -12,6 +12,7 @@ import { AdminModule } from './admin/admin.module';
 import { DistributorModule } from './distributor/distributor.module';
 import { CustomerModule } from './customer/customer.module';
 import { NotificationModule } from './notification/notification.module';
+import { EmailModule } from './email/email.module';
 import { DeliveryModule } from './delivery/delivery.module';
 import { BillingModule } from './billing/billing.module';
 import { JobsModule } from './jobs/jobs.module';
@@ -33,6 +34,7 @@ import { IdentityModule } from './identity/identity.module';
     SubscriptionModule,
     ProductsModule,
     NotificationModule,
+    EmailModule,
     AuthModule,
     AdminModule,
     DistributorModule,

@@ -11,6 +11,15 @@ export function isSubscriptionFlowEnabled(): boolean {
   return envFlag('FEATURE_SUBSCRIPTION_FLOW_ENABLED');
 }
 
+/**
+ * When enabled, customer self-service subscribe creates PENDING_APPROVAL
+ * and requires distributor accept/decline. Distributor-led create stays ACTIVE.
+ * When disabled, customer subscribe activates immediately (legacy behavior).
+ */
+export function isSubscriptionApprovalEnabled(): boolean {
+  return envFlag('FEATURE_SUBSCRIPTION_APPROVAL_ENABLED');
+}
+
 /** Usage-based billing, invoices, and payment recording. */
 export function isBillingEnabled(): boolean {
   return envFlag('FEATURE_BILLING_ENABLED');
@@ -19,6 +28,7 @@ export function isBillingEnabled(): boolean {
 export function getPublicFeatureFlags() {
   return {
     subscriptionFlowEnabled: isSubscriptionFlowEnabled(),
+    subscriptionApprovalEnabled: isSubscriptionApprovalEnabled(),
     billingEnabled: isBillingEnabled(),
   };
 }

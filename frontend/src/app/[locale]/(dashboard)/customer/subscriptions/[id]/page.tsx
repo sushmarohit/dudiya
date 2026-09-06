@@ -4,6 +4,7 @@ import { use, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +21,7 @@ import {
 import { useFormSchemas } from "@/hooks/use-form-schemas";
 import type { SubscriptionFrequency } from "@/types";
 import { formatDate } from "@/lib/utils";
+import { subscriptionStatusMessageKey } from "@/lib/subscription-status";
 import { useApiErrorMessage } from "@/hooks/use-api-error-message";
 import { showToast } from "@/components/providers";
 import { DeliverySchedulePreview } from "@/components/subscription/delivery-schedule-preview";
@@ -42,6 +44,7 @@ export default function SubscriptionDetailPage({
   const tCustomer = useTranslations("customer");
   const tCommon = useTranslations("common");
   const tSubscription = useTranslations("subscription");
+  const tApproval = useTranslations("subscriptionApproval");
   const getApiErrorMessage = useApiErrorMessage();
   const { data: subscription, isLoading, error } = useCustomerSubscription(id);
   const distributorId = subscription?.distributorId ?? "";
@@ -136,6 +139,11 @@ export default function SubscriptionDetailPage({
 
   const products = distributor?.products?.filter((p) => p.enabled) ?? [];
   const slots = distributor?.deliverySlots ?? [];
+  const watchedFrequency = editForm.watch("frequency") as
+    | SubscriptionFrequency
+    | undefined;
+  const startDateKey = subscription.startDate.slice(0, 10);
+  const previewFrequency = watchedFrequency ?? subscription.frequency;
 
   return (
     <div className="space-y-6">
@@ -156,7 +164,7 @@ export default function SubscriptionDetailPage({
         <CardContent className="space-y-2 text-sm">
           <p>
             <span className="text-slate-500">{tCommon("status")}:</span>{" "}
-            {subscription.status}
+            {tCommon(subscriptionStatusMessageKey(subscription.status))}
           </p>
           <p>
             <span className="text-slate-500">{tCommon("startDate")}:</span>{" "}
@@ -165,11 +173,46 @@ export default function SubscriptionDetailPage({
         </CardContent>
       </Card>
 
-      <SubscriptionEndPanel
-        party="customer"
-        subscriptionId={id}
-        status={subscription.status}
-      />
+      {subscription.status === "ACTIVE" ||
+      subscription.status === "PENDING_CANCEL" ||
+      subscription.status === "CANCELLED" ? (
+        <SubscriptionEndPanel
+          party="customer"
+          subscriptionId={id}
+          status={subscription.status}
+        />
+      ) : null}
+
+      {subscription.status === "PENDING_APPROVAL" ? (
+        <Card>
+          <CardContent className="py-4 text-sm text-amber-900">
+            <p className="font-medium">{tApproval("customerPendingTitle")}</p>
+            <p className="mt-1 text-amber-800">
+              {tApproval("customerPendingDescription")}
+            </p>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {subscription.status === "REJECTED" ? (
+        <Card>
+          <CardContent className="space-y-3 py-4 text-sm">
+            <p className="font-medium text-red-800">
+              {tApproval("customerRejectedTitle")}
+            </p>
+            <p className="text-slate-600">
+              {subscription.rejectionReason
+                ? tApproval("customerRejectedReason", {
+                    reason: subscription.rejectionReason,
+                  })
+                : tApproval("customerRejectedDescription")}
+            </p>
+            <Link href="/customer/find-distributor">
+              <Button size="sm">{tApproval("findAnother")}</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {subscription.status === "ACTIVE" && (
         <Card>
@@ -245,7 +288,17 @@ export default function SubscriptionDetailPage({
           <CardTitle>{tSubscription("schedulePreview")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <DeliverySchedulePreview subscriptionId={id} role="customer" />
+          <DeliverySchedulePreview
+            subscriptionId={
+              previewFrequency === subscription.frequency ? id : undefined
+            }
+            role="customer"
+            scheduleParams={
+              previewFrequency !== subscription.frequency
+                ? { frequency: previewFrequency, startDate: startDateKey }
+                : undefined
+            }
+          />
         </CardContent>
       </Card>
 

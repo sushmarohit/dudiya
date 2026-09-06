@@ -24,13 +24,22 @@ export function getNotificationAction(
 
   switch (type) {
     case "SUBSCRIPTION_ACTIVATED":
+    case "SUBSCRIPTION_REQUESTED":
+    case "SUBSCRIPTION_REJECTED":
       if (subscriptionId) {
         return {
-          labelKey: "viewSubscription",
+          labelKey:
+            type === "SUBSCRIPTION_REQUESTED" && role === "DISTRIBUTOR"
+              ? "reviewRequest"
+              : type === "SUBSCRIPTION_REJECTED"
+                ? "findDistributor"
+                : "viewSubscription",
           href:
-            role === "DISTRIBUTOR"
-              ? `/distributor/subscriptions/${subscriptionId}`
-              : `/customer/subscriptions/${subscriptionId}`,
+            type === "SUBSCRIPTION_REJECTED" && role === "CUSTOMER"
+              ? "/customer/find-distributor"
+              : role === "DISTRIBUTOR"
+                ? `/distributor/subscriptions/${subscriptionId}`
+                : `/customer/subscriptions/${subscriptionId}`,
         };
       }
       return {
@@ -116,6 +125,8 @@ export function getNotificationAction(
 export function notificationTypeLabelKey(type: NotificationType): string {
   const map: Record<NotificationType, string> = {
     SUBSCRIPTION_ACTIVATED: "types.subscriptionActivated",
+    SUBSCRIPTION_REQUESTED: "types.subscriptionRequested",
+    SUBSCRIPTION_REJECTED: "types.subscriptionRejected",
     PAUSE_APPLIED: "types.pauseApplied",
     EXTRA_MILK_REQUEST: "types.extraMilk",
     BILL_GENERATED: "types.billGenerated",

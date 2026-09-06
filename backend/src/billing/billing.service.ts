@@ -20,7 +20,7 @@ import {
   sumDecimals,
   toDecimal,
 } from '../common/utils/money.util';
-import { parseDateInput, startOfDay } from '../common/utils/date.util';
+import { parseDateInput, startOfDay, formatDateKey } from '../common/utils/date.util';
 import { UpdateBillingSettingsDto } from './dto/billing-settings.dto';
 import { RecordPaymentDto } from './dto/record-payment.dto';
 import { BillAdjustmentDto } from './dto/bill-adjustment.dto';
@@ -533,24 +533,24 @@ export class BillingService {
   }
 
   /**
-   * Settlement period:
-   * - start = day after last non-VOID bill cycleEnd for this customer+distributor,
-   *           else billingActivationDate / startDate of the subscription
-   * - end   = last DELIVERED delivery date for this subscription (or start if none)
+   * Settlement period (per subscription):
+   * - start = day after the latest delivery already on a non-VOID bill for this subscription,
+   *           else billingActivationDate / startDate
+   * - end   = last unbilled DELIVERED delivery date (or start if none)
    * Only unbilled DELIVERED items for this subscription are included.
    */
   async previewSettlementBill(subscriptionId: string) {
     const { periodStart, periodEnd, items, lineData, subtotal } =
       await this.buildSettlementLines(subscriptionId);
     return {
-      periodStart,
-      periodEnd,
+      periodStart: formatDateKey(periodStart),
+      periodEnd: formatDateKey(periodEnd),
       deliveryCount: items.length,
       subtotal: Number(subtotal.toFixed(2)),
       total: Number(subtotal.toFixed(2)),
       lines: lineData.map((l) => ({
         deliveryItemId: l.item.id,
-        deliveryDate: l.item.deliveryDate,
+        deliveryDate: formatDateKey(l.item.deliveryDate),
         productId: l.item.productId,
         productName: l.item.product.name,
         quantity: l.qty,
@@ -617,7 +617,7 @@ export class BillingService {
       userId: sub.customer.user.id,
       type: NotificationType.BILL_GENERATED,
       title: 'Settlement invoice issued',
-      body: `Final settlement for ${sub.product.name}: ₹${formatMoney(total)} (${periodStart.toISOString().slice(0, 10)} – ${periodEnd.toISOString().slice(0, 10)}).`,
+      body: `Final settlement for ${sub.product.name}: ₹${formatMoney(total)} (${formatDateKey(periodStart)} – ${formatDateKey(periodEnd)}).`,
       payload: { billId: bill.id, subscriptionId, settlement: true },
       eventId: `settlement-bill:${bill.id}`,
     });
@@ -641,18 +641,23 @@ export class BillingService {
       throwApi(ApiErrorCode.SUBSCRIPTION_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 
-    const lastBill = await this.prisma.bill.findFirst({
+    // Scope to this subscription only — do not use another product/sub's bill cycle.
+    const lastBilledDelivery = await this.prisma.deliveryItem.findFirst({
       where: {
-        distributorId: sub.distributorId,
-        customerId: sub.customerId,
-        status: { not: BillStatus.VOID },
+        subscriptionId,
+        billLineItems: {
+          some: {
+            bill: { status: { not: BillStatus.VOID } },
+          },
+        },
       },
-      orderBy: { cycleEnd: 'desc' },
+      orderBy: { deliveryDate: 'desc' },
+      select: { deliveryDate: true },
     });
 
     let periodStart: Date;
-    if (lastBill) {
-      periodStart = startOfDay(lastBill.cycleEnd);
+    if (lastBilledDelivery) {
+      periodStart = startOfDay(lastBilledDelivery.deliveryDate);
       periodStart.setDate(periodStart.getDate() + 1);
     } else {
       periodStart = startOfDay(sub.billingActivationDate ?? sub.startDate);
@@ -674,9 +679,9 @@ export class BillingService {
 
     let periodEnd = periodStart;
     if (items.length > 0) {
-      const lastDate = items[items.length - 1].deliveryDate;
-      periodEnd = startOfDay(lastDate);
-      periodEnd.setHours(23, 59, 59, 999);
+      // Use calendar start-of-day so display/storage are not skewed by end-of-day timestamps.
+      periodStart = startOfDay(items[0].deliveryDate);
+      periodEnd = startOfDay(items[items.length - 1].deliveryDate);
     }
 
     const lineData: Array<{

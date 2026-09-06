@@ -28,7 +28,10 @@ import {
   UpdateCustomerSubscriptionDto,
 } from './dto/subscription.dto';
 import { CatalogService } from '../products/catalog.service';
-import { assertSubscriptionFlowEnabled } from '../common/config/feature-flags';
+import {
+  assertSubscriptionFlowEnabled,
+  isSubscriptionApprovalEnabled,
+} from '../common/config/feature-flags';
 
 interface NearbyDistributorRow {
   id: string;
@@ -423,6 +426,8 @@ export class CustomerService {
       update: {},
     });
 
+    const requiresApproval = isSubscriptionApprovalEnabled();
+
     const sub = await this.prisma.subscription.create({
       data: {
         distributorId: dto.distributorId,
@@ -433,6 +438,9 @@ export class CustomerService {
         frequency: dto.frequency,
         deliverySlotId: dto.deliverySlotId,
         startDate: new Date(dto.startDate),
+        status: requiresApproval
+          ? SubscriptionStatus.PENDING_APPROVAL
+          : SubscriptionStatus.ACTIVE,
         createdVia: OnboardedVia.SELF_SERVICE,
         fatPercent: pricing.fatPercent,
         billingActivationDate: new Date(dto.startDate),
@@ -444,24 +452,45 @@ export class CustomerService {
       },
     });
 
-    await this.notifications.createMany([
-      {
-        userId,
-        type: NotificationType.SUBSCRIPTION_ACTIVATED,
-        title: 'Subscription activated',
-        body: `Your subscription for ${sub.product.name} is active.`,
-        payload: { subscriptionId: sub.id },
-        eventId: `subscription-activated:${sub.id}:customer`,
-      },
-      {
-        userId: sub.distributor.userId,
-        type: NotificationType.SUBSCRIPTION_ACTIVATED,
-        title: 'New subscription',
-        body: `A customer subscribed to ${sub.product.name}.`,
-        payload: { subscriptionId: sub.id },
-        eventId: `subscription-activated:${sub.id}:distributor`,
-      },
-    ]);
+    if (requiresApproval) {
+      await this.notifications.createMany([
+        {
+          userId,
+          type: NotificationType.SUBSCRIPTION_REQUESTED,
+          title: 'Subscription request sent',
+          body: `Your request for ${sub.product.name} from ${sub.distributor.businessName} is waiting for approval.`,
+          payload: { subscriptionId: sub.id },
+          eventId: `subscription-requested:${sub.id}:customer`,
+        },
+        {
+          userId: sub.distributor.userId,
+          type: NotificationType.SUBSCRIPTION_REQUESTED,
+          title: 'New subscription request',
+          body: `A customer requested ${sub.product.name}. Accept or decline the request.`,
+          payload: { subscriptionId: sub.id },
+          eventId: `subscription-requested:${sub.id}:distributor`,
+        },
+      ]);
+    } else {
+      await this.notifications.createMany([
+        {
+          userId,
+          type: NotificationType.SUBSCRIPTION_ACTIVATED,
+          title: 'Subscription activated',
+          body: `Your subscription for ${sub.product.name} is active.`,
+          payload: { subscriptionId: sub.id },
+          eventId: `subscription-activated:${sub.id}:customer`,
+        },
+        {
+          userId: sub.distributor.userId,
+          type: NotificationType.SUBSCRIPTION_ACTIVATED,
+          title: 'New subscription',
+          body: `A customer subscribed to ${sub.product.name}.`,
+          payload: { subscriptionId: sub.id },
+          eventId: `subscription-activated:${sub.id}:distributor`,
+        },
+      ]);
+    }
 
     return sub;
   }

@@ -78,6 +78,11 @@
     "statuses": {
       "active": "सक्रिय",
       "pending": "लंबित",
+      "pendingApproval": "अनुमोदन लंबित",
+      "pendingCancel": "समाप्त हो रही",
+      "cancelled": "रद्द",
+      "rejected": "अस्वीकृत",
+      "paused": "रोकी गई",
       "suspended": "निलंबित"
     },
     "onboardedVia": {
@@ -438,6 +443,8 @@
     "unread": "अपठित",
     "viewSubscription": "सदस्यता देखें",
     "viewSubscriptions": "सदस्यताएँ देखें",
+    "reviewRequest": "अनुरोध देखें",
+    "findDistributor": "वितरक खोजें",
     "viewBill": "बिल देखें",
     "viewBills": "बिल देखें",
     "continueSetup": "सेटअप जारी रखें",
@@ -448,6 +455,8 @@
     "findDistributorLink": "नया वितरक चाहिए? पास में खोजें",
     "types": {
       "subscriptionActivated": "सदस्यता",
+      "subscriptionRequested": "सदस्यता अनुरोध",
+      "subscriptionRejected": "सदस्यता अस्वीकृत",
       "pauseApplied": "रोक / छोड़ें",
       "extraMilk": "अतिरिक्त दूध",
       "billGenerated": "बिलिंग",
@@ -462,6 +471,26 @@
       "journeyStarted": "रास्ते में",
       "generic": "अपडेट"
     }
+  },
+  "subscriptionApproval": {
+    "distributorTitle": "ग्राहक सदस्यता अनुरोध",
+    "distributorDescription": "इस ग्राहक ने सदस्यता मांगी है। डिलीवरी शुरू करने के लिए स्वीकार करें, या सेवा न दे सकें तो अस्वीकार करें।",
+    "approve": "स्वीकार करें",
+    "reject": "अस्वीकार करें",
+    "approveTitle": "सदस्यता स्वीकार करें?",
+    "approveDescription": "सदस्यता सक्रिय हो जाएगी और डिलीवरी शुरू हो सकती है।",
+    "rejectTitle": "सदस्यता अस्वीकार करें?",
+    "rejectDescription": "ग्राहक को सूचित किया जाएगा। वे किसी अन्य वितरक से अनुरोध कर सकते हैं।",
+    "rejectReason": "कारण (वैकल्पिक)",
+    "rejectReasonPlaceholder": "आप क्यों अस्वीकार कर रहे हैं?",
+    "approved": "सदस्यता स्वीकार की गई",
+    "rejected": "सदस्यता अस्वीकार की गई",
+    "customerPendingTitle": "वितरक अनुमोदन की प्रतीक्षा",
+    "customerPendingDescription": "आपका सदस्यता अनुरोध भेज दिया गया है। वितरक स्वीकार करने के बाद डिलीवरी शुरू होगी।",
+    "customerRejectedTitle": "सदस्यता अस्वीकृत",
+    "customerRejectedDescription": "वितरक ने यह अनुरोध अस्वीकार कर दिया। आप कोई अन्य वितरक खोज सकते हैं।",
+    "customerRejectedReason": "वितरक ने यह अनुरोध अस्वीकार किया: {reason}",
+    "findAnother": "वितरक खोजें"
   },
   "admin": {
     "dashboard": {
@@ -717,8 +746,10 @@
       "chooseSlot": "डिलीवरी स्लॉट चुनें",
       "confirmSubscription": "सदस्यता पुष्टि करें",
       "subscriptionCreated": "सदस्यता बनाई गई",
+      "requestSent": "अनुरोध भेजा गया — वितरक अनुमोदन की प्रतीक्षा",
       "fatFromDistributor": "वसा {fat}% · {price}/यूनिट (वितरक द्वारा सेट)",
       "alreadyActive": "इस वितरक के साथ आपकी पहले से सक्रिय सदस्यता है। नई शुरू करने से पहले उसे समाप्त करें।",
+      "pendingApproval": "इस वितरक के अनुमोदन की प्रतीक्षा में आपका सदस्यता अनुरोध पहले से है।",
       "endPending": "इस वितरक के साथ सदस्यता समाप्ति अनुरोध लंबित है। नई शुरू करने से पहले पुष्टि पूरी करें।",
       "manageExisting": "मौजूदा सदस्यता प्रबंधित करें"
     },
@@ -858,7 +889,8 @@
     "IDENTITY_DOCUMENT_NOT_FOUND": "पहचान दस्तावेज़ नहीं मिला।",
     "IDENTITY_NAME_MISMATCH": "दस्तावेज़ पर नाम आपके पंजीकृत नाम से मेल नहीं खाता।",
     "IDENTITY_NOT_VERIFIED": "जारी रखने के लिए कम से कम एक सत्यापित पहचान दस्तावेज़ अपलोड करें।",
-    "SUBSCRIPTION_ALREADY_ACTIVE": "इस वितरक के साथ आपकी पहले से सक्रिय सदस्यता है। नई शुरू करने से पहले उसे समाप्त करें।",
+    "SUBSCRIPTION_ALREADY_ACTIVE": "इस वितरक के साथ आपकी पहले से सक्रिय या लंबित सदस्यता है। नई शुरू करने से पहले समाप्त करें या अनुमोदन की प्रतीक्षा करें।",
+    "SUBSCRIPTION_NOT_PENDING_APPROVAL": "यह सदस्यता अनुमोदन की प्रतीक्षा में नहीं है।",
     "SUBSCRIPTION_END_PENDING": "सदस्यता समाप्ति अनुरोध पहले से पुष्टि की प्रतीक्षा में है।",
     "SUBSCRIPTION_END_NOT_PENDING": "इस सदस्यता के लिए कोई लंबित समाप्ति अनुरोध नहीं है।",
     "SUBSCRIPTION_END_ALREADY_CONFIRMED": "आपने इस समाप्ति अनुरोध की पुष्टि पहले ही कर दी है।",
@@ -879,6 +911,10 @@
     "declaredNamePlaceholder": "दस्तावेज़ पर छपा नाम लिखें",
     "file": "दस्तावेज़ फ़ाइल",
     "fileRequiredHint": "छपा नाम पढ़ने के लिए पहचान पत्र की साफ़ फ़ोटो आवश्यक है।",
+    "preview": "पूर्वावलोकन",
+    "previewAlt": "चयनित दस्तावेज़ पूर्वावलोकन",
+    "pdfPreview": "PDF चुना गया",
+    "clearFile": "हटाएं",
     "upload": "अपलोड करें और OCR से सत्यापित करें",
     "uploadRequired": "फ़ाइल चुनें और दस्तावेज़ पर नाम लिखें।",
     "uploadDocuments": "दस्तावेज़ अपलोड करें",

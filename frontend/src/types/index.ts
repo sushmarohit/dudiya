@@ -13,8 +13,10 @@ export type SubscriptionFrequency =
 export type SubscriptionStatus =
   | "ACTIVE"
   | "PAUSED"
+  | "PENDING_APPROVAL"
   | "PENDING_CANCEL"
-  | "CANCELLED";
+  | "CANCELLED"
+  | "REJECTED";
 export type DeliveryItemStatus = "PENDING" | "DELIVERED" | "SKIPPED" | "FAILED";
 export type BillStatus =
   | "DRAFT"
@@ -28,6 +30,8 @@ export type BillAdjustmentType = "CREDIT" | "DEBIT";
 export type BillingCycle = "WEEKLY" | "BI_WEEKLY" | "MONTHLY";
 export type NotificationType =
   | "SUBSCRIPTION_ACTIVATED"
+  | "SUBSCRIPTION_REQUESTED"
+  | "SUBSCRIPTION_REJECTED"
   | "PAUSE_APPLIED"
   | "EXTRA_MILK_REQUEST"
   | "BILL_GENERATED"
@@ -185,6 +189,9 @@ export interface Subscription {
   status: SubscriptionStatus;
   createdVia: OnboardedVia;
   fatPercent?: number | null;
+  rejectionReason?: string | null;
+  reviewedAt?: string | null;
+  endedAt?: string | null;
   product?: Product;
   deliverySlot?: DeliverySlot;
   customer?: CustomerProfile;

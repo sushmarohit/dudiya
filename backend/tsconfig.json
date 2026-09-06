@@ -9,6 +9,8 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -16,7 +18,11 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@prisma/client": ["node_modules/.prisma/client/index"]
+    }
   },
-  "include": ["src/**/*", "prisma/seed.ts"]
+  "include": ["src/**/*"]
 }

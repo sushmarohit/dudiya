@@ -17,7 +17,6 @@ import { BulkDeliveryStatusDto } from './dto/bulk-delivery-status.dto';
 import { ReorderDeliveryItemsDto } from './dto/reorder-delivery-items.dto';
 
 const MINUTES_PER_STOP = 8;
-const ETA_WINDOW_BUFFER_MIN = 5;
 
 @Injectable()
 export class DeliveryService {
@@ -405,25 +404,11 @@ export class DeliveryService {
         if (notifiedUserIds.has(customerUserId)) continue;
         notifiedUserIds.add(customerUserId);
 
-        const windowStart = new Date(
-          eta.getTime() - ETA_WINDOW_BUFFER_MIN * 60_000,
-        );
-        const windowEnd = new Date(
-          eta.getTime() + ETA_WINDOW_BUFFER_MIN * 60_000,
-        );
-        const fmt = (d: Date) =>
-          d.toLocaleTimeString('en-IN', {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true,
-            timeZone: profile.timezone || 'Asia/Kolkata',
-          });
-
         await this.notifications.create({
           userId: customerUserId,
           type: NotificationType.DELIVERY_JOURNEY_STARTED,
           title: 'Delivery on the way',
-          body: `${profile.businessName} started delivery. Your ${item.product.name} is expected around ${fmt(windowStart)}–${fmt(windowEnd)}.`,
+          body: `${profile.businessName} started delivery. Your ${item.product.name} is on the way.`,
           payload: {
             deliveryId: delivery.id,
             deliveryItemId: item.id,

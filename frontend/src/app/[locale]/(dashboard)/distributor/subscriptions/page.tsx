@@ -10,6 +10,7 @@ import type { SubscriptionFrequency } from "@/types";
 import { formatDate } from "@/lib/utils";
 import { PageHeader, ResponsiveTable } from "@/components/ui/responsive-table";
 import { isSubscriptionFlowEnabled } from "@/lib/feature-flags";
+import { subscriptionStatusMessageKey } from "@/lib/subscription-status";
 
 const FREQUENCY_MESSAGE_KEYS: Record<SubscriptionFrequency, string> = {
   DAILY: "daily",
@@ -92,7 +93,9 @@ export default function DistributorSubscriptionsPage() {
                       `frequencies.${FREQUENCY_MESSAGE_KEYS[s.frequency]}`,
                     )}
                   </td>
-                  <td className="px-4 py-3">{s.status}</td>
+                  <td className="px-4 py-3">
+                    {tCommon(subscriptionStatusMessageKey(s.status))}
+                  </td>
                   <td className="px-4 py-3">{formatDate(s.startDate)}</td>
                   <td className="px-4 py-3">
                     <Link href={`/distributor/subscriptions/${s.id}`}>
